@@ -1,5 +1,8 @@
 using CESCA.API.Authorization;
 using CESCA.API.Data;
+using CESCA.API.Middleware.ExceptionHandler;
+using CESCA.API.Services.Implementation;
+using CESCA.API.Services.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -46,6 +49,12 @@ builder.Services.AddAuthorization(options =>
 });
 
 builder.Services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
+
+//Services
+builder.Services.AddScoped<ISupplierService, SupplierService>();
+
+//Exceptions
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 var app = builder.Build();
 
