@@ -1,6 +1,8 @@
 using CESCA.API.Authorization;
+using CESCA.API.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 
@@ -14,6 +16,12 @@ builder.Services.AddSwaggerGen();
 
 // Add environment variables
 builder.Configuration.AddEnvironmentVariables();
+
+// Add Db Context
+builder.Services.AddDbContext<ApplicationDBContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
 
 // Setup Auth0
 var domain = $"https://{builder.Configuration["Auth0:Domain"]}/";
