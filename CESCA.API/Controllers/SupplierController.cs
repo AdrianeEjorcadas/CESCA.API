@@ -31,5 +31,18 @@ namespace CESCA.API.Controllers
                 Data = result
             });
         }
+
+        [HttpGet("get-supplier/{supplierId}")]
+        public async Task<ActionResult<ReturnResponse<SupplierOutputDTO>>> GetSupplierByIdAsync([FromQuery] Guid supplierId)
+        {
+            var result = await _supplierService.GetSupplierByIdAsync(supplierId);
+            return Ok(new ReturnResponse<object>
+            {
+                StatusCode = 200,
+                Message = "Supplier retrieved successfully",
+                Data = result
+            });
+        }
+
     }
 }

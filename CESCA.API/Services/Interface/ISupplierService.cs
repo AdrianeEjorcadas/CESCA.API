@@ -9,7 +9,7 @@ namespace CESCA.API.Services.Interface
 
         Task<Supplier> GetSupplierAsync();
 
-        Task<Supplier> GetSupplierByIdAsync(Guid supplierId);
+        Task<SupplierOutputDTO> GetSupplierByIdAsync(Guid supplierId);
 
         Task<Supplier> UpdateSupplierAsync();
 

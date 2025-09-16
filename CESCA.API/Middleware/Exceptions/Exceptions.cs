@@ -13,7 +13,6 @@
         {
             public SupplierCreationException(string message) : base(message)
             {
-                
             }
         }
     }

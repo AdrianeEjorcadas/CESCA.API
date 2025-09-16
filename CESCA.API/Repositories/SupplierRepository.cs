@@ -2,6 +2,7 @@
 using CESCA.API.Models;
 using CESCA.API.Models.Dtos;
 using CESCA.API.Repositories.Interface;
+using Microsoft.EntityFrameworkCore;
 
 namespace CESCA.API.Repositories
 {
@@ -30,14 +31,30 @@ namespace CESCA.API.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<Supplier> GetSupplierAsync()
+        public async Task<IEnumerable<Supplier>> GetSupplierAsync()
         {
-            throw new NotImplementedException();
+            return await _context.Suppliers
+                .AsNoTracking()
+                .ToListAsync();
         }
 
-        public Task<Supplier> GetSupplierByIdAsync(Guid supplierId)
+        public async Task<SupplierOutputDTO> GetSupplierByIdAsync(Guid supplierId)
         {
-            throw new NotImplementedException();
+            #pragma warning disable CS8603 // Possible null reference return.
+            return await _context.Suppliers
+                .AsNoTracking()
+                .Where(s => s.SupplierId == supplierId)
+                .Select(s => new SupplierOutputDTO
+                {
+                    SupplierId = s.SupplierId,
+                    SupplierName = s.SupplierName,
+                    Email = s.Email ?? "No email address",
+                    ContactNumber = s.ContactNumber,
+                    Address = s.Address ?? "No Address",
+                    IsDeleted = s.IsDeleted
+                })
+                .FirstOrDefaultAsync();
+            #pragma warning restore CS8603 // Possible null reference return.
         }
 
         public Task<Supplier> UpdateSupplierAsync()

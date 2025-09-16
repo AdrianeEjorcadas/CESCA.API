@@ -7,9 +7,9 @@ namespace CESCA.API.Repositories.Interface
     {
         Task<Supplier> AddSupplierAsync(Supplier supplier);
 
-        Task<Supplier> GetSupplierAsync();
+        Task<IEnumerable<Supplier>> GetSupplierAsync();
 
-        Task<Supplier> GetSupplierByIdAsync(Guid supplierId);
+        Task<SupplierOutputDTO> GetSupplierByIdAsync(Guid supplierId);
 
         Task<Supplier> UpdateSupplierAsync();
 

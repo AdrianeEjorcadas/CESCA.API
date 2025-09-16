@@ -44,9 +44,16 @@ namespace CESCA.API.Services.Implementation
             throw new NotImplementedException();
         }
 
-        public Task<Supplier> GetSupplierByIdAsync(Guid supplierId)
+        public async Task<SupplierOutputDTO> GetSupplierByIdAsync(Guid supplierId)
         {
-            throw new NotImplementedException();
+            var result = await _supplierRepository.GetSupplierByIdAsync(supplierId);
+
+            if (result is null) 
+            {
+                throw new NotFoundException("Supplier not found");
+            }
+
+            return result;
         }
 
         public Task<Supplier> UpdateSupplierAsync()
