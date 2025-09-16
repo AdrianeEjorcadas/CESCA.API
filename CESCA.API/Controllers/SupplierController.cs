@@ -1,7 +1,9 @@
-﻿using CESCA.API.Models;
+﻿using CESCA.API.Middleware.Filters;
+using CESCA.API.Models;
 using CESCA.API.Models.Dtos;
 using CESCA.API.Models.Response;
 using CESCA.API.Services.Implementation;
+using CESCA.API.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -11,13 +13,14 @@ namespace CESCA.API.Controllers
     [Route("[controller]")]
     public class SupplierController : ControllerBase
     {
-        private readonly SupplierService _supplierService;
-        public SupplierController(SupplierService supplierService)
+        private readonly ISupplierService _supplierService;
+        public SupplierController(ISupplierService supplierService)
         {
             _supplierService = supplierService;
         }
 
         [HttpPost("add-supplier")]
+        [ValidateModelState]
         public async Task<ActionResult<ReturnResponse<Supplier>>> AddSupplierAsync([FromBody] AddSupplierDTO addSupplierDTO)
         {
             var result = await _supplierService.AddSupplierAsync(addSupplierDTO);

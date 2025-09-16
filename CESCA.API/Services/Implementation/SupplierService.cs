@@ -1,14 +1,37 @@
 ﻿using CESCA.API.Models;
 using CESCA.API.Models.Dtos;
+using CESCA.API.Repositories.Interface;
 using CESCA.API.Services.Interface;
+using static CESCA.API.Middleware.Exceptions.Exceptions;
 
 namespace CESCA.API.Services.Implementation
 {
     public class SupplierService : ISupplierService
     {
-        public Task<Supplier> AddSupplierAsync(AddSupplierDTO addSupplierDTO)
+        private readonly ISupplierRepository _supplierRepository;
+        public SupplierService(ISupplierRepository supplierRepository)
         {
-            throw new NotImplementedException();
+            _supplierRepository = supplierRepository;
+        }
+
+        public async Task<Supplier> AddSupplierAsync(AddSupplierDTO addSupplierDTO)
+        {
+            var supplier = new Supplier
+            {
+                SupplierName = addSupplierDTO.SupplierName,
+                Email  = addSupplierDTO.Email,
+                ContactNumber = addSupplierDTO.ContactNumber,
+                Address = addSupplierDTO.Address
+            };
+
+            var result = await _supplierRepository.AddSupplierAsync(supplier);
+
+            if (result is null)
+            {
+                throw new SupplierCreationException("Error occured while adding supplier");
+            }
+
+            return result;
         }
 
         public Task<Supplier> DeleteSupplierAsync(Guid supplierId)

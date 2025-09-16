@@ -1,5 +1,6 @@
 ﻿using CESCA.API.Models.Response;
 using Microsoft.AspNetCore.Diagnostics;
+using static CESCA.API.Middleware.Exceptions.Exceptions;
 
 namespace CESCA.API.Middleware.ExceptionHandler
 {
@@ -7,12 +8,24 @@ namespace CESCA.API.Middleware.ExceptionHandler
     {
         public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
         {
-            var response = new ReturnResponse<object>
+            var response = new ReturnResponse<object>();
+            response.Data = exception.Data;
+
+            switch (exception)
             {
-                StatusCode = StatusCodes.Status500InternalServerError,
-                Message = "Unexpected error occur",
-                Data = null
-            };
+                case NotFoundException ex:
+                    response.StatusCode = StatusCodes.Status404NotFound;
+                    break;
+
+                case SupplierCreationException ex:
+                    response.StatusCode = StatusCodes.Status400BadRequest;
+                    break;
+
+                default:
+                    response.StatusCode = StatusCodes.Status500InternalServerError;
+                    response.Message = "Unexpected error occured";
+                    break;
+            }
 
             httpContext.Response.StatusCode = response.StatusCode;
             await httpContext.Response.WriteAsJsonAsync(response, cancellationToken);

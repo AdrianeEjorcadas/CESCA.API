@@ -1,12 +1,16 @@
 using CESCA.API.Authorization;
 using CESCA.API.Data;
 using CESCA.API.Middleware.ExceptionHandler;
+using CESCA.API.Middleware.Filters;
+using CESCA.API.Repositories;
+using CESCA.API.Repositories.Interface;
 using CESCA.API.Services.Implementation;
 using CESCA.API.Services.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,6 +28,35 @@ builder.Configuration.AddEnvironmentVariables();
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+
+// Add filter 
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<ValidateModelState>();
+});
+
+//Exceptions
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+
+//Services
+builder.Services.AddScoped<ISupplierService, SupplierService>();
+
+//Repo
+builder.Services.AddScoped<ISupplierRepository, SupplierRepository>();
+
+
+//Add Swagger
+builder.Services.AddSwaggerGen(options =>
+{
+    options.CustomSchemaIds(type => type.FullName);
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "Cesca API",
+        Version = "v1",
+        Description = "API for Cesca POS transaction"
+    });
 });
 
 // Setup Auth0
@@ -50,28 +83,30 @@ builder.Services.AddAuthorization(options =>
 
 builder.Services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
 
-//Services
-builder.Services.AddScoped<ISupplierService, SupplierService>();
-
-//Exceptions
-builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 var app = builder.Build();
 
-// Add authentication and authorization
+//Exception Pipeline
+app.UseExceptionHandler();
+
+// Security piepline
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseHttpsRedirection();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Cesca API v1");
+        c.RoutePrefix = string.Empty; // Serve at root URL
+    });
 }
 
-app.UseHttpsRedirection();
 
-app.UseAuthorization();
+//app.UseAuthorization();
 
 app.MapControllers();
 

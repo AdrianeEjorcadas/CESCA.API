@@ -8,5 +8,13 @@
             {
             }
         }
+
+        public class SupplierCreationException : Exception
+        {
+            public SupplierCreationException(string message) : base(message)
+            {
+                
+            }
+        }
     }
 }
