@@ -1,5 +1,5 @@
 ﻿using Azure.Core;
-using CESCA.API.Helpers.Parameters;
+using CESCA.API.Helpers.Pagination.Parameters;
 using CESCA.API.Middleware.Filters;
 using CESCA.API.Models;
 using CESCA.API.Models.Dtos;

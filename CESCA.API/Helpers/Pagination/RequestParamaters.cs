@@ -1,4 +1,4 @@
-﻿namespace CESCA.API.Helpers
+﻿namespace CESCA.API.Helpers.Pagination
 {
     public abstract class RequestParamaters
     {
@@ -14,7 +14,7 @@
             }
             set
             {
-                _pageSize = (value > maxPageSize) ? maxPageSize : value;
+                _pageSize = value > maxPageSize ? maxPageSize : value;
             }
         }
     }

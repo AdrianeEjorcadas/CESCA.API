@@ -1,4 +1,4 @@
-﻿namespace CESCA.API.Helpers
+﻿namespace CESCA.API.Helpers.Pagination
 {
     public class PagedList<T> : List<T>
     {
