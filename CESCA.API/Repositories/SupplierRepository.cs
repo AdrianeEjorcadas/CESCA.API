@@ -1,4 +1,6 @@
 ﻿using CESCA.API.Data;
+using CESCA.API.Helpers;
+using CESCA.API.Helpers.Parameters;
 using CESCA.API.Models;
 using CESCA.API.Models.Dtos;
 using CESCA.API.Repositories.Interface;
@@ -17,17 +19,17 @@ namespace CESCA.API.Repositories
         }
 
 
-        public async Task<Supplier> AddSupplierAsync(Supplier supplier)
+        public async Task<Supplier> AddSupplierAsync(Supplier supplier, CancellationToken cancellationToken = default)
         {
             var result = await _context.Suppliers
-                .AddAsync(supplier);
+                .AddAsync(supplier, cancellationToken);
 
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
 
             return supplier;
         }
 
-        public async Task<SupplierOutputDTO> DeleteSupplierAsync(Guid supplierId)
+        public async Task<SupplierOutputDTO> DeleteSupplierAsync(Guid supplierId, CancellationToken cancellationToken = default)
         {
             var result = await _context.Suppliers
                 .FindAsync(supplierId);
@@ -38,7 +40,7 @@ namespace CESCA.API.Repositories
             }
 
             _context.Suppliers.Remove(result);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
 
             return new SupplierOutputDTO
             {
@@ -51,14 +53,31 @@ namespace CESCA.API.Repositories
             };
         }
 
-        public async Task<IEnumerable<Supplier>> GetSupplierAsync()
+        public async Task<PagedList<SupplierOutputDTO>> GetSupplierAsync(SupplierParameters supplierParameters, CancellationToken cancellationToken = default)
         {
-            return await _context.Suppliers
+            var result = await _context.Suppliers
                 .AsNoTracking()
-                .ToListAsync();
+                .Skip((supplierParameters.PageNumber - 1) * supplierParameters.PageSize)
+                .Take(supplierParameters.PageSize)
+                .OrderBy(s => s.SupplierName)
+                .Select(s => new SupplierOutputDTO
+                {
+                    SupplierId = s.SupplierId,
+                    SupplierName = s.SupplierName,
+                    Email = s.Email,
+                    ContactNumber = s.ContactNumber,
+                    Address = s.Address,
+                    IsDeleted = s.IsDeleted
+                })
+                .ToListAsync(cancellationToken);
+
+            var count = await _context.Suppliers .CountAsync(cancellationToken);
+
+            return PagedList<SupplierOutputDTO>
+                .ToPagedList(result, count, supplierParameters.PageNumber, supplierParameters.PageSize);
         }
 
-        public async Task<SupplierOutputDTO?> GetSupplierByIdAsync(Guid supplierId)
+        public async Task<SupplierOutputDTO?> GetSupplierByIdAsync(Guid supplierId, CancellationToken cancellationToken = default)
         {
             var result = await _context.Suppliers
                 .AsNoTracking()
@@ -72,12 +91,12 @@ namespace CESCA.API.Repositories
                     Address = s.Address,
                     IsDeleted = s.IsDeleted
                 })
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(cancellationToken);
 
            return result;
         }
 
-        public Task<Supplier> UpdateSupplierAsync()
+        public Task<Supplier> UpdateSupplierAsync(CancellationToken cancellationToken = default)
         {
             throw new NotImplementedException();
         }

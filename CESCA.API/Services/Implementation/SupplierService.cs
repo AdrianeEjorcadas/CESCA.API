@@ -1,4 +1,6 @@
-﻿using CESCA.API.Models;
+﻿using CESCA.API.Helpers;
+using CESCA.API.Helpers.Parameters;
+using CESCA.API.Models;
 using CESCA.API.Models.Dtos;
 using CESCA.API.Repositories.Interface;
 using CESCA.API.Services.Interface;
@@ -9,6 +11,7 @@ namespace CESCA.API.Services.Implementation
     public class SupplierService : ISupplierService
     {
         private readonly ISupplierRepository _supplierRepository;
+
         public SupplierService(ISupplierRepository supplierRepository)
         {
             _supplierRepository = supplierRepository;
@@ -46,9 +49,12 @@ namespace CESCA.API.Services.Implementation
             return result;
         }
 
-        public Task<Supplier> GetSupplierAsync()
+        public async Task<(IEnumerable<SupplierOutputDTO> suppliers, MetaData metaData)> GetSupplierAsync(SupplierParameters supplierParameters, 
+            CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            var result = await _supplierRepository.GetSupplierAsync(supplierParameters, cancellationToken);
+
+            return (suppliers: result, metaData: result.MetaData);
         }
 
         public async Task<SupplierOutputDTO> GetSupplierByIdAsync(Guid supplierId)

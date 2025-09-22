@@ -1,18 +1,20 @@
-﻿using CESCA.API.Models;
+﻿using CESCA.API.Helpers;
+using CESCA.API.Helpers.Parameters;
+using CESCA.API.Models;
 using CESCA.API.Models.Dtos;
 
 namespace CESCA.API.Repositories.Interface
 {
     public interface ISupplierRepository
     {
-        Task<Supplier> AddSupplierAsync(Supplier supplier);
+        Task<Supplier> AddSupplierAsync(Supplier supplier, CancellationToken cancellationToken = default);
 
-        Task<IEnumerable<Supplier>> GetSupplierAsync();
+        Task<PagedList<SupplierOutputDTO>> GetSupplierAsync(SupplierParameters supplierParameters, CancellationToken cancellationToken = default);
 
-        Task<SupplierOutputDTO?> GetSupplierByIdAsync(Guid supplierId);
+        Task<SupplierOutputDTO?> GetSupplierByIdAsync(Guid supplierId, CancellationToken cancellationToken = default);
 
-        Task<Supplier> UpdateSupplierAsync();
+        Task<Supplier> UpdateSupplierAsync(CancellationToken cancellationToken = default);
 
-        Task<SupplierOutputDTO> DeleteSupplierAsync(Guid supplierId);
+        Task<SupplierOutputDTO> DeleteSupplierAsync(Guid supplierId, CancellationToken cancellationToken = default);
     }
 }

@@ -1,4 +1,6 @@
-﻿using CESCA.API.Models;
+﻿using CESCA.API.Helpers;
+using CESCA.API.Helpers.Parameters;
+using CESCA.API.Models;
 using CESCA.API.Models.Dtos;
 
 namespace CESCA.API.Services.Interface
@@ -7,7 +9,8 @@ namespace CESCA.API.Services.Interface
     {
         Task<Supplier> AddSupplierAsync(AddSupplierDTO addSupplierDTO);
 
-        Task<Supplier> GetSupplierAsync();
+        Task<(IEnumerable<SupplierOutputDTO> suppliers, MetaData metaData)> GetSupplierAsync(SupplierParameters supplierParameters,
+            CancellationToken cancellationToken);
 
         Task<SupplierOutputDTO> GetSupplierByIdAsync(Guid supplierId);
 
