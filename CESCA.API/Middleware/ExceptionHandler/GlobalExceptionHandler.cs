@@ -10,6 +10,7 @@ namespace CESCA.API.Middleware.ExceptionHandler
         {
             var response = new ReturnResponse<object>();
             response.Data = exception.Data;
+            response.Message = exception.Message;
 
             switch (exception)
             {
@@ -21,6 +22,10 @@ namespace CESCA.API.Middleware.ExceptionHandler
                     response.StatusCode = StatusCodes.Status400BadRequest;
                     break;
 
+                case InvalidOperationException ex:
+                    response.StatusCode= StatusCodes.Status400BadRequest;
+                    break;
+ 
                 default:
                     response.StatusCode = StatusCodes.Status500InternalServerError;
                     response.Message = "Unexpected error occured";

@@ -3,6 +3,7 @@ using CESCA.API.Models;
 using CESCA.API.Models.Dtos;
 using CESCA.API.Repositories.Interface;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace CESCA.API.Repositories
 {
@@ -26,9 +27,28 @@ namespace CESCA.API.Repositories
             return supplier;
         }
 
-        public Task<Supplier> DeleteSupplierAsync(Guid supplierId)
+        public async Task<SupplierOutputDTO> DeleteSupplierAsync(Guid supplierId)
         {
-            throw new NotImplementedException();
+            var result = await _context.Suppliers
+                .FindAsync(supplierId);
+
+            if (result is null)
+            {
+                return null;
+            }
+
+            _context.Suppliers.Remove(result);
+            await _context.SaveChangesAsync();
+
+            return new SupplierOutputDTO
+            {
+                SupplierId = result.SupplierId,
+                SupplierName = result.SupplierName,
+                Email = result.Email,
+                Address = result.Address,
+                ContactNumber = result.ContactNumber,
+                IsDeleted = result.IsDeleted
+            };
         }
 
         public async Task<IEnumerable<Supplier>> GetSupplierAsync()
@@ -38,23 +58,23 @@ namespace CESCA.API.Repositories
                 .ToListAsync();
         }
 
-        public async Task<SupplierOutputDTO> GetSupplierByIdAsync(Guid supplierId)
+        public async Task<SupplierOutputDTO?> GetSupplierByIdAsync(Guid supplierId)
         {
-            #pragma warning disable CS8603 // Possible null reference return.
-            return await _context.Suppliers
+            var result = await _context.Suppliers
                 .AsNoTracking()
                 .Where(s => s.SupplierId == supplierId)
                 .Select(s => new SupplierOutputDTO
                 {
                     SupplierId = s.SupplierId,
                     SupplierName = s.SupplierName,
-                    Email = s.Email ?? "No email address",
+                    Email = s.Email,
                     ContactNumber = s.ContactNumber,
-                    Address = s.Address ?? "No Address",
+                    Address = s.Address,
                     IsDeleted = s.IsDeleted
                 })
                 .FirstOrDefaultAsync();
-            #pragma warning restore CS8603 // Possible null reference return.
+
+           return result;
         }
 
         public Task<Supplier> UpdateSupplierAsync()

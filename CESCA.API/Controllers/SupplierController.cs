@@ -24,7 +24,7 @@ namespace CESCA.API.Controllers
         public async Task<ActionResult<ReturnResponse<Supplier>>> AddSupplierAsync([FromBody] AddSupplierDTO addSupplierDTO)
         {
             var result = await _supplierService.AddSupplierAsync(addSupplierDTO);
-            return Ok(new ReturnResponse<object>
+            return Ok(new ReturnResponse<Supplier>
             {
                 StatusCode = 201,
                 Message = "Supplier added successfully",
@@ -32,17 +32,29 @@ namespace CESCA.API.Controllers
             });
         }
 
-        [HttpGet("get-supplier/{supplierId}")]
-        public async Task<ActionResult<ReturnResponse<SupplierOutputDTO>>> GetSupplierByIdAsync([FromQuery] Guid supplierId)
+        [HttpGet("get-supplier")]
+        public async Task<ActionResult<ReturnResponse<SupplierOutputDTO>>> GetSupplierByIdAsync([FromQuery]Guid supplierId)
         {
             var result = await _supplierService.GetSupplierByIdAsync(supplierId);
-            return Ok(new ReturnResponse<object>
+            return Ok(new ReturnResponse<SupplierOutputDTO>
             {
                 StatusCode = 200,
                 Message = "Supplier retrieved successfully",
                 Data = result
             });
         }
+
+        [HttpDelete("delete-supplier")]
+        public async Task<ActionResult<ReturnResponse<SupplierOutputDTO>>> DeleteSupplierAsync([FromQuery] Guid supplierId)
+        {
+            var result = await _supplierService.DeleteSupplierAsync(supplierId);
+            return Ok(new ReturnResponse<SupplierOutputDTO>
+            {
+                StatusCode = 200,
+                Message = $"{result.SupplierName.ToUpper()} has been deleted",
+                Data = null
+            });
+        } 
 
     }
 }

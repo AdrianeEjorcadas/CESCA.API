@@ -13,6 +13,6 @@ namespace CESCA.API.Services.Interface
 
         Task<Supplier> UpdateSupplierAsync();
 
-        Task<Supplier> DeleteSupplierAsync(Guid supplierId);
+        Task<SupplierOutputDTO> DeleteSupplierAsync(Guid supplierId);
     }
 }

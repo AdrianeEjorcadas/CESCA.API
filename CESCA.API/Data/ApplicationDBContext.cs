@@ -17,11 +17,16 @@ namespace CESCA.API.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Product>()
                 .HasOne(p => p.Supplier)
                 .WithMany(s => s.Products)
                 .HasForeignKey(p => p.SupplierId)
                 .IsRequired();
+
+            modelBuilder.Entity<Supplier>().HasQueryFilter(e => !e.IsDeleted);
         }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
@@ -97,7 +102,7 @@ namespace CESCA.API.Data
                     supplier.DeletedAt = now;
                 } else if (entry.Entity is Product product)
                 {
-                    entry.State |= EntityState.Modified;
+                    entry.State = EntityState.Modified;
                     product.IsDeleted = true;
                     product.DeletedBy = userForNow;
                     product.DeletedAt = now;

@@ -34,9 +34,16 @@ namespace CESCA.API.Services.Implementation
             return result;
         }
 
-        public Task<Supplier> DeleteSupplierAsync(Guid supplierId)
+        public async Task<SupplierOutputDTO> DeleteSupplierAsync(Guid supplierId)
         {
-            throw new NotImplementedException();
+            var result = await _supplierRepository.DeleteSupplierAsync(supplierId);
+
+            if (result is null)
+            {
+                throw new InvalidOperationException("Error occured while deleting supplier");
+            }
+
+            return result;
         }
 
         public Task<Supplier> GetSupplierAsync()
