@@ -13,7 +13,7 @@ namespace CESCA.API.Repositories.Interface
 
         Task<SupplierDTO?> GetSupplierByIdAsync(Guid supplierId, CancellationToken cancellationToken);
 
-        Task<Supplier> UpdateSupplierAsync(Supplier supplier, CancellationToken cancellationToken);
+        Task<Supplier?> UpdateSupplierAsync(Supplier supplier, CancellationToken cancellationToken);
 
         Task<SupplierDTO> DeleteSupplierAsync(Guid supplierId, CancellationToken cancellationToken);
     }

@@ -74,7 +74,7 @@ namespace CESCA.API.Data
             {
                 if (entry.Entity is Supplier supplier)
                 {
-                    supplier.UpdatedBy = userForNow;
+                    //supplier.UpdatedBy = userForNow;
                     supplier.UpdatedAt = now;
                 } else if (entry.Entity is Product product)
                 {

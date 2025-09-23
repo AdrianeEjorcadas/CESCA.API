@@ -110,6 +110,7 @@ namespace CESCA.API.Repositories
             supplierToUpdate.Email = supplier.Email;
             supplierToUpdate.Address = supplier.Address;
             supplierToUpdate.ContactNumber = supplier.ContactNumber;
+            supplierToUpdate.UpdatedBy = supplier.UpdatedBy;
 
             await _context.SaveChangesAsync();
 

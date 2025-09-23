@@ -78,7 +78,7 @@ namespace CESCA.API.Controllers
         }
 
         [HttpPut("update-supplier")]
-        public async Task<ActionResult<ReturnResponse<Supplier>>> UpdateSupplierAsync([FromQuery] SupplierDTO supplierDTO,
+        public async Task<ActionResult<ReturnResponse<Supplier>>> UpdateSupplierAsync([FromBody] UpdateSupplierDTO supplierDTO,
             CancellationToken ct = default)
         {
             var result = await _supplierService.UpdateSupplierAsync(supplierDTO, ct);

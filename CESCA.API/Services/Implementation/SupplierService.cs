@@ -69,15 +69,16 @@ namespace CESCA.API.Services.Implementation
             return result;
         }
 
-        public async Task<Supplier> UpdateSupplierAsync(SupplierDTO supplierDTO, CancellationToken ct)
+        public async Task<Supplier> UpdateSupplierAsync(UpdateSupplierDTO updateSupplierDTO, CancellationToken ct)
         {
             var supplierToUpdate = new Supplier
             {
-                SupplierId = supplierDTO.SupplierId,
-                SupplierName = supplierDTO.SupplierName,
-                Address = supplierDTO.Address,
-                Email = supplierDTO.Email,
-                ContactNumber = supplierDTO.ContactNumber,
+                SupplierId = updateSupplierDTO.SupplierId,
+                SupplierName = updateSupplierDTO.SupplierName,
+                Address = updateSupplierDTO.Address,
+                Email = updateSupplierDTO.Email,
+                ContactNumber = updateSupplierDTO.ContactNumber,
+                UpdatedBy = updateSupplierDTO.UpdatedBy
             };
 
             var result = await _supplierRepository.UpdateSupplierAsync(supplierToUpdate, ct);
