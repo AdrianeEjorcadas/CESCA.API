@@ -1,6 +1,8 @@
 ﻿using CESCA.API.Models.Dtos.Product;
 using CESCA.API.Models.Response;
+using CESCA.API.Services.Implementation;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CESCA.API.Controllers
@@ -9,6 +11,12 @@ namespace CESCA.API.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
+        private readonly ProductService _productService;
+        public ProductController(ProductService productService)
+        {
+            _productService = productService;
+        }
+
         /// <summary>
         /// Handles product registration
         /// </summary>
@@ -16,9 +24,15 @@ namespace CESCA.API.Controllers
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
         [HttpPost("add-product")]
-        public Task<ReturnResponse<ProductDTO>> AddProductAsync([FromBody] ProductDTO productDTO)
+        public async Task<ActionResult<ReturnResponse<ProductDTO>>> AddProductAsync([FromBody] ProductDTO productDTO, CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            var result = await _productService.AddProductAsync(productDTO, ct);
+            return Created(string.Empty, new ReturnResponse<ProductDTO>
+            {
+                StatusCode = 201,
+                Message = "Product registration completed",
+                Data = result
+            });
         }
     }
 }

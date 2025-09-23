@@ -26,7 +26,7 @@ namespace CESCA.API.Repositories
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            return supplier;
+            return result.Entity;
         }
 
         public async Task<SupplierDTO> DeleteSupplierAsync(Guid supplierId, CancellationToken cancellationToken)

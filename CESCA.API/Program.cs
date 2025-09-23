@@ -44,10 +44,11 @@ builder.Services.AddProblemDetails();
 //Services
 builder.Services.AddScoped<ISupplierService, SupplierService>();
 builder.Services.AddTransient<ISKUGeneratorService, SKUGeneratorService>();
+builder.Services.AddScoped<IProductService, ProductService>();  
 
 //Repo
 builder.Services.AddScoped<ISupplierRepository, SupplierRepository>();
-
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 //Add Swagger
 builder.Services.AddSwaggerGen(options =>

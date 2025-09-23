@@ -27,7 +27,7 @@ namespace CESCA.API.Controllers
         public async Task<ActionResult<ReturnResponse<Supplier>>> AddSupplierAsync([FromBody] AddSupplierDTO addSupplierDTO,CancellationToken ct = default)
         {
             var result = await _supplierService.AddSupplierAsync(addSupplierDTO, ct);
-            return Ok(new ReturnResponse<Supplier>
+            return Created(string.Empty, new ReturnResponse<Supplier>
             {
                 StatusCode = 201,
                 Message = "Supplier added successfully",
