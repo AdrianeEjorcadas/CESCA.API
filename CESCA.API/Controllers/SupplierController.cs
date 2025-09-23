@@ -2,7 +2,7 @@
 using CESCA.API.Helpers.Pagination.Parameters;
 using CESCA.API.Middleware.Filters;
 using CESCA.API.Models;
-using CESCA.API.Models.Dtos;
+using CESCA.API.Models.Dtos.Supplier;
 using CESCA.API.Models.Response;
 using CESCA.API.Services.Implementation;
 using CESCA.API.Services.Interface;

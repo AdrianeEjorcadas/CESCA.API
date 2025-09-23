@@ -2,7 +2,7 @@
 using CESCA.API.Helpers.Pagination;
 using CESCA.API.Helpers.Pagination.Parameters;
 using CESCA.API.Models;
-using CESCA.API.Models.Dtos;
+using CESCA.API.Models.Dtos.Supplier;
 using CESCA.API.Repositories.Interface;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;

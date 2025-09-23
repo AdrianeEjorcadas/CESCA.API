@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CESCA.API.Models.Dtos
+namespace CESCA.API.Models.Dtos.Supplier
 {
     public class SupplierDTO
     {
