@@ -42,6 +42,7 @@ builder.Services.AddProblemDetails();
 
 //Services
 builder.Services.AddScoped<ISupplierService, SupplierService>();
+builder.Services.AddTransient<ISKUGeneratorService, SKUGeneratorService>();
 
 //Repo
 builder.Services.AddScoped<ISupplierRepository, SupplierRepository>();
@@ -94,6 +95,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseHttpsRedirection();
 
+//app.UseRouting();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -104,7 +107,6 @@ if (app.Environment.IsDevelopment())
         c.RoutePrefix = string.Empty; // Serve at root URL
     });
 }
-
 
 //app.UseAuthorization();
 

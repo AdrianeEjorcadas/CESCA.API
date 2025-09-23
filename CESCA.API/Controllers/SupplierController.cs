@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace CESCA.API.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class SupplierController : ControllerBase
     {
         private readonly ISupplierService _supplierService;
