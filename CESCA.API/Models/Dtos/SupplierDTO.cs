@@ -1,6 +1,6 @@
 ﻿namespace CESCA.API.Models.Dtos
 {
-    public class SupplierOutputDTO
+    public class SupplierDTO
     {
         public Guid SupplierId { get; set; }
         public string SupplierName { get; set; }

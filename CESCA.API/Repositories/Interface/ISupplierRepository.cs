@@ -7,14 +7,14 @@ namespace CESCA.API.Repositories.Interface
 {
     public interface ISupplierRepository
     {
-        Task<Supplier> AddSupplierAsync(Supplier supplier, CancellationToken cancellationToken = default);
+        Task<Supplier> AddSupplierAsync(Supplier supplier, CancellationToken cancellationToken);
 
-        Task<PagedList<SupplierOutputDTO>> GetSupplierAsync(SupplierParameters supplierParameters, CancellationToken cancellationToken = default);
+        Task<PagedList<SupplierDTO>> GetSupplierAsync(SupplierParameters supplierParameters, CancellationToken cancellationToken = default);
 
-        Task<SupplierOutputDTO?> GetSupplierByIdAsync(Guid supplierId, CancellationToken cancellationToken = default);
+        Task<SupplierDTO?> GetSupplierByIdAsync(Guid supplierId, CancellationToken cancellationToken);
 
-        Task<Supplier> UpdateSupplierAsync(CancellationToken cancellationToken = default);
+        Task<Supplier> UpdateSupplierAsync(Supplier supplier, CancellationToken cancellationToken);
 
-        Task<SupplierOutputDTO> DeleteSupplierAsync(Guid supplierId, CancellationToken cancellationToken = default);
+        Task<SupplierDTO> DeleteSupplierAsync(Guid supplierId, CancellationToken cancellationToken);
     }
 }

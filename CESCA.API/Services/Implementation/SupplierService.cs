@@ -17,7 +17,7 @@ namespace CESCA.API.Services.Implementation
             _supplierRepository = supplierRepository;
         }
 
-        public async Task<Supplier> AddSupplierAsync(AddSupplierDTO addSupplierDTO)
+        public async Task<Supplier> AddSupplierAsync(AddSupplierDTO addSupplierDTO, CancellationToken ct)
         {
             var supplier = new Supplier
             {
@@ -27,7 +27,7 @@ namespace CESCA.API.Services.Implementation
                 Address = addSupplierDTO.Address
             };
 
-            var result = await _supplierRepository.AddSupplierAsync(supplier);
+            var result = await _supplierRepository.AddSupplierAsync(supplier, ct);
 
             if (result is null)
             {
@@ -37,9 +37,9 @@ namespace CESCA.API.Services.Implementation
             return result;
         }
 
-        public async Task<SupplierOutputDTO> DeleteSupplierAsync(Guid supplierId)
+        public async Task<SupplierDTO> DeleteSupplierAsync(Guid supplierId, CancellationToken ct)
         {
-            var result = await _supplierRepository.DeleteSupplierAsync(supplierId);
+            var result = await _supplierRepository.DeleteSupplierAsync(supplierId, ct);
 
             if (result is null)
             {
@@ -49,17 +49,17 @@ namespace CESCA.API.Services.Implementation
             return result;
         }
 
-        public async Task<(IEnumerable<SupplierOutputDTO> suppliers, MetaData metaData)> GetSupplierAsync(SupplierParameters supplierParameters, 
-            CancellationToken cancellationToken = default)
+        public async Task<(IEnumerable<SupplierDTO> suppliers, MetaData metaData)> GetSupplierAsync(SupplierParameters supplierParameters, 
+            CancellationToken ct)
         {
-            var result = await _supplierRepository.GetSupplierAsync(supplierParameters, cancellationToken);
+            var result = await _supplierRepository.GetSupplierAsync(supplierParameters, ct);
 
             return (suppliers: result, metaData: result.MetaData);
         }
 
-        public async Task<SupplierOutputDTO> GetSupplierByIdAsync(Guid supplierId)
+        public async Task<SupplierDTO> GetSupplierByIdAsync(Guid supplierId, CancellationToken ct)
         {
-            var result = await _supplierRepository.GetSupplierByIdAsync(supplierId);
+            var result = await _supplierRepository.GetSupplierByIdAsync(supplierId, ct);
 
             if (result is null) 
             {
@@ -69,9 +69,25 @@ namespace CESCA.API.Services.Implementation
             return result;
         }
 
-        public Task<Supplier> UpdateSupplierAsync()
+        public async Task<Supplier> UpdateSupplierAsync(SupplierDTO supplierDTO, CancellationToken ct)
         {
-            throw new NotImplementedException();
+            var supplierToUpdate = new Supplier
+            {
+                SupplierId = supplierDTO.SupplierId,
+                SupplierName = supplierDTO.SupplierName,
+                Address = supplierDTO.Address,
+                Email = supplierDTO.Email,
+                ContactNumber = supplierDTO.ContactNumber,
+            };
+
+            var result = await _supplierRepository.UpdateSupplierAsync(supplierToUpdate, ct);
+
+            if (result is null)
+            {
+                throw new InvalidOperationException("Error on updating supplier");
+            }
+
+            return result;
         }
     }
 }

@@ -19,7 +19,7 @@ namespace CESCA.API.Repositories
         }
 
 
-        public async Task<Supplier> AddSupplierAsync(Supplier supplier, CancellationToken cancellationToken = default)
+        public async Task<Supplier> AddSupplierAsync(Supplier supplier, CancellationToken cancellationToken)
         {
             var result = await _context.Suppliers
                 .AddAsync(supplier, cancellationToken);
@@ -29,7 +29,7 @@ namespace CESCA.API.Repositories
             return supplier;
         }
 
-        public async Task<SupplierOutputDTO> DeleteSupplierAsync(Guid supplierId, CancellationToken cancellationToken = default)
+        public async Task<SupplierDTO> DeleteSupplierAsync(Guid supplierId, CancellationToken cancellationToken)
         {
             var result = await _context.Suppliers
                 .FindAsync(supplierId);
@@ -42,7 +42,7 @@ namespace CESCA.API.Repositories
             _context.Suppliers.Remove(result);
             await _context.SaveChangesAsync(cancellationToken);
 
-            return new SupplierOutputDTO
+            return new SupplierDTO
             {
                 SupplierId = result.SupplierId,
                 SupplierName = result.SupplierName,
@@ -53,14 +53,14 @@ namespace CESCA.API.Repositories
             };
         }
 
-        public async Task<PagedList<SupplierOutputDTO>> GetSupplierAsync(SupplierParameters supplierParameters, CancellationToken cancellationToken = default)
+        public async Task<PagedList<SupplierDTO>> GetSupplierAsync(SupplierParameters supplierParameters, CancellationToken cancellationToken)
         {
             var result = await _context.Suppliers
                 .AsNoTracking()
+                .OrderBy(s => s.SupplierName)
                 .Skip((supplierParameters.PageNumber - 1) * supplierParameters.PageSize)
                 .Take(supplierParameters.PageSize)
-                .OrderBy(s => s.SupplierName)
-                .Select(s => new SupplierOutputDTO
+                .Select(s => new SupplierDTO
                 {
                     SupplierId = s.SupplierId,
                     SupplierName = s.SupplierName,
@@ -71,18 +71,18 @@ namespace CESCA.API.Repositories
                 })
                 .ToListAsync(cancellationToken);
 
-            var count = await _context.Suppliers .CountAsync(cancellationToken);
+            var count = await _context.Suppliers.CountAsync(cancellationToken);
 
-            return PagedList<SupplierOutputDTO>
+            return PagedList<SupplierDTO>
                 .ToPagedList(result, count, supplierParameters.PageNumber, supplierParameters.PageSize);
         }
 
-        public async Task<SupplierOutputDTO?> GetSupplierByIdAsync(Guid supplierId, CancellationToken cancellationToken = default)
+        public async Task<SupplierDTO?> GetSupplierByIdAsync(Guid supplierId, CancellationToken cancellationToken)
         {
             var result = await _context.Suppliers
                 .AsNoTracking()
                 .Where(s => s.SupplierId == supplierId)
-                .Select(s => new SupplierOutputDTO
+                .Select(s => new SupplierDTO
                 {
                     SupplierId = s.SupplierId,
                     SupplierName = s.SupplierName,
@@ -96,9 +96,24 @@ namespace CESCA.API.Repositories
            return result;
         }
 
-        public Task<Supplier> UpdateSupplierAsync(CancellationToken cancellationToken = default)
+        public async Task<Supplier?> UpdateSupplierAsync(Supplier supplier, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var supplierToUpdate = await _context.Suppliers
+                .FindAsync(supplier.SupplierId, cancellationToken);
+
+            if (supplierToUpdate is null)
+            {
+                return supplierToUpdate;
+            }
+
+            supplierToUpdate.SupplierName = supplier.SupplierName;
+            supplierToUpdate.Email = supplier.Email;
+            supplierToUpdate.Address = supplier.Address;
+            supplierToUpdate.ContactNumber = supplier.ContactNumber;
+
+            await _context.SaveChangesAsync();
+
+            return supplierToUpdate;
         }
     }
 }

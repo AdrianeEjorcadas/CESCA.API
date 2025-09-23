@@ -24,9 +24,9 @@ namespace CESCA.API.Controllers
 
         [HttpPost("add-supplier")]
         [ValidateModelState]
-        public async Task<ActionResult<ReturnResponse<Supplier>>> AddSupplierAsync([FromBody] AddSupplierDTO addSupplierDTO)
+        public async Task<ActionResult<ReturnResponse<Supplier>>> AddSupplierAsync([FromBody] AddSupplierDTO addSupplierDTO,CancellationToken ct = default)
         {
-            var result = await _supplierService.AddSupplierAsync(addSupplierDTO);
+            var result = await _supplierService.AddSupplierAsync(addSupplierDTO, ct);
             return Ok(new ReturnResponse<Supplier>
             {
                 StatusCode = 201,
@@ -36,10 +36,10 @@ namespace CESCA.API.Controllers
         }
 
         [HttpGet("get-supplier-by-id")]
-        public async Task<ActionResult<ReturnResponse<SupplierOutputDTO>>> GetSupplierByIdAsync([FromQuery]Guid supplierId)
+        public async Task<ActionResult<ReturnResponse<SupplierDTO>>> GetSupplierByIdAsync([FromQuery]Guid supplierId, CancellationToken ct = default)
         {
-            var result = await _supplierService.GetSupplierByIdAsync(supplierId);
-            return Ok(new ReturnResponse<SupplierOutputDTO>
+            var result = await _supplierService.GetSupplierByIdAsync(supplierId, ct);
+            return Ok(new ReturnResponse<SupplierDTO>
             {
                 StatusCode = 200,
                 Message = "Supplier retrieved successfully",
@@ -65,16 +65,30 @@ namespace CESCA.API.Controllers
         }
 
         [HttpDelete("delete-supplier")]
-        public async Task<ActionResult<ReturnResponse<SupplierOutputDTO>>> DeleteSupplierAsync([FromQuery] Guid supplierId)
+        public async Task<ActionResult<ReturnResponse<SupplierDTO>>> DeleteSupplierAsync([FromQuery] Guid supplierId,
+            CancellationToken ct = default)
         {
-            var result = await _supplierService.DeleteSupplierAsync(supplierId);
-            return Ok(new ReturnResponse<SupplierOutputDTO>
+            var result = await _supplierService.DeleteSupplierAsync(supplierId, ct);
+            return Ok(new ReturnResponse<SupplierDTO>
             {
                 StatusCode = 200,
                 Message = $"{result.SupplierName.ToUpper()} has been deleted",
                 Data = null
             });
-        } 
+        }
+
+        [HttpPut("update-supplier")]
+        public async Task<ActionResult<ReturnResponse<Supplier>>> UpdateSupplierAsync([FromQuery] SupplierDTO supplierDTO,
+            CancellationToken ct = default)
+        {
+            var result = await _supplierService.UpdateSupplierAsync(supplierDTO, ct);
+            return Ok(new ReturnResponse<Supplier>
+            {
+                StatusCode = 200,
+                Message = $"{result!.SupplierName.ToUpper()} has been updated",
+                Data = result
+            });
+        }
 
     }
 }
