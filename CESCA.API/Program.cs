@@ -67,8 +67,6 @@ builder.Services.AddAutoMapper(cfg =>
     cfg.AddProfile<MappingProfile>();
 });
 
-
-
 //Add Swagger
 builder.Services.AddSwaggerGen(options =>
 {

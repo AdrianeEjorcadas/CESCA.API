@@ -9,7 +9,7 @@ namespace CESCA.API.Services.Implementation
             string date = DateTime.Now.ToString("yyyyMMdd");
             string uniqueCode = Guid.NewGuid().ToString().Substring(0, 8);
 
-            return $"{GetCategoryCode(category)}-{GetProductCode(productName)}-{date}-{uniqueCode}";
+            return $"{GetCategoryCode(category)}-{GetProductCode(productName)}-{date}-{uniqueCode.ToUpper()}";
         }
 
         private string GetCategoryCode(string category)

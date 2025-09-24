@@ -17,7 +17,7 @@ namespace CESCA.API.Models.Dtos.Product
 
         public string? BrandName { get; set; }
 
-        [Required(ErrorMessage = "Form is required")]
+         [Required(ErrorMessage = "Form is required")]
         public string Form { get; set; }                          // e.g., Tablet, Liquid, Pack
 
         [Required(ErrorMessage = "Strength Or Size is required")]
@@ -38,8 +38,7 @@ namespace CESCA.API.Models.Dtos.Product
         [Required(ErrorMessage = "Prescription details is required")]
         public bool IsPrescriptionOnly { get; set; }             // For regulated meds
 
-        [Required(ErrorMessage = "Bar Code details is required")]
-        public string Barcode { get; set; }                      // UPC or SKU
+        public string? Barcode { get; set; }                      // UPC or SKU
 
         [Required(ErrorMessage = "Supplier details is required")]
         public Guid SupplierId { get; set; }                    // FK to Suppliers table

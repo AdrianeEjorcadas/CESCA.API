@@ -2,6 +2,7 @@
 using CESCA.API.Models.Dtos.Product;
 using CESCA.API.Models.Response;
 using CESCA.API.Services.Implementation;
+using CESCA.API.Services.Interface;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -12,8 +13,8 @@ namespace CESCA.API.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
-        private readonly ProductService _productService;
-        public ProductController(ProductService productService)
+        private readonly IProductService _productService;
+        public ProductController(IProductService productService)
         {
             _productService = productService;
         }

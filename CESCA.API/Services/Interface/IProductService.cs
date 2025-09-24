@@ -5,6 +5,6 @@ namespace CESCA.API.Services.Interface
 {
     public interface IProductService
     {
-        Task<ProductDTO> AddProductAsync(ProductDTO productDto, CancellationToken ct);
+        Task<ProductResponseDTO> AddProductAsync(ProductDTO productDto, CancellationToken ct);
     }
 }
