@@ -62,12 +62,16 @@ namespace CESCA.API.Models
         public string? Aisle { get; set; }                    // e.g., "Health-2"
 
 
+        //archiving 
+        public bool IsArchived { get; set; } = false;
+
+
         // Audit fields
         public Guid CreatedBy { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
         public DateTimeOffset? UpdatedAt { get; set; }
         public Guid? UpdatedBy { get; set; }
-        public bool? IsDeleted { get; set; }
+        public bool IsDeleted { get; set; } = false;
         public DateTimeOffset? DeletedAt { get; set; }
         public Guid? DeletedBy { get; set; }
 

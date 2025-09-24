@@ -22,6 +22,12 @@ namespace CESCA.API.Controllers
             _supplierService = supplierService;
         }
 
+        /// <summary>
+        /// Handles supplier registration
+        /// </summary>
+        /// <param name="addSupplierDTO"></param>
+        /// <param name="ct"></param>
+        /// <returns></returns>
         [HttpPost("add-supplier")]
         [ValidateModelState]
         public async Task<ActionResult<ReturnResponse<Supplier>>> AddSupplierAsync([FromBody] AddSupplierDTO addSupplierDTO,CancellationToken ct = default)
@@ -35,6 +41,12 @@ namespace CESCA.API.Controllers
             });
         }
 
+        /// <summary>
+        ///  Fetch specific supplier
+        /// </summary>
+        /// <param name="supplierId"></param>
+        /// <param name="ct"></param>
+        /// <returns></returns>
         [HttpGet("get-supplier-by-id")]
         public async Task<ActionResult<ReturnResponse<SupplierDTO>>> GetSupplierByIdAsync([FromQuery]Guid supplierId, CancellationToken ct = default)
         {
@@ -47,6 +59,12 @@ namespace CESCA.API.Controllers
             });
         }
 
+        /// <summary>
+        ///  Fetch all supplier by page
+        /// </summary>
+        /// <param name="supplierParameters"></param>
+        /// <param name="ct"></param>
+        /// <returns></returns>
         [HttpGet("get-suppliers")]
         public async Task<ActionResult<ReturnResponse<object>>> GetSuppliersAsync([FromQuery] SupplierParameters supplierParameters, 
             CancellationToken ct = default)
@@ -64,6 +82,12 @@ namespace CESCA.API.Controllers
             });
         }
 
+        /// <summary>
+        ///  Delete specific supplier
+        /// </summary>
+        /// <param name="supplierId"></param>
+        /// <param name="ct"></param>
+        /// <returns></returns>
         [HttpDelete("delete-supplier")]
         public async Task<ActionResult<ReturnResponse<SupplierDTO>>> DeleteSupplierAsync([FromQuery] Guid supplierId,
             CancellationToken ct = default)
@@ -77,7 +101,14 @@ namespace CESCA.API.Controllers
             });
         }
 
+        /// <summary>
+        ///  Update supplier information
+        /// </summary>
+        /// <param name="supplierDTO"></param>
+        /// <param name="ct"></param>
+        /// <returns></returns>
         [HttpPut("update-supplier")]
+        [ValidateModelState]
         public async Task<ActionResult<ReturnResponse<Supplier>>> UpdateSupplierAsync([FromBody] UpdateSupplierDTO supplierDTO,
             CancellationToken ct = default)
         {

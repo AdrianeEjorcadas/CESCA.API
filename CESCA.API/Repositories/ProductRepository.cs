@@ -1,5 +1,6 @@
 ﻿using CESCA.API.Data;
 using CESCA.API.Models;
+using CESCA.API.Models.Dtos.Product;
 using CESCA.API.Repositories.Interface;
 
 namespace CESCA.API.Repositories
@@ -13,13 +14,16 @@ namespace CESCA.API.Repositories
             _context = context;
         }
 
-        public async Task<Product> AddProductAsync(Product product, CancellationToken ct)
+        public async Task<ProductResponseDTO> AddProductAsync(Product product, CancellationToken ct)
         {
             var result = await _context.Products
                 .AddAsync(product, ct);
             await _context.SaveChangesAsync(ct);
 
-            return result.Entity;
+            return new ProductResponseDTO
+            {
+
+            };
         }
     }
 }

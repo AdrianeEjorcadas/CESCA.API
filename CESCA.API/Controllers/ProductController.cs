@@ -1,4 +1,5 @@
-﻿using CESCA.API.Models.Dtos.Product;
+﻿using CESCA.API.Middleware.Filters;
+using CESCA.API.Models.Dtos.Product;
 using CESCA.API.Models.Response;
 using CESCA.API.Services.Implementation;
 using Microsoft.AspNetCore.Http;
@@ -17,13 +18,8 @@ namespace CESCA.API.Controllers
             _productService = productService;
         }
 
-        /// <summary>
-        /// Handles product registration
-        /// </summary>
-        /// <param name="productDTO"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
         [HttpPost("add-product")]
+        [ValidateModelState]
         public async Task<ActionResult<ReturnResponse<ProductDTO>>> AddProductAsync([FromBody] ProductDTO productDTO, CancellationToken ct = default)
         {
             var result = await _productService.AddProductAsync(productDTO, ct);

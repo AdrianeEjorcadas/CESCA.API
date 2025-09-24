@@ -1,5 +1,7 @@
+using AutoMapper;
 using CESCA.API.Authorization;
 using CESCA.API.Data;
+using CESCA.API.Helpers.Mapping;
 using CESCA.API.Middleware.ExceptionHandler;
 using CESCA.API.Middleware.Filters;
 using CESCA.API.Repositories;
@@ -9,10 +11,14 @@ using CESCA.API.Services.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.Security.Claims;
+
+
+DotNetEnv.Env.Load(); // loads .env from root
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,6 +55,19 @@ builder.Services.AddScoped<IProductService, ProductService>();
 //Repo
 builder.Services.AddScoped<ISupplierRepository, SupplierRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+
+//Mapper
+//builder.Services.AddAutoMapper(cfg => { }, typeof(MappingProfile));
+//builder.Services.AddAutoMapper(cfg => cfg.LicenseKey = "<License Key Here>", typeof(Program));
+var licenseKey = Environment.GetEnvironmentVariable("AUTOMAPPER_LICENSE_KEY");
+
+builder.Services.AddAutoMapper(cfg =>
+{
+    cfg.LicenseKey = licenseKey;
+    cfg.AddProfile<MappingProfile>();
+});
+
+
 
 //Add Swagger
 builder.Services.AddSwaggerGen(options =>
