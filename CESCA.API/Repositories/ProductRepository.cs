@@ -39,16 +39,48 @@ namespace CESCA.API.Repositories
                 return null;
             }
 
-            //update the value of 'productToUpdate' by using the value of 'product'
+            //update the value of 'productToUpdate' by using the value of 'updateProductDTO'
             _mapper.Map(updateProductDTO, productEntity);
-
-            // Force EF to treat it as modified
-            //_context.Entry(productEntity).State = EntityState.Modified;
 
             await _context.SaveChangesAsync(ct);    
 
             //return updated product
             return _mapper.Map<ProductResponseDTO>(productEntity);
+        }
+
+        public async Task<ProductResponseDTO?> DeleteProductAsync(Guid productId, CancellationToken ct)
+        {
+            //check if product exist
+            var productEntity = await _context.Products
+                .FindAsync(productId, ct);
+
+            if (productEntity is null)
+            {
+                return null;
+            }
+
+            _context.Products.Remove(productEntity);
+
+            await _context.SaveChangesAsync(ct);
+
+            return _mapper.Map<ProductResponseDTO>(productEntity);
+        }
+
+        public async Task<ProductResponseDTO> ArchivedProductAsync(Guid productId, CancellationToken ct)
+        {
+            // check if product exist
+            var productEntity = await _context.Products
+                .FindAsync(productId, ct);
+
+            if (productEntity is null)
+            {
+                return null;
+            }
+
+            productEntity.IsArchived = true;
+            await _context.SaveChangesAsync(ct);
+
+            return _mapper.Map <ProductResponseDTO>(productEntity);
         }
     }
 }

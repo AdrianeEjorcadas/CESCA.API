@@ -44,5 +44,29 @@ namespace CESCA.API.Controllers
                 Data = result
             });
         }
+
+        [HttpDelete("delete-product")]
+        public async Task<ActionResult<ReturnResponse<ProductResponseDTO>>> DeleteProductAsync([FromQuery] Guid productId, CancellationToken ct = default)
+        {
+            var result = await _productService.DeleteProductAsync(productId, ct);
+            return Ok(new ReturnResponse<ProductResponseDTO>
+            {
+                StatusCode = 200,
+                Message = $"Successfully delete {result.ProductName}",
+                Data = result
+            });
+        }
+
+        [HttpPut("archived-product")]
+        public async Task<ActionResult<ReturnResponse<ProductResponseDTO>>> ArchivedProductAsync([FromQuery] Guid productId, CancellationToken ct = default)
+        {
+            var result = await _productService.ArchivedProductAsync(productId, ct);
+            return Ok(new ReturnResponse<ProductResponseDTO>
+            {
+                StatusCode = 200,
+                Message = $"Successfully archiving {result.ProductName}",
+                Data = result
+            });
+        }
     }
 }

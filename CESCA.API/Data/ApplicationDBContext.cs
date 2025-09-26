@@ -27,6 +27,7 @@ namespace CESCA.API.Data
                 .IsRequired();
 
             modelBuilder.Entity<Supplier>().HasQueryFilter(e => !e.IsDeleted);
+            modelBuilder.Entity<Product>().HasQueryFilter(e => !e.IsDeleted);
         }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

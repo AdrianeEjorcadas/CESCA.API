@@ -32,7 +32,7 @@ namespace CESCA.API.Repositories
         public async Task<SupplierDTO> DeleteSupplierAsync(Guid supplierId, CancellationToken cancellationToken)
         {
             var result = await _context.Suppliers
-                .FindAsync(supplierId);
+                .FindAsync(supplierId, cancellationToken);
 
             if (result is null)
             {

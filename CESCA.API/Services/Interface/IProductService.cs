@@ -8,5 +8,9 @@ namespace CESCA.API.Services.Interface
         Task<ProductResponseDTO> AddProductAsync(ProductDTO productDto, CancellationToken ct);
 
         Task<ProductResponseDTO?> UpdateProductAsync(UpdateProductDTO updateProductDTO, CancellationToken ct);
+
+        Task<ProductResponseDTO?> DeleteProductAsync(Guid productId, CancellationToken ct);
+
+        Task<ProductResponseDTO> ArchivedProductAsync(Guid productId, CancellationToken ct);
     }
 }

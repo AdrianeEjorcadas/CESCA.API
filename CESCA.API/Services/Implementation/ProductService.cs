@@ -50,5 +50,29 @@ namespace CESCA.API.Services.Implementation
 
             return result;
         }
+
+        public async Task<ProductResponseDTO?> DeleteProductAsync(Guid productId, CancellationToken ct)
+        {
+            var result  = await _productRepository.DeleteProductAsync(productId, ct);
+
+            if (result is null)
+            {
+                throw new InvalidOperationException("Error occurred while deleting the product");
+            }
+
+            return result;
+        }
+
+        public async Task<ProductResponseDTO> ArchivedProductAsync(Guid productId, CancellationToken ct)
+        {
+            var result = await _productRepository.ArchivedProductAsync(productId, ct);
+
+            if(result is null)
+            {
+                throw new InvalidOperationException("Error occurred while archiving the product");
+            }
+
+            return result;
+        }
     }
 }
