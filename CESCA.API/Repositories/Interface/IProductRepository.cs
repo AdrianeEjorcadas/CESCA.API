@@ -6,5 +6,7 @@ namespace CESCA.API.Repositories.Interface
     public interface IProductRepository
     {
         Task<ProductResponseDTO> AddProductAsync(Product product, CancellationToken ct);
+
+        Task<ProductResponseDTO?> UpdateProductAsync(UpdateProductDTO updateProductDTO, CancellationToken ct);
     }
 }

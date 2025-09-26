@@ -19,6 +19,10 @@ namespace CESCA.API.Helpers.Mapping
 
             //ProductDTO to Product
             CreateMap<ProductDTO, Product>();
+
+            //UpdateProductDTO to Product
+            CreateMap<UpdateProductDTO, Product>();
+
         }
     }
 }

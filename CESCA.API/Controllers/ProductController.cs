@@ -31,5 +31,18 @@ namespace CESCA.API.Controllers
                 Data = result
             });
         }
+
+        [HttpPut("update-product")]
+        [ValidateModelState]
+        public async Task<ActionResult<ReturnResponse<ProductResponseDTO>>> UpdateProductAsync([FromBody] UpdateProductDTO updateProduct, CancellationToken ct = default)
+        {
+            var result = await _productService.UpdateProductAsync(updateProduct, ct);
+            return Ok(new ReturnResponse<ProductDTO>
+            {
+                StatusCode = 200,
+                Message = "Product update completed",
+                Data = result
+            });
+        }
     }
 }

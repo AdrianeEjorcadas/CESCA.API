@@ -15,13 +15,18 @@ namespace CESCA.API.Models.Dtos.Product
 
         public string? SubCategory { get; set; }                  // e.g., Antibiotic, Shampoo
 
-        public string? BrandName { get; set; }
+        public string? Brand { get; set; }
 
          [Required(ErrorMessage = "Form is required")]
         public string Form { get; set; }                          // e.g., Tablet, Liquid, Pack
 
         [Required(ErrorMessage = "Strength Or Size is required")]
         public string StrengthOrSize { get; set; }                // e.g., 500mg, 250ml
+
+        public string? UnitSize { get; set; }                 // e.g., 10 tablets, 1 bottle
+
+        [Required(ErrorMessage = "Price is required")]
+        public decimal Price { get; set; }                   // Retail price
 
         [Required(ErrorMessage = "Stock Quantity is required")]
         public int StockQuantity { get; set; }                    // Current inventory

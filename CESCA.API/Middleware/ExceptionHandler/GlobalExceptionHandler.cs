@@ -9,8 +9,8 @@ namespace CESCA.API.Middleware.ExceptionHandler
         public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
         {
             var response = new ReturnResponse<object>();
-            response.Data = exception.Data;
             response.Message = exception.Message;
+            response.Data = (exception.InnerException != null ? $"Inner Exception: {exception.InnerException.Message}" : "");
 
             switch (exception)
             {
@@ -28,7 +28,7 @@ namespace CESCA.API.Middleware.ExceptionHandler
  
                 default:
                     response.StatusCode = StatusCodes.Status500InternalServerError;
-                    response.Message = "Unexpected error occured";
+                    response.Message = "Unexpected Error Occured";
                     break;
             }
 
