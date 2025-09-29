@@ -1,5 +1,8 @@
 ﻿namespace CESCA.API.Helpers.Pagination
 {
+    /// <summary>
+    ///  Parameter used when retriving data (incldues filters like search and other fields)
+    /// </summary>
     public abstract class RequestParamaters
     {
         const int maxPageSize = 50;
@@ -17,5 +20,9 @@
                 _pageSize = (value > maxPageSize) ? maxPageSize : value;
             }
         }
+
+        //Filters
+        public string? SearchTerm { get; set; }
+        public bool? IsArchived { get; set; }
     }
 }

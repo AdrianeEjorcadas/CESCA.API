@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
+using CESCA.API.Helpers.Pagination;
+using CESCA.API.Helpers.Pagination.Parameters;
 using CESCA.API.Models;
 using CESCA.API.Models.Dtos.Product;
 using CESCA.API.Repositories.Interface;
 using CESCA.API.Services.Interface;
+using static CESCA.API.Middleware.Exceptions.Exceptions;
 
 namespace CESCA.API.Services.Implementation
 {
@@ -29,7 +32,7 @@ namespace CESCA.API.Services.Implementation
 
             if (result is null)
             {
-                throw new InvalidOperationException("Error occured while adding product");
+                throw new ProductCreationException("Error occured while adding product");
             }
 
             return result;
@@ -45,7 +48,7 @@ namespace CESCA.API.Services.Implementation
 
             if (result is null)
             {
-                throw new InvalidOperationException("Error occurred while updating product");
+                throw new ProductNotFoundException("Error occurred while updating product");
             }
 
             return result;
@@ -57,7 +60,7 @@ namespace CESCA.API.Services.Implementation
 
             if (result is null)
             {
-                throw new InvalidOperationException("Error occurred while deleting the product");
+                throw new ProductNotFoundException("Error occurred while deleting the product");
             }
 
             return result;
@@ -69,7 +72,26 @@ namespace CESCA.API.Services.Implementation
 
             if(result is null)
             {
-                throw new InvalidOperationException("Error occurred while archiving the product");
+                throw new ProductNotFoundException("Error occurred while archiving the product");
+            }
+
+            return result;
+        }
+
+        public async Task<(IEnumerable<ProductResponseDTO> products, MetaData metaData)> GetProductAsync(ProductParameters parameters, CancellationToken ct)
+        {
+            var result = await _productRepository.GetProductsAsync(parameters, ct);
+
+            return (products: result, metaData: result.MetaData);
+        }
+
+        public async Task<ProductResponseDTO> GetProductByIdAsync(Guid productId, CancellationToken ct)
+        {
+            var result = await _productRepository.GetProductsByIdAsync(productId, ct);
+
+            if (result is null)
+            {
+                throw new ProductNotFoundException("Error occurred while archiving the product");
             }
 
             return result;

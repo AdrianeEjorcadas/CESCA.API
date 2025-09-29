@@ -1,4 +1,5 @@
-﻿using CESCA.API.Middleware.Filters;
+﻿using CESCA.API.Helpers.Pagination.Parameters;
+using CESCA.API.Middleware.Filters;
 using CESCA.API.Models.Dtos.Product;
 using CESCA.API.Models.Response;
 using CESCA.API.Services.Implementation;
@@ -65,6 +66,30 @@ namespace CESCA.API.Controllers
             {
                 StatusCode = 200,
                 Message = $"Successfully archiving {result.ProductName}",
+                Data = result
+            });
+        }
+
+        [HttpGet("get-products")]
+        public async Task<ActionResult<ReturnResponse<object>>> GetProductsAsync([FromQuery]ProductParameters productParameters,CancellationToken ct = default)
+        {
+            var result = await _productService.GetProductAsync(productParameters, ct);
+            return Ok(new ReturnResponse<object>
+            {
+                StatusCode = 200,
+                Message = "Successfully retrieve products",
+                Data = result.products
+            });
+        }
+
+        [HttpGet("get-product-by-id")]
+        public async Task<ActionResult<ReturnResponse<ProductResponseDTO>>> GetProductByIdAsync([FromQuery] Guid productId, CancellationToken ct = default)
+        {
+            var result = await _productService.GetProductByIdAsync(productId, ct);
+            return Ok(new ReturnResponse<object>
+            {
+                StatusCode = 200,
+                Message = $"Successfully retrieve {result.ProductName}",
                 Data = result
             });
         }

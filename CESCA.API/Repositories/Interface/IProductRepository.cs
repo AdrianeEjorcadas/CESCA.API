@@ -1,5 +1,8 @@
-﻿using CESCA.API.Models;
+﻿using CESCA.API.Helpers.Pagination;
+using CESCA.API.Helpers.Pagination.Parameters;
+using CESCA.API.Models;
 using CESCA.API.Models.Dtos.Product;
+using CESCA.API.Models.Dtos.Supplier;
 
 namespace CESCA.API.Repositories.Interface
 {
@@ -12,5 +15,10 @@ namespace CESCA.API.Repositories.Interface
         Task<ProductResponseDTO?> DeleteProductAsync(Guid productId, CancellationToken ct);
 
         Task<ProductResponseDTO> ArchivedProductAsync(Guid productId, CancellationToken ct);
+
+        Task<PagedList<ProductResponseDTO>> GetProductsAsync(ProductParameters productParameters,
+           CancellationToken ct);
+
+        Task<ProductResponseDTO?> GetProductsByIdAsync(Guid productId, CancellationToken ct);
     }
 }

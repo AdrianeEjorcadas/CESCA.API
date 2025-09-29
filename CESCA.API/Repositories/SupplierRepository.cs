@@ -55,7 +55,15 @@ namespace CESCA.API.Repositories
 
         public async Task<PagedList<SupplierDTO>> GetSupplierAsync(SupplierParameters supplierParameters, CancellationToken cancellationToken)
         {
-            var result = await _context.Suppliers
+            var query = _context.Suppliers.AsQueryable();
+            
+            //Search Term
+            if (!string.IsNullOrEmpty(supplierParameters.SearchTerm))
+            {
+                query = query.Where(q => q.SupplierName.Contains(supplierParameters.SearchTerm));
+            }
+
+            var result = await query
                 .AsNoTracking()
                 .OrderBy(s => s.SupplierName)
                 .Skip((supplierParameters.PageNumber - 1) * supplierParameters.PageSize)

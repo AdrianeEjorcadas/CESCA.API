@@ -4,7 +4,6 @@ namespace CESCA.API.Models.Dtos.Product
 {
     public class ProductDTO
     {
-
         [Required(ErrorMessage = "Product Name is required")]
         public string ProductName { get; set; }
 

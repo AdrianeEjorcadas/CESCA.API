@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using CESCA.API.Data;
+using CESCA.API.Helpers.Pagination;
+using CESCA.API.Helpers.Pagination.Parameters;
 using CESCA.API.Models;
 using CESCA.API.Models.Dtos.Product;
 using CESCA.API.Repositories.Interface;
@@ -81,6 +84,49 @@ namespace CESCA.API.Repositories
             await _context.SaveChangesAsync(ct);
 
             return _mapper.Map <ProductResponseDTO>(productEntity);
+        }
+
+        public async Task<PagedList<ProductResponseDTO>> GetProductsAsync(ProductParameters productParameters, CancellationToken ct)
+        {
+            var query = _context.Products.AsQueryable();
+
+            //Search Term
+            if (!string.IsNullOrEmpty(productParameters.SearchTerm)){
+                query = query.Where(p => p.ProductName.Contains(productParameters.SearchTerm));
+            }
+
+            // Archived Items
+            if (productParameters.IsArchived.HasValue)
+            {
+                query = query.Where(p => p.IsArchived == productParameters.IsArchived.Value);
+            }
+
+            var result = await query
+                .AsNoTracking()
+                .OrderBy(p  => p.ProductName)
+                .Skip((productParameters.PageNumber - 1) * productParameters.PageSize)
+                .Take(productParameters.PageSize)
+                .ProjectTo<ProductResponseDTO>(_mapper.ConfigurationProvider) //map data to ProductResponseDTO
+                .ToListAsync(ct);
+
+            var count = await _context.Products.CountAsync(ct);
+
+            return PagedList<ProductResponseDTO>
+                .ToPagedList(result, count, productParameters.PageNumber, productParameters.PageSize);
+        }
+
+        public async Task<ProductResponseDTO?> GetProductsByIdAsync(Guid productId, CancellationToken ct)
+        {
+            var result = await _context.Products
+                .FindAsync(productId, ct);
+
+            if (result is null)
+            {
+                return null;
+            }
+
+            return _mapper.Map<ProductResponseDTO>(result);
+
         }
     }
 }
