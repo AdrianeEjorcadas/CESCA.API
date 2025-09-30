@@ -17,6 +17,7 @@ namespace CESCA.API.Models
         public string? Address { get; set; }
 
         public ICollection<Product> Products { get; set; }
+        public bool IsArchived { get; set; }
 
 
         // Audit fields

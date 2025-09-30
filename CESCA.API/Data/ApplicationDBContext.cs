@@ -17,7 +17,6 @@ namespace CESCA.API.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Product>()
@@ -53,6 +52,7 @@ namespace CESCA.API.Data
                     supplier.SupplierId = Guid.NewGuid();
                     supplier.CreatedBy = userForNow;
                     supplier.CreatedAt = now;
+                    supplier.IsArchived = false;
                 }
                 else if (entry.Entity is Product product)
                 {
