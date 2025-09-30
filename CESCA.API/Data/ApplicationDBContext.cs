@@ -1,14 +1,13 @@
 ﻿using CESCA.API.Models;
+using CESCA.API.Models.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace CESCA.API.Data
 {
-    public class ApplicationDBContext : DbContext
+    public class ApplicationDBContext : IdentityDbContext<User, Role, Guid>
     {
-
         public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options) : base(options) { }
-
-        public DbSet<User> Users { get; set; }
 
         public DbSet<Product> Products { get; set; }
 

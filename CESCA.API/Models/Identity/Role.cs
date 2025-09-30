@@ -2,7 +2,7 @@
 
 namespace CESCA.API.Models.Identity
 {
-    public class Role : IdentityRole
+    public class Role : IdentityRole<Guid>
     {
     }
 }

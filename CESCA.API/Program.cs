@@ -4,18 +4,21 @@ using CESCA.API.Data;
 using CESCA.API.Helpers.Mapping;
 using CESCA.API.Middleware.ExceptionHandler;
 using CESCA.API.Middleware.Filters;
+using CESCA.API.Models.Identity;
 using CESCA.API.Repositories;
 using CESCA.API.Repositories.Interface;
 using CESCA.API.Services.Implementation;
 using CESCA.API.Services.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.Security.Claims;
+using System.Text;
 
 
 DotNetEnv.Env.Load(); // loads .env from root
@@ -36,6 +39,36 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+// Add Identity
+var jwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
+var jwtAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
+var jwtSecret = Environment.GetEnvironmentVariable("JWT_SECRET");
+
+builder.Services.AddIdentityCore<User>()
+    .AddRoles<Role>()
+    .AddEntityFrameworkStores<ApplicationDBContext>()
+    .AddApiEndpoints();
+
+builder.Services.AddIdentity<User, Role>();
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtIssuer,
+            ValidAudience = jwtAudience,
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(jwtSecret))
+        };
+    });
+
+builder.Services.AddAuthorization();
 
 // Add filter 
 builder.Services.AddControllers(options =>
@@ -83,28 +116,28 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 // Setup Auth0
-var domain = $"https://{builder.Configuration["Auth0:Domain"]}/";
-var audience = builder.Configuration["Auth0:Audience"];
+//var domain = $"https://{builder.Configuration["Auth0:Domain"]}/";
+//var audience = builder.Configuration["Auth0:Audience"];
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.Authority = domain;
-        options.Audience = audience;
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            NameClaimType = ClaimTypes.NameIdentifier
-        };
-    });
+//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+//    .AddJwtBearer(options =>
+//    {
+//        options.Authority = domain;
+//        options.Audience = audience;
+//        options.TokenValidationParameters = new TokenValidationParameters
+//        {
+//            NameClaimType = ClaimTypes.NameIdentifier
+//        };
+//    });
 
-//Add auth permission
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("access:admin", policy => policy.Requirements.Add(new
-        HasScopeRequirement("access:admin", domain)));
-});
+////Add auth permission
+//builder.Services.AddAuthorization(options =>
+//{
+//    options.AddPolicy("access:admin", policy => policy.Requirements.Add(new
+//        HasScopeRequirement("access:admin", domain)));
+//});
 
-builder.Services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
+//builder.Services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
 
 
 var app = builder.Build();
@@ -113,8 +146,8 @@ var app = builder.Build();
 app.UseExceptionHandler();
 
 // Security piepline
-app.UseAuthentication();
-app.UseAuthorization();
+//app.UseAuthentication();
+//app.UseAuthorization();
 app.UseHttpsRedirection();
 
 //app.UseRouting();
@@ -131,6 +164,8 @@ if (app.Environment.IsDevelopment())
 }
 
 //app.UseAuthorization();
+
+app.MapIdentityApi<User>(); //Identity Endpoint
 
 app.MapControllers();
 
