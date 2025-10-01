@@ -101,6 +101,12 @@ namespace CESCA.API.Repositories
                 query = query.Where(p => p.IsArchived == productParameters.IsArchived.Value);
             }
 
+            // Expired Items
+            if (productParameters.ExpirationDate.HasValue)
+            {
+                query = query.Where(p => p.ExpirationDate < DateTime.UtcNow);
+            }
+
             var result = await query
                 .AsNoTracking()
                 .OrderBy(p  => p.ProductName)

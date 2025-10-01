@@ -2,5 +2,6 @@
 {
     public class ProductParameters : RequestParamaters
     {
+        public DateTimeOffset? ExpirationDate { get; set; }
     }
 }
