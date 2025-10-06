@@ -5,6 +5,7 @@ using CESCA.API.Helpers.Mapping;
 using CESCA.API.Middleware.ExceptionHandler;
 using CESCA.API.Middleware.Filters;
 using CESCA.API.Models.Identity;
+using CESCA.API.Overrides;
 using CESCA.API.Repositories;
 using CESCA.API.Repositories.Interface;
 using CESCA.API.Services.Implementation;
@@ -165,7 +166,20 @@ if (app.Environment.IsDevelopment())
 
 //app.UseAuthorization();
 
-app.MapIdentityApi<User>(); //Identity Endpoint
+app.MapIdentityApiFilterable<User>(new IdentityApiEndpointRouteBuilderOptions
+{
+    ExcludeRegisterPost = false,
+    ExcludeLoginPost = false,
+    ExcludeRefreshPost = false,
+    ExcludeConfirmEmailGet = false,
+    ExcludeResendConfirmationEmailPost = true,
+    ExcludeForgotPasswordPost = true,
+    ExcludeResetPasswordPost = true,
+    ExcludeManageGroup = true,
+    Exclude2faPost = true,
+    ExcludegInfoGet = true,
+    ExcludeInfoPost = true
+}); //Identity Endpoint
 
 app.MapControllers();
 
