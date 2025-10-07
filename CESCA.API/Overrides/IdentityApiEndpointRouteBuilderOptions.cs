@@ -4,6 +4,7 @@
     {
         public bool ExcludeRegisterPost { get; set; }
         public bool ExcludeLoginPost { get; set; }
+        public bool ExcludeLogoutPost { get; set; }
         public bool ExcludeRefreshPost { get; set; }
         public bool ExcludeConfirmEmailGet { get; set; }
         public bool ExcludeResendConfirmationEmailPost { get; set; }

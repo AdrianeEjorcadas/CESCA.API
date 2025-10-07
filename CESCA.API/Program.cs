@@ -1,6 +1,7 @@
 using AutoMapper;
 using CESCA.API.Authorization;
 using CESCA.API.Data;
+using CESCA.API.Helpers.Email;
 using CESCA.API.Helpers.Mapping;
 using CESCA.API.Middleware.ExceptionHandler;
 using CESCA.API.Middleware.Filters;
@@ -10,9 +11,11 @@ using CESCA.API.Repositories;
 using CESCA.API.Repositories.Interface;
 using CESCA.API.Services.Implementation;
 using CESCA.API.Services.Interface;
+using DotNetEnv;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -22,9 +25,18 @@ using System.Security.Claims;
 using System.Text;
 
 
-DotNetEnv.Env.Load(); // loads .env from root
 
-var builder = WebApplication.CreateBuilder(args);
+
+var builder = WebApplication.CreateBuilder(args); 
+
+Env.Load(); // loads .env from root
+// Add Identity
+var jwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
+var jwtAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
+var jwtSecret = Environment.GetEnvironmentVariable("JWT_SECRET");
+//// Send Grid
+//var sgApiKey = builder.Configuration["SendGrid:ApiKey"];
+
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -41,33 +53,33 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
-// Add Identity
-var jwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
-var jwtAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
-var jwtSecret = Environment.GetEnvironmentVariable("JWT_SECRET");
 
 builder.Services.AddIdentityCore<ApplicationUser>()
     .AddRoles<Role>()
     .AddEntityFrameworkStores<ApplicationDBContext>()
     .AddApiEndpoints();
 
-builder.Services.AddIdentity<ApplicationUser, Role>();
+builder.Services.AddAuthorization();
+builder.Services.AddAuthentication()
+    .AddBearerToken(IdentityConstants.BearerScheme);
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = jwtIssuer,
-            ValidAudience = jwtAudience,
-            IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(jwtSecret))
-        };
-    });
+//builder.Services.AddIdentity<ApplicationUser, Role>();
+
+//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+//    .AddJwtBearer(options =>
+//    {
+//        options.TokenValidationParameters = new TokenValidationParameters
+//        {
+//            ValidateIssuer = true,
+//            ValidateAudience = true,
+//            ValidateLifetime = true,
+//            ValidateIssuerSigningKey = true,
+//            ValidIssuer = jwtIssuer,
+//            ValidAudience = jwtAudience,
+//            IssuerSigningKey = new SymmetricSecurityKey(
+//                Encoding.UTF8.GetBytes(jwtSecret))
+//        };
+//    });
 
 builder.Services.AddAuthorization();
 
@@ -100,6 +112,9 @@ builder.Services.AddAutoMapper(cfg =>
     cfg.LicenseKey = licenseKey;
     cfg.AddProfile<MappingProfile>();
 });
+
+//email
+builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 //Add Swagger
 builder.Services.AddSwaggerGen(options =>
@@ -171,10 +186,11 @@ app.MapIdentityApiFilterable<ApplicationUser>(new IdentityApiEndpointRouteBuilde
     ExcludeRegisterPost = false,
     ExcludeLoginPost = false,
     ExcludeRefreshPost = false,
+    ExcludeLogoutPost = false,
     ExcludeConfirmEmailGet = false,
-    ExcludeResendConfirmationEmailPost = true,
-    ExcludeForgotPasswordPost = true,
-    ExcludeResetPasswordPost = true,
+    ExcludeResendConfirmationEmailPost = false,
+    ExcludeForgotPasswordPost = false,
+    ExcludeResetPasswordPost = false,
     ExcludeManageGroup = true,
     Exclude2faPost = true,
     ExcludegInfoGet = true,

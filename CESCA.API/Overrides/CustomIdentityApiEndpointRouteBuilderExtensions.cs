@@ -140,6 +140,14 @@ public static class CustomIdentityApiEndpointRouteBuilderExtensions
             });
         }
 
+        if (!configOptions.ExcludeLogoutPost)
+        {
+            routeGroup.MapPost("/logout", async (SignInManager<IdentityUser> signInManager) =>
+            {
+                await signInManager.SignOutAsync().ConfigureAwait(false);
+            });
+        }
+
         if (!configOptions.ExcludeRefreshPost)
         {
             routeGroup.MapPost("/refresh", async Task<Results<Ok<AccessTokenResponse>, UnauthorizedHttpResult, SignInHttpResult, ChallengeHttpResult>>
