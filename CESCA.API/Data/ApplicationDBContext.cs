@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CESCA.API.Data
 {
-    public class ApplicationDBContext : IdentityDbContext<User, Role, Guid>
+    public class ApplicationDBContext : IdentityDbContext<ApplicationUser, Role, Guid>
     {
         public ApplicationDBContext(DbContextOptions<ApplicationDBContext> options) : base(options) { }
 
@@ -58,6 +58,11 @@ namespace CESCA.API.Data
                     product.ProductId = Guid.NewGuid();
                     product.CreatedBy = userForNow;
                     product.CreatedAt = now;
+                }
+                else if (entry.Entity is ApplicationUser appUser)
+                {
+                    appUser.CreatedBy = userForNow;
+                    appUser.CreatedAt = now;
                 }
             }
         }

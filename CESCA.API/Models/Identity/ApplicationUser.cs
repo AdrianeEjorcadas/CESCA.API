@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace CESCA.API.Models.Identity
 {
-    public class User : IdentityUser<Guid>
+    public class ApplicationUser : IdentityUser<Guid>
     {
         public string FirstName { get; set; }
         public string? LastName { get; set; }

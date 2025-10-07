@@ -1,12 +1,9 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
-using System.Text.Encodings.Web;
+using CESCA.API.Helpers.Typography;
+using CESCA.API.Models.Dtos.User;
+using CESCA.API.Models.Identity;
 using CESCA.API.Overrides;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Builder;
@@ -18,13 +15,19 @@ using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
+using System.Linq;
+using System.Security.Claims;
+using System.Text;
+using System.Text.Encodings.Web;
 
 namespace Microsoft.AspNetCore.Routing;
 
 /// <summary>
 /// Provides extension methods for <see cref="IEndpointRouteBuilder"/> to add identity endpoints.
 /// </summary>
-public static class IdentityApiEndpointRouteBuilderExtensions
+public static class CustomIdentityApiEndpointRouteBuilderExtensions
 {
     // Validate the email address using DataAnnotations like the UserValidator does when RequireUniqueEmail = true.
     private static readonly EmailAddressAttribute _emailAddressAttribute = new();
@@ -59,7 +62,7 @@ public static class IdentityApiEndpointRouteBuilderExtensions
             // NOTE: We cannot inject UserManager<TUser> directly because the TUser generic parameter is currently unsupported by RDG.
             // https://github.com/dotnet/aspnetcore/issues/47338
             routeGroup.MapPost("/register", async Task<Results<Ok, ValidationProblem>>
-                ([FromBody] RegisterRequest registration, HttpContext context, [FromServices] IServiceProvider sp) =>
+                ([FromBody] RegisterUserDTO registration, HttpContext context, [FromServices] IServiceProvider sp) =>
             {
                 var userManager = sp.GetRequiredService<UserManager<TUser>>();
 
@@ -78,8 +81,17 @@ public static class IdentityApiEndpointRouteBuilderExtensions
                 }
 
                 var user = new TUser();
+                // built-in 
                 await userStore.SetUserNameAsync(user, email, CancellationToken.None);
                 await emailStore.SetEmailAsync(user, email, CancellationToken.None);
+
+                // Custom field of identity
+                if(user is ApplicationUser appUser)
+                {
+                    appUser.FirstName = TypographyHelper.ToSentenceCase(registration.FirstName);
+                    appUser.LastName = TypographyHelper.ToSentenceCase(registration.LastName);
+                }
+
                 var result = await userManager.CreateAsync(user, registration.Password);
 
                 if (!result.Succeeded)
@@ -456,6 +468,7 @@ public static class IdentityApiEndpointRouteBuilderExtensions
         return new IdentityEndpointsConventionBuilder(routeGroup);
     }
 
+    // Built-in method
     private static ValidationProblem CreateValidationProblem(string errorCode, string errorDescription) =>
         TypedResults.ValidationProblem(new Dictionary<string, string[]> {
             { errorCode, [errorDescription] }
@@ -523,4 +536,5 @@ public static class IdentityApiEndpointRouteBuilderExtensions
     {
         public string? Name => null;
     }
+
 }

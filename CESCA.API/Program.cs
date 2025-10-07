@@ -46,12 +46,12 @@ var jwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
 var jwtAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
 var jwtSecret = Environment.GetEnvironmentVariable("JWT_SECRET");
 
-builder.Services.AddIdentityCore<User>()
+builder.Services.AddIdentityCore<ApplicationUser>()
     .AddRoles<Role>()
     .AddEntityFrameworkStores<ApplicationDBContext>()
     .AddApiEndpoints();
 
-builder.Services.AddIdentity<User, Role>();
+builder.Services.AddIdentity<ApplicationUser, Role>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -166,7 +166,7 @@ if (app.Environment.IsDevelopment())
 
 //app.UseAuthorization();
 
-app.MapIdentityApiFilterable<User>(new IdentityApiEndpointRouteBuilderOptions
+app.MapIdentityApiFilterable<ApplicationUser>(new IdentityApiEndpointRouteBuilderOptions
 {
     ExcludeRegisterPost = false,
     ExcludeLoginPost = false,
