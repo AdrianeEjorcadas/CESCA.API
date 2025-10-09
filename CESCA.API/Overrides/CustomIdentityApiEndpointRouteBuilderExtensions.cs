@@ -1,6 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using CESCA.API.Helpers.Email;
 using CESCA.API.Helpers.Typography;
 using CESCA.API.Models.Dtos.User;
 using CESCA.API.Models.Identity;
@@ -42,7 +43,7 @@ public static class CustomIdentityApiEndpointRouteBuilderExtensions
     /// </param>
     /// <returns>An <see cref="IEndpointConventionBuilder"/> to further customize the added endpoints.</returns>
     public static IEndpointConventionBuilder MapIdentityApiFilterable<TUser>(this IEndpointRouteBuilder endpoints,
-        IdentityApiEndpointRouteBuilderOptions configOptions)
+        IdentityApiEndpointRouteBuilderOptions configOptions, EmailSender gridEmailSender)
         where TUser : class, new()
     {
         ArgumentNullException.ThrowIfNull(endpoints);
@@ -51,6 +52,7 @@ public static class CustomIdentityApiEndpointRouteBuilderExtensions
         var bearerTokenOptions = endpoints.ServiceProvider.GetRequiredService<IOptionsMonitor<BearerTokenOptions>>();
         var emailSender = endpoints.ServiceProvider.GetRequiredService<IEmailSender<TUser>>();
         var linkGenerator = endpoints.ServiceProvider.GetRequiredService<LinkGenerator>();
+        var _gridEmailSender = gridEmailSender;
 
         // We'll figure out a unique endpoint name based on the final route pattern during endpoint generation.
         string? confirmEmailEndpointName = null;
@@ -84,7 +86,7 @@ public static class CustomIdentityApiEndpointRouteBuilderExtensions
                 // built-in 
                 await userStore.SetUserNameAsync(user, email, CancellationToken.None);
                 await emailStore.SetEmailAsync(user, email, CancellationToken.None);
-
+                 
                 // Custom field of identity
                 if(user is ApplicationUser appUser)
                 {
@@ -469,6 +471,12 @@ public static class CustomIdentityApiEndpointRouteBuilderExtensions
 
             var confirmEmailUrl = linkGenerator.GetUriByName(context, confirmEmailEndpointName, routeValues)
                 ?? throw new NotSupportedException($"Could not find endpoint named '{confirmEmailEndpointName}'.");
+
+            // 4. Build HTML body using your template
+            var userName = (user as ApplicationUser).FirstName;
+            var emailBody = EmailTemplates.GetConfirmationEmail(userName, email, confirmEmailUrl);
+
+            await _gridEmailSender.SendEmailAsync(email, "Confirmation Email", emailBody);
 
             await emailSender.SendConfirmationLinkAsync(user, email, HtmlEncoder.Default.Encode(confirmEmailUrl));
         }

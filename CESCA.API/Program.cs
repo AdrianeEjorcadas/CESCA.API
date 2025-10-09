@@ -12,6 +12,7 @@ using CESCA.API.Repositories.Interface;
 using CESCA.API.Services.Implementation;
 using CESCA.API.Services.Interface;
 using DotNetEnv;
+using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -62,6 +63,7 @@ builder.Services.AddIdentityCore<ApplicationUser>()
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication()
     .AddBearerToken(IdentityConstants.BearerScheme);
+
 
 //builder.Services.AddIdentity<ApplicationUser, Role>();
 
@@ -180,8 +182,10 @@ if (app.Environment.IsDevelopment())
 }
 
 //app.UseAuthorization();
+var gridEmailSend = app.Services.GetRequiredService<IEmailSender>();
 
-app.MapIdentityApiFilterable<ApplicationUser>(new IdentityApiEndpointRouteBuilderOptions
+app.MapIdentityApiFilterable<ApplicationUser>(
+    new IdentityApiEndpointRouteBuilderOptions
 {
     ExcludeRegisterPost = false,
     ExcludeLoginPost = false,
@@ -195,7 +199,8 @@ app.MapIdentityApiFilterable<ApplicationUser>(new IdentityApiEndpointRouteBuilde
     Exclude2faPost = true,
     ExcludegInfoGet = true,
     ExcludeInfoPost = true
-}); //Identity Endpoint
+},
+(EmailSender)gridEmailSend); //Identity Endpoint
 
 app.MapControllers();
 
