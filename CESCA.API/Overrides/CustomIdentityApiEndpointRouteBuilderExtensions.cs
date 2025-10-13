@@ -96,7 +96,12 @@ public static class CustomIdentityApiEndpointRouteBuilderExtensions
 
                 var result = await userManager.CreateAsync(user, registration.Password);
 
-                if (!result.Succeeded)
+                if (result.Succeeded)
+                {
+                    var roleName = registration.Role ?? "User";
+                    //assign role
+                    await userManager.AddToRoleAsync(user, roleName);
+                } else
                 {
                     return CreateValidationProblem(result);
                 }
@@ -478,7 +483,7 @@ public static class CustomIdentityApiEndpointRouteBuilderExtensions
 
             await _gridEmailSender.SendEmailAsync(email, "Confirmation Email", emailBody);
 
-            await emailSender.SendConfirmationLinkAsync(user, email, HtmlEncoder.Default.Encode(confirmEmailUrl));
+            //await emailSender.SendConfirmationLinkAsync(user, email, HtmlEncoder.Default.Encode(confirmEmailUrl));
         }
 
         return new IdentityEndpointsConventionBuilder(routeGroup);

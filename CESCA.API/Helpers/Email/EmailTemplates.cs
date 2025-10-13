@@ -9,7 +9,7 @@
                 <body style='font-family:Segoe UI, sans-serif;'>
                     <h2>Welcome, {userName}!</h2>
                     <p>Thanks for signing up. Please confirm your email by clicking 
-    1                   <span>
+                        <span>
                             <a href='{confirmationLink}'>here</a>
                         </span>
                     </p> 
@@ -19,5 +19,14 @@
                 </html>
             ";
         }
+
+        public static string GetForgotPasswordEmail(string email, string resetCode)
+        {
+            return $@"
+                        
+                    ";
+        }
     }
+
+   
 }

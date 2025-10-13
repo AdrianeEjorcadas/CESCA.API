@@ -181,6 +181,21 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+// role creation on startup
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<Role>>();
+    string[] roleNames = { "Admin", "User" };
+    foreach (var roleName in roleNames)
+    {
+        if (!await roleManager.RoleExistsAsync(roleName))
+        {
+            await roleManager.CreateAsync(new Role { Name = roleName });
+        }
+    }
+}
+
+
 //app.UseAuthorization();
 var gridEmailSend = app.Services.GetRequiredService<IEmailSender>();
 
