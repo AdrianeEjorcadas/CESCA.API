@@ -7,6 +7,7 @@ using CESCA.API.Models.Dtos.User;
 using CESCA.API.Models.Identity;
 using CESCA.API.Overrides;
 using Microsoft.AspNetCore.Authentication.BearerToken;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -28,6 +29,7 @@ namespace Microsoft.AspNetCore.Routing;
 /// <summary>
 /// Provides extension methods for <see cref="IEndpointRouteBuilder"/> to add identity endpoints.
 /// </summary>
+/// 
 public static class CustomIdentityApiEndpointRouteBuilderExtensions
 {
     // Validate the email address using DataAnnotations like the UserValidator does when RequireUniqueEmail = true.
@@ -86,9 +88,9 @@ public static class CustomIdentityApiEndpointRouteBuilderExtensions
                 // built-in 
                 await userStore.SetUserNameAsync(user, email, CancellationToken.None);
                 await emailStore.SetEmailAsync(user, email, CancellationToken.None);
-                 
+
                 // Custom field of identity
-                if(user is ApplicationUser appUser)
+                if (user is ApplicationUser appUser)
                 {
                     appUser.FirstName = TypographyHelper.ToSentenceCase(registration.FirstName);
                     appUser.LastName = TypographyHelper.ToSentenceCase(registration.LastName);
@@ -101,14 +103,16 @@ public static class CustomIdentityApiEndpointRouteBuilderExtensions
                     var roleName = registration.Role ?? "User";
                     //assign role
                     await userManager.AddToRoleAsync(user, roleName);
-                } else
+                }
+                else
                 {
                     return CreateValidationProblem(result);
                 }
 
                 await SendConfirmationEmailAsync(user, userManager, context, email);
                 return TypedResults.Ok();
-            });
+            })
+            .RequireAuthorization(new AuthorizeAttribute { Roles = "Admin" });
         }
 
         if (!configOptions.ExcludeLoginPost)
@@ -152,30 +156,31 @@ public static class CustomIdentityApiEndpointRouteBuilderExtensions
             routeGroup.MapPost("/logout", async (SignInManager<IdentityUser> signInManager) =>
             {
                 await signInManager.SignOutAsync().ConfigureAwait(false);
-            });
+            })
+            .RequireAuthorization();
         }
 
         if (!configOptions.ExcludeRefreshPost)
         {
             routeGroup.MapPost("/refresh", async Task<Results<Ok<AccessTokenResponse>, UnauthorizedHttpResult, SignInHttpResult, ChallengeHttpResult>>
              ([FromBody] RefreshRequest refreshRequest, [FromServices] IServiceProvider sp) =>
-         {
-             var signInManager = sp.GetRequiredService<SignInManager<TUser>>();
-             var refreshTokenProtector = bearerTokenOptions.Get(IdentityConstants.BearerScheme).RefreshTokenProtector;
-             var refreshTicket = refreshTokenProtector.Unprotect(refreshRequest.RefreshToken);
-
-             // Reject the /refresh attempt with a 401 if the token expired or the security stamp validation fails
-             if (refreshTicket?.Properties?.ExpiresUtc is not { } expiresUtc ||
-                 timeProvider.GetUtcNow() >= expiresUtc ||
-                 await signInManager.ValidateSecurityStampAsync(refreshTicket.Principal) is not TUser user)
-
              {
-                 return TypedResults.Challenge();
-             }
+                 var signInManager = sp.GetRequiredService<SignInManager<TUser>>();
+                 var refreshTokenProtector = bearerTokenOptions.Get(IdentityConstants.BearerScheme).RefreshTokenProtector;
+                 var refreshTicket = refreshTokenProtector.Unprotect(refreshRequest.RefreshToken);
 
-             var newPrincipal = await signInManager.CreateUserPrincipalAsync(user);
-             return TypedResults.SignIn(newPrincipal, authenticationScheme: IdentityConstants.BearerScheme);
-         }); 
+                 // Reject the /refresh attempt with a 401 if the token expired or the security stamp validation fails
+                 if (refreshTicket?.Properties?.ExpiresUtc is not { } expiresUtc ||
+                     timeProvider.GetUtcNow() >= expiresUtc ||
+                     await signInManager.ValidateSecurityStampAsync(refreshTicket.Principal) is not TUser user)
+
+                 {
+                     return TypedResults.Challenge();
+                 }
+
+                 var newPrincipal = await signInManager.CreateUserPrincipalAsync(user);
+                 return TypedResults.SignIn(newPrincipal, authenticationScheme: IdentityConstants.BearerScheme);
+             });
         }
 
         if (!configOptions.ExcludeConfirmEmailGet)

@@ -6,12 +6,15 @@ using CESCA.API.Models.Dtos.Supplier;
 using CESCA.API.Models.Response;
 using CESCA.API.Services.Implementation;
 using CESCA.API.Services.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace CESCA.API.Controllers
 {
+
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class SupplierController : ControllerBase
@@ -28,6 +31,7 @@ namespace CESCA.API.Controllers
         /// <param name="addSupplierDTO"></param>
         /// <param name="ct"></param>
         /// <returns></returns>
+        /// 
         [HttpPost("add-supplier")]
         [ValidateModelState]
         public async Task<ActionResult<ReturnResponse<Supplier>>> AddSupplierAsync([FromBody] AddSupplierDTO addSupplierDTO,CancellationToken ct = default)

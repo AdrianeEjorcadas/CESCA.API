@@ -4,12 +4,14 @@ using CESCA.API.Models.Dtos.Product;
 using CESCA.API.Models.Response;
 using CESCA.API.Services.Implementation;
 using CESCA.API.Services.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CESCA.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ProductController : ControllerBase

@@ -6,6 +6,7 @@ using CESCA.API.Helpers.Pagination.Parameters;
 using CESCA.API.Models;
 using CESCA.API.Models.Dtos.Product;
 using CESCA.API.Repositories.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 namespace CESCA.API.Repositories
@@ -31,6 +32,7 @@ namespace CESCA.API.Repositories
             return _mapper.Map<ProductResponseDTO>(result.Entity);
         }
 
+
         public async Task<ProductResponseDTO?> UpdateProductAsync(UpdateProductDTO updateProductDTO, CancellationToken ct)
         {
             //check if product exist
@@ -51,6 +53,7 @@ namespace CESCA.API.Repositories
             return _mapper.Map<ProductResponseDTO>(productEntity);
         }
 
+
         public async Task<ProductResponseDTO?> DeleteProductAsync(Guid productId, CancellationToken ct)
         {
             //check if product exist
@@ -69,6 +72,7 @@ namespace CESCA.API.Repositories
             return _mapper.Map<ProductResponseDTO>(productEntity);
         }
 
+
         public async Task<ProductResponseDTO> ArchivedProductAsync(Guid productId, CancellationToken ct)
         {
             // check if product exist
@@ -85,6 +89,7 @@ namespace CESCA.API.Repositories
 
             return _mapper.Map <ProductResponseDTO>(productEntity);
         }
+
 
         public async Task<PagedList<ProductResponseDTO>> GetProductsAsync(ProductParameters productParameters, CancellationToken ct)
         {
@@ -120,6 +125,7 @@ namespace CESCA.API.Repositories
             return PagedList<ProductResponseDTO>
                 .ToPagedList(result, count, productParameters.PageNumber, productParameters.PageSize);
         }
+
 
         public async Task<ProductResponseDTO?> GetProductsByIdAsync(Guid productId, CancellationToken ct)
         {
