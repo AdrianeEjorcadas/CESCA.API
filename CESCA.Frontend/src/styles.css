@@ -1,2 +1,32 @@
 /* You can add global styles to this file, and also import other style files */
+@import '@fortawesome/fontawesome-free/css/all.min.css';
 @import "tailwindcss";
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+@theme{
+    
+    /* color theme */
+    /* azure */
+    --color-light-1 : #3B82F6;
+    --color-light-2 : #1D4ED8;
+    --color-light-3 : #0EA5E9;
+    --color-light-4 : #38BDF8;
+    /* white */
+    --color-white : #ffffff;
+    /* black */
+    --color-black : #000000;
+    /* gray */
+    --color-gray : #6B7280;
+    /* charcoal / for headers, nav bar */
+    --color-charcoal : #1E293B;
+    /* for highlight */
+    --color-highlight: #10B981;
+    /* for bg */
+    --color-bg: #EFF6FF;
+}
+
+
+

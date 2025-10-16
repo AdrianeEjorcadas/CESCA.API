@@ -157,8 +157,19 @@ builder.Services.AddSwaggerGen(options =>
 
 //builder.Services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
 
+//Add CORS Policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngularApp",
+        policy => policy.WithOrigins("http://localhost:4200")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod());
+});
 
 var app = builder.Build();
+
+//Allow angular apps
+app.UseCors("AllowAngularApp");
 
 //Exception Pipeline
 app.UseExceptionHandler();

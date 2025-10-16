@@ -1,0 +1,49 @@
+<div class="flex flex-col justify-center h-screen bg-gray-100 items-center">
+  <div class=" flex flex-col justify-center bg-white rounded-2xl p-10 w-100">
+      <!-- log in header -->
+      <div>
+          <h2 class="text-light-3 text-4xl text-center mb-5 tracking-widest">Cesca's <span class="text-gray ">Pharmacy</span></h2>
+      </div>
+      <!-- form -->
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+            <!-- email -->
+            <div class="flex flex-row">
+                <i class="fa-solid fa-user text-2xl text-light-1 pt-2 pr-1"></i>
+                  <input
+                    formControlName="email"
+                    type="email"
+                    placeholder="Enter your email"
+                    class="flex-1 focus:border-light-btn rounded border border-light-3 px-3 py-2 text-gray-500 focus:ring-0 focus:outline-none"
+                  />
+            </div>
+            <!-- error message for email input -->
+            <div class="flex flex-col items-end mb-2">
+              <p [hidden]="!emailError" class="text-red-400 text-xs">
+                  {{emailError}}
+              </p>
+            </div>  
+            <!-- password -->
+            <div class="flex flex-row ">
+              <i class="fa-solid fa-lock text-2xl text-light-1 pt-2 pr-1"></i>
+                <input
+                  formControlName="password"
+                  type="password"
+                  placeholder="Enter your password"
+                  class="flex-1 focus:border-light-btn rounded border border-light-3 px-3 py-2 text-gray-500 focus:ring-0 focus:outline-none"
+                />
+            </div>
+            <!-- error message for password input -->
+            <div class="flex flex-col items-end mb-2"> 
+                <p [hidden]="!passwordError" class="text-red-400 text-xs">
+                  {{passwordError}}
+                </p> 
+            </div>
+            <!-- submit -->
+          <div class="flex flex-col items-end">
+            <button 
+              [disabled]="!loginForm.valid"
+              type="submit" class="capitalize bg-light-1 border-2 border-light-3 text-white rounded px-2 py-1 cursor-pointer hover:bg-white hover:text-light-1 transition-all duration-300 tracking-wider">log in</button>
+          </div>
+      </form>
+  </div>
+</div>
