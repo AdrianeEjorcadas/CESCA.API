@@ -175,8 +175,8 @@ app.UseCors("AllowAngularApp");
 app.UseExceptionHandler();
 
 // Security piepline
-//app.UseAuthentication();
-//app.UseAuthorization();
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseHttpsRedirection();
 
 //app.UseRouting();

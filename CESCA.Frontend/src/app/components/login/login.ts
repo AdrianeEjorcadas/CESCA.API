@@ -7,6 +7,8 @@ import {MatInputModule} from '@angular/material/input';
 
 import {FaIconLibrary} from '@fortawesome/angular-fontawesome';
 import {faUser, faLock} from '@fortawesome/free-solid-svg-icons';
+import { AuthService } from '../../services/auth-service';
+import {ToastrService} from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
@@ -17,12 +19,13 @@ import {faUser, faLock} from '@fortawesome/free-solid-svg-icons';
 })
 export class Login {
 
-
-  //font awesome
-  library = inject(FaIconLibrary);
+  // services
+  private authService = inject(AuthService);
+  private toastrService = inject(ToastrService);
 
 
   loginForm: FormGroup;
+
 
   constructor(
     private fb: FormBuilder,
@@ -62,7 +65,15 @@ export class Login {
 
   
   onSubmit(){
-    console.log("email: " + this.loginForm.value.email + " password: " + this.loginForm.value.password);
+    this.authService.loginPost(this.loginForm.value).subscribe({
+      next: (res) => {
+        //navigate to home
+        this.toastrService.success('Login Successful!', 'Welcome madapaker');
+      },
+      error: (err) => {
+        this.toastrService.error('Invalid credentials', 'Login failed');
+      }
+    });
   }
 
 }
