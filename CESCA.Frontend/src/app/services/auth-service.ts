@@ -15,6 +15,11 @@ private apiUrl = 'https://localhost:7259';
 
   private http = inject(HttpClient);
   private tokenService = inject(TokenService);
+  private isLoggedIn : boolean = false;
+
+  isAuthenticated() : boolean{
+    return this.isLoggedIn;
+  }
 
   loginPost(login: Login) : Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, login)
@@ -22,6 +27,7 @@ private apiUrl = 'https://localhost:7259';
         tap(res => {
           if(res.accessToken){
             this.tokenService.setToken(res.accessToken, res.refreshToken);
+            this.isLoggedIn = true;
           }
         }),
         catchError(err => throwError(() => err))

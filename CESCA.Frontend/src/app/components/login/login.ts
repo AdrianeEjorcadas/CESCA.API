@@ -23,13 +23,13 @@ export class Login {
   private authService = inject(AuthService);
   private toastrService = inject(ToastrService);
 
+  private router = inject(Router);
 
   loginForm: FormGroup;
 
 
   constructor(
-    private fb: FormBuilder,
-    private router: Router
+    private fb: FormBuilder
   ){
     this.loginForm = fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -68,6 +68,7 @@ export class Login {
     this.authService.loginPost(this.loginForm.value).subscribe({
       next: (res) => {
         //navigate to home
+        this.router.navigate(['/dashboard']);
         this.toastrService.success('Login Successful!', 'Welcome madapaker');
       },
       error: (err) => {
