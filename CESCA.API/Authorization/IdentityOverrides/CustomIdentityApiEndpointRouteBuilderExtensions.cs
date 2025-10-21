@@ -5,7 +5,6 @@ using CESCA.API.Helpers.Email;
 using CESCA.API.Helpers.Typography;
 using CESCA.API.Models.Dtos.User;
 using CESCA.API.Models.Identity;
-using CESCA.API.Overrides;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -17,14 +16,16 @@ using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
 
-namespace Microsoft.AspNetCore.Routing;
+namespace CESCA.API.Authorization.IdentityOverrides;
 
 /// <summary>
 /// Provides extension methods for <see cref="IEndpointRouteBuilder"/> to add identity endpoints.
@@ -115,41 +116,93 @@ public static class CustomIdentityApiEndpointRouteBuilderExtensions
             .RequireAuthorization(new AuthorizeAttribute { Roles = "Admin" });
         }
 
+        //if (!configOptions.ExcludeLoginPost)
+        //{
+
+        //    routeGroup.MapPost("/login", async Task<Results<Ok<AccessTokenResponse>, EmptyHttpResult, ProblemHttpResult>>
+        //        ([FromBody] LoginRequest login, [FromQuery] bool? useCookies, [FromQuery] bool? useSessionCookies, [FromServices] IServiceProvider sp) =>
+        //    {
+        //        var signInManager = sp.GetRequiredService<SignInManager<TUser>>(); // this
+
+        //        var useCookieScheme = useCookies == true || useSessionCookies == true;
+        //        var isPersistent = useCookies == true && useSessionCookies != true;
+        //        signInManager.AuthenticationScheme = useCookieScheme ? IdentityConstants.ApplicationScheme : IdentityConstants.BearerScheme;
+
+        //        var result = await signInManager.PasswordSignInAsync(login.Email, login.Password, isPersistent, lockoutOnFailure: true);
+
+        //        if (result.RequiresTwoFactor)
+        //        {
+        //            if (!string.IsNullOrEmpty(login.TwoFactorCode))
+        //            {
+        //                result = await signInManager.TwoFactorAuthenticatorSignInAsync(login.TwoFactorCode, isPersistent, rememberClient: isPersistent);
+        //            }
+        //            else if (!string.IsNullOrEmpty(login.TwoFactorRecoveryCode))
+        //            {
+        //                result = await signInManager.TwoFactorRecoveryCodeSignInAsync(login.TwoFactorRecoveryCode);
+        //            }
+        //        }
+
+        //        if (!result.Succeeded)
+        //        {
+        //            return TypedResults.Problem("Invalid login attempt", statusCode: StatusCodes.Status401Unauthorized);
+        //        }
+
+        //        // The signInManager already produced the needed response in the form of a cookie or bearer token.
+        //        return TypedResults.Empty;
+        //    });
+        //}
+
+
         if (!configOptions.ExcludeLoginPost)
         {
-
-            routeGroup.MapPost("/login", async Task<Results<Ok<AccessTokenResponse>, EmptyHttpResult, ProblemHttpResult>>
-                ([FromBody] LoginRequest login, [FromQuery] bool? useCookies, [FromQuery] bool? useSessionCookies, [FromServices] IServiceProvider sp) =>
+            routeGroup.MapPost("/login", async Task<IResult> (
+             [FromBody] LoginRequest login,
+             [FromServices] IServiceProvider sp) =>
             {
-                var signInManager = sp.GetRequiredService<SignInManager<TUser>>();
+                 var signInManager = sp.GetRequiredService<SignInManager<ApplicationUser>>();
+                 var userManager = sp.GetRequiredService<UserManager<ApplicationUser>>();
+                 var config = sp.GetRequiredService<IConfiguration>();
 
-                var useCookieScheme = (useCookies == true) || (useSessionCookies == true);
-                var isPersistent = (useCookies == true) && (useSessionCookies != true);
-                signInManager.AuthenticationScheme = useCookieScheme ? IdentityConstants.ApplicationScheme : IdentityConstants.BearerScheme;
+                 // Validate credentials
+                 var user = await userManager.FindByEmailAsync(login.Email);
+                 if (user == null || !await userManager.CheckPasswordAsync(user, login.Password))
+                 {
+                     return Results.Problem("Invalid login attempt", statusCode: StatusCodes.Status401Unauthorized);
+                 }
 
-                var result = await signInManager.PasswordSignInAsync(login.Email, login.Password, isPersistent, lockoutOnFailure: true);
+                 // Optional: handle lockout / 2FA if you want to keep that logic
+                 // (you can still use signInManager for those checks)
 
-                if (result.RequiresTwoFactor)
-                {
-                    if (!string.IsNullOrEmpty(login.TwoFactorCode))
-                    {
-                        result = await signInManager.TwoFactorAuthenticatorSignInAsync(login.TwoFactorCode, isPersistent, rememberClient: isPersistent);
-                    }
-                    else if (!string.IsNullOrEmpty(login.TwoFactorRecoveryCode))
-                    {
-                        result = await signInManager.TwoFactorRecoveryCodeSignInAsync(login.TwoFactorRecoveryCode);
-                    }
-                }
+                 // Collect claims
+                 var roles = await userManager.GetRolesAsync(user);
+                 var claims = new List<Claim>
+                 {
+                        new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                        new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName ?? user.Email ?? "")
+                 };
+                 foreach (var role in roles)
+                 {
+                     claims.Add(new Claim(ClaimTypes.Role, role));
+                 }
 
-                if (!result.Succeeded)
-                {
-                    return TypedResults.Problem(result.ToString(), statusCode: StatusCodes.Status401Unauthorized);
-                }
+                 // Build JWT
+                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JWT_SECRET"]!));
+                 var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-                // The signInManager already produced the needed response in the form of a cookie or bearer token.
-                return TypedResults.Empty;
-            });
+                 var token = new JwtSecurityToken(
+                     issuer: config["JWT_ISSUER"],
+                     audience: config["JWT_AUDIENCE"],
+                     claims: claims,
+                     expires: DateTime.UtcNow.AddHours(1),
+                     signingCredentials: creds);
+
+                 var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+
+                 // Return JWT to Angular
+                 return Results.Ok(new { token = tokenString });
+            }); 
         }
+
 
         if (!configOptions.ExcludeLogoutPost)
         {
@@ -284,7 +337,7 @@ public static class CustomIdentityApiEndpointRouteBuilderExtensions
 
                 var user = await userManager.FindByEmailAsync(resetRequest.Email);
 
-                if (user is null || !(await userManager.IsEmailConfirmedAsync(user)))
+                if (user is null || !await userManager.IsEmailConfirmedAsync(user))
                 {
                     // Don't reveal that the user does not exist or is not confirmed, so don't return a 200 if we would have
                     // returned a 400 for an invalid code given a valid user email.
@@ -360,7 +413,7 @@ public static class CustomIdentityApiEndpointRouteBuilderExtensions
                 }
 
                 string[]? recoveryCodes = null;
-                if (tfaRequest.ResetRecoveryCodes || (tfaRequest.Enable == true && await userManager.CountRecoveryCodesAsync(user) == 0))
+                if (tfaRequest.ResetRecoveryCodes || tfaRequest.Enable == true && await userManager.CountRecoveryCodesAsync(user) == 0)
                 {
                     var recoveryCodesEnumerable = await userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, 10);
                     recoveryCodes = recoveryCodesEnumerable?.ToArray();

@@ -1,12 +1,14 @@
 using AutoMapper;
 using CESCA.API.Authorization;
+using CESCA.API.Authorization.Claims;
+using CESCA.API.Authorization.IdentityOverrides;
 using CESCA.API.Data;
 using CESCA.API.Helpers.Email;
 using CESCA.API.Helpers.Mapping;
 using CESCA.API.Middleware.ExceptionHandler;
 using CESCA.API.Middleware.Filters;
 using CESCA.API.Models.Identity;
-using CESCA.API.Overrides;
+//using CESCA.API.Overrides;
 using CESCA.API.Repositories;
 using CESCA.API.Repositories.Interface;
 using CESCA.API.Services.Implementation;
@@ -61,27 +63,30 @@ builder.Services.AddIdentityCore<ApplicationUser>()
     .AddApiEndpoints();
 
 builder.Services.AddAuthorization();
-builder.Services.AddAuthentication()
-    .AddBearerToken(IdentityConstants.BearerScheme);
+//builder.Services.AddAuthentication()
+//    .AddBearerToken(IdentityConstants.BearerScheme);
 
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = false, // for the meantime pause
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtIssuer,
+        ValidAudience = jwtAudience,
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_SECRET")))
+    };
+});
 
-//builder.Services.AddIdentity<ApplicationUser, Role>();
-
-//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-//    .AddJwtBearer(options =>
-//    {
-//        options.TokenValidationParameters = new TokenValidationParameters
-//        {
-//            ValidateIssuer = true,
-//            ValidateAudience = true,
-//            ValidateLifetime = true,
-//            ValidateIssuerSigningKey = true,
-//            ValidIssuer = jwtIssuer,
-//            ValidAudience = jwtAudience,
-//            IssuerSigningKey = new SymmetricSecurityKey(
-//                Encoding.UTF8.GetBytes(jwtSecret))
-//        };
-//    });
+//builder.Services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, AppClaimsPrincipalFactory>(); not needed since JWTBearer will be implemented
 
 builder.Services.AddAuthorization();
 

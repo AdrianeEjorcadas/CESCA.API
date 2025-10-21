@@ -1,4 +1,4 @@
-﻿namespace CESCA.API.Overrides
+﻿namespace CESCA.API.Authorization.IdentityOverrides
 {
     public class IdentityApiEndpointRouteBuilderOptions
     {
