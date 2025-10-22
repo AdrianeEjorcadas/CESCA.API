@@ -29,16 +29,22 @@ using System.Text;
 
 
 
+Env.Load(); // loads .env from root
 
 var builder = WebApplication.CreateBuilder(args); 
 
-Env.Load(); // loads .env from root
 // Add Identity
-var jwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
-var jwtAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
-var jwtSecret = Environment.GetEnvironmentVariable("JWT_SECRET");
+var jwtIssuer = builder.Configuration["JWT_ISSUER"]!;
+var jwtAudience = builder.Configuration["JWT_AUDIENCE"]!;
+var jwtSecret = builder.Configuration["JWT_SECRET"]!;
 //// Send Grid
 //var sgApiKey = builder.Configuration["SendGrid:ApiKey"];
+Console.WriteLine($"Loaded secret length: {jwtSecret.Length}");
+
+Console.WriteLine($"Issuer: {jwtIssuer}");
+Console.WriteLine($"Audience: {jwtAudience}");
+Console.WriteLine($"Secret length: {jwtSecret?.Length}");
+
 
 
 // Add services to the container.
@@ -77,12 +83,12 @@ builder.Services.AddAuthentication(options =>
     {
         ValidateIssuer = true,
         ValidateAudience = true,
-        ValidateLifetime = false, // for the meantime pause
+        ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
         ValidIssuer = jwtIssuer,
         ValidAudience = jwtAudience,
         IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_SECRET")))
+            Encoding.UTF8.GetBytes(jwtSecret))
     };
 });
 

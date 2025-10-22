@@ -203,6 +203,9 @@ public static class CustomIdentityApiEndpointRouteBuilderExtensions
             }); 
         }
 
+        routeGroup.MapGet("/secure", () => "Authenticated")
+            .RequireAuthorization();
+
 
         if (!configOptions.ExcludeLogoutPost)
         {
