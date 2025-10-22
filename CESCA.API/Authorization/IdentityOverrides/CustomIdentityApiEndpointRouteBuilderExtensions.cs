@@ -1,6 +1,7 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using CESCA.API.Data;
 using CESCA.API.Helpers.Email;
 using CESCA.API.Helpers.Typography;
 using CESCA.API.Models.Dtos.User;
@@ -196,11 +197,75 @@ public static class CustomIdentityApiEndpointRouteBuilderExtensions
                      expires: DateTime.UtcNow.AddHours(1),
                      signingCredentials: creds);
 
-                 var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+
+                var accessToken = new JwtSecurityTokenHandler().WriteToken(token);
+
+                // Generate refresh token
+                var refreshToken = Guid.NewGuid().ToString();
+
+                //Save ref token in identity table
+                await userManager.SetAuthenticationTokenAsync(user, "Cesca App", "RefreshToken", refreshToken);
 
                  // Return JWT to Angular
-                 return Results.Ok(new { token = tokenString });
-            }); 
+                 return Results.Ok(new { accessToken, refreshToken });
+            });
+        }
+
+        if (!configOptions.ExcludeRefreshPost)
+        {
+            routeGroup.MapPost("/refresh", async Task<IResult>
+             ([FromBody] RefreshRequest refreshRequest, 
+             [FromServices] IServiceProvider sp, 
+             [FromServices] ApplicationDBContext db) =>
+            {
+                var userManager = sp.GetRequiredService<UserManager<ApplicationUser>>();
+                var config = sp.GetRequiredService<IConfiguration>();
+
+                var tokenEntry = db.UserTokens.FirstOrDefault(t =>
+                     t.LoginProvider == "Cesca App" &&
+                     t.Name == "RefreshToken" &&
+                     t.Value == refreshRequest.RefreshToken
+                );
+
+                if (tokenEntry == null) return Results.Unauthorized();
+
+                var user = await userManager.FindByIdAsync(tokenEntry.UserId.ToString());
+                if (user == null) return Results.Unauthorized();
+
+                // Collect claims
+                var roles = await userManager.GetRolesAsync(user);
+                var claims = new List<Claim>
+                 {
+                        new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                        new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName ?? user.Email ?? "")
+                 };
+                foreach (var role in roles)
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, role));
+                }
+
+                // Build JWT
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JWT_SECRET"]!));
+                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+                var token = new JwtSecurityToken(
+                    issuer: config["JWT_ISSUER"],
+                    audience: config["JWT_AUDIENCE"],
+                    claims: claims,
+                    expires: DateTime.UtcNow.AddHours(1),
+                    signingCredentials: creds);
+
+                var accessToken = new JwtSecurityTokenHandler().WriteToken(token);
+
+                // Generate refresh token
+                var newRefreshToken = Guid.NewGuid().ToString();
+
+                //Save ref token in identity table
+                await userManager.SetAuthenticationTokenAsync(user, "Cesca App", "RefreshToken", newRefreshToken);
+
+                return Results.Ok(new { accessToken, refreshToken = newRefreshToken });
+
+            });
         }
 
         routeGroup.MapGet("/secure", () => "Authenticated")
@@ -216,28 +281,30 @@ public static class CustomIdentityApiEndpointRouteBuilderExtensions
             .RequireAuthorization();
         }
 
-        if (!configOptions.ExcludeRefreshPost)
-        {
-            routeGroup.MapPost("/refresh", async Task<Results<Ok<AccessTokenResponse>, UnauthorizedHttpResult, SignInHttpResult, ChallengeHttpResult>>
-             ([FromBody] RefreshRequest refreshRequest, [FromServices] IServiceProvider sp) =>
-             {
-                 var signInManager = sp.GetRequiredService<SignInManager<TUser>>();
-                 var refreshTokenProtector = bearerTokenOptions.Get(IdentityConstants.BearerScheme).RefreshTokenProtector;
-                 var refreshTicket = refreshTokenProtector.Unprotect(refreshRequest.RefreshToken);
+        //if (!configOptions.ExcludeRefreshPost)
+        //{
+        //    routeGroup.MapPost("/refresh", async Task<Results<Ok<AccessTokenResponse>, UnauthorizedHttpResult, SignInHttpResult, ChallengeHttpResult>>
+        //     ([FromBody] RefreshRequest refreshRequest, [FromServices] IServiceProvider sp) =>
+        //     {
+        //         var signInManager = sp.GetRequiredService<SignInManager<TUser>>();
+        //         var refreshTokenProtector = bearerTokenOptions.Get(IdentityConstants.BearerScheme).RefreshTokenProtector;
+        //         var refreshTicket = refreshTokenProtector.Unprotect(refreshRequest.RefreshToken);
 
-                 // Reject the /refresh attempt with a 401 if the token expired or the security stamp validation fails
-                 if (refreshTicket?.Properties?.ExpiresUtc is not { } expiresUtc ||
-                     timeProvider.GetUtcNow() >= expiresUtc ||
-                     await signInManager.ValidateSecurityStampAsync(refreshTicket.Principal) is not TUser user)
+        //         // Reject the /refresh attempt with a 401 if the token expired or the security stamp validation fails
+        //         if (refreshTicket?.Properties?.ExpiresUtc is not { } expiresUtc ||
+        //             timeProvider.GetUtcNow() >= expiresUtc ||
+        //             await signInManager.ValidateSecurityStampAsync(refreshTicket.Principal) is not TUser user)
 
-                 {
-                     return TypedResults.Challenge();
-                 }
+        //         {
+        //             return TypedResults.Challenge();
+        //         }
 
-                 var newPrincipal = await signInManager.CreateUserPrincipalAsync(user);
-                 return TypedResults.SignIn(newPrincipal, authenticationScheme: IdentityConstants.BearerScheme);
-             });
-        }
+        //         var newPrincipal = await signInManager.CreateUserPrincipalAsync(user);
+        //         return TypedResults.SignIn(newPrincipal, authenticationScheme: IdentityConstants.BearerScheme);
+        //     });
+        //}
+
+      
 
         if (!configOptions.ExcludeConfirmEmailGet)
         {

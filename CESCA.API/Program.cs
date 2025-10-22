@@ -39,8 +39,6 @@ var jwtAudience = builder.Configuration["JWT_AUDIENCE"]!;
 var jwtSecret = builder.Configuration["JWT_SECRET"]!;
 //// Send Grid
 //var sgApiKey = builder.Configuration["SendGrid:ApiKey"];
-Console.WriteLine($"Loaded secret length: {jwtSecret.Length}");
-
 Console.WriteLine($"Issuer: {jwtIssuer}");
 Console.WriteLine($"Audience: {jwtAudience}");
 Console.WriteLine($"Secret length: {jwtSecret?.Length}");
