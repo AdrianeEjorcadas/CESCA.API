@@ -4,25 +4,25 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class TokenService {
-  private accessToken: string | null = null;
+  private readonly ACCESS_TOKEN = 'accessToken';
   private readonly REFRESH_TOKEN = 'refreshToken';
 
   setToken(accessToken: string, refreshToken: string){
-    this.accessToken = accessToken;
-    sessionStorage.setItem(this.REFRESH_TOKEN, refreshToken);
+    sessionStorage.setItem(this.ACCESS_TOKEN, accessToken);
+    localStorage.setItem(this.REFRESH_TOKEN, refreshToken);
   }
 
   getAccessToken(): string | null{
-    return this.accessToken;
+    return sessionStorage.getItem(this.ACCESS_TOKEN);
   }
 
   getRefreshToken(): string | null{
-    return sessionStorage.getItem(this.REFRESH_TOKEN);
+    return localStorage.getItem(this.REFRESH_TOKEN);
   }
 
   clearToken(){
-    this.accessToken = null;
-    sessionStorage.removeItem(this.REFRESH_TOKEN);
+    sessionStorage.removeItem(this.ACCESS_TOKEN);
+    localStorage.removeItem(this.REFRESH_TOKEN);
   }
 
 }
