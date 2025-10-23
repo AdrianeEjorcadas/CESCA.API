@@ -1,0 +1,36 @@
+<div class="flex flex-row h-screen gap-2 border border-amber-200 p-1">
+    <div class="flex flex-col gap-3 border p-2">
+        <div class="md:text-center">
+            <a routerLink="dashboard">
+                <i class="fa-solid fa-prescription text-2xl text-light-1"></i>
+            </a>
+        </div>
+        <!-- mobile menu -->
+        <div class="flex flex-col md:hidden gap-1 h-screen border justify-between">
+            <div class="flex flex-col">
+                <a routerLink="dashboard">
+                    <i class="fa-solid fa-chart-line text-2xl text-light-1"></i>
+                </a>
+                <a routerLink="inventory">
+                    <i class="fa-solid fa-warehouse text-2xl text-light-1"></i>
+                </a>
+            </div>
+            <a (click)="logoutPrompt()">
+                <i class="fa-solid fa-arrow-right-from-bracket text-2xl text-light-1 cursor-pointer"></i>
+            </a>
+        </div>
+        <!-- desktop menu -->
+        <div class="hidden md:flex md:flex-col h-screen justify-between border">
+            <div class="flex flex-col">
+                <a class="cursor-pointer" routerLink="dashboard">Dashboard</a>
+                <a class="cursor-pointer" routerLink="inventory">Inventory</a>
+            </div>
+            <a class="cursor-pointer">Logout</a>
+        </div>
+    </div>
+    <div>
+        <div class="h-max border border-red-400">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</div>

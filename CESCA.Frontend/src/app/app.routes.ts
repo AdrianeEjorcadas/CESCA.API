@@ -13,19 +13,26 @@ export const routes: Routes = [
     },
     {
         path: '',
-        loadComponent: () => import('../app/components/home/home').then(m => m.Home),
+        loadComponent: () => import('../app/components/admin/admin').then(m => m.Admin),
         canActivate: [authGuard],
         children: [
-            {
+           {
+                path: 'dashboard',
+                title: 'Cesca Dashboard',
+                loadComponent: () => import('../app/components/dashboard/dashboard').then(m => m.Dashboard),
+                canActivate: [authGuard]
+           },
+           {
+                path: 'inventory',
+                title: 'Cesca Inventory',
+                loadComponent: () => import('../app/components/inventory/inventory').then(m => m.Inventory),
+                canActivate: [authGuard]
+           },
+           {
                 path: '',
                 redirectTo: 'dashboard',
                 pathMatch: 'full'
-            },
-            {
-                path: 'dashboard',
-                title: 'Cesca Dashboard',
-                loadComponent: () => import('../app/components/dashboard/dashboard').then(m => m.Dashboard)
-            }
+           }
         ]
     }
 ];
