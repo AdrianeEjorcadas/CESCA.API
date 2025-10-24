@@ -1,14 +1,16 @@
 import { Component, inject } from '@angular/core';
-import { Router, RouterOutlet, RouterLinkWithHref } from '@angular/router';
+import { Router, RouterOutlet, RouterLinkWithHref, RouterLinkActive, RouterLink } from '@angular/router';
 import { TokenService } from '../../services/token-service';
 import { ToastrService } from 'ngx-toastr';
 import {MatButtonModule} from '@angular/material/button';
 import {MatDialog} from '@angular/material/dialog';
 import { ConfirmDialogLogout } from '../../reusable/confirm-dialog-logout/confirm-dialog-logout';
 import { NgOptimizedImage } from '@angular/common';
+
+
 @Component({
   selector: 'app-admin',
-  imports: [RouterOutlet, RouterLinkWithHref, MatButtonModule, NgOptimizedImage, ],
+  imports: [RouterOutlet, RouterLinkWithHref, MatButtonModule, NgOptimizedImage, RouterLinkActive, RouterLink],
   templateUrl: './admin.html',
   styleUrl: './admin.css',
   standalone: true,
