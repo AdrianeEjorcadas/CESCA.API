@@ -3,18 +3,12 @@ import { Router, RouterOutlet, RouterLinkWithHref } from '@angular/router';
 import { TokenService } from '../../services/token-service';
 import { ToastrService } from 'ngx-toastr';
 import {MatButtonModule} from '@angular/material/button';
-import {
-  MatDialog,
-  MatDialogActions,
-  MatDialogClose,
-  MatDialogContent,
-  MatDialogRef,
-  MatDialogTitle,
-} from '@angular/material/dialog';
+import {MatDialog} from '@angular/material/dialog';
 import { ConfirmDialogLogout } from '../../reusable/confirm-dialog-logout/confirm-dialog-logout';
+import { NgOptimizedImage } from '@angular/common';
 @Component({
   selector: 'app-admin',
-  imports: [RouterOutlet, RouterLinkWithHref, MatButtonModule],
+  imports: [RouterOutlet, RouterLinkWithHref, MatButtonModule, NgOptimizedImage, ],
   templateUrl: './admin.html',
   styleUrl: './admin.css',
   standalone: true,

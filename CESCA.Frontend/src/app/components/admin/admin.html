@@ -1,35 +1,47 @@
-<div class="flex flex-row h-screen gap-2 border border-amber-200 p-1">
-    <div class="flex flex-col gap-3 border p-2">
-        <div class="md:text-center">
-            <a routerLink="dashboard">
-                <i class="fa-solid fa-prescription text-2xl text-light-1"></i>
+<div class="flex flex-row h-screen">
+    <div class="flex flex-col gap-3 p-2 border border-r-gray-300">
+        <div class="self-center mb-6 mt-4">
+            <a routerLink="dashboard" title="Cesca System">
+                <img 
+                    ngSrc="assets/image/medicine_logo.png"
+                    width="50"
+                    height="30"
+                    alt="Cesca Logo"
+                    priority>
             </a>
         </div>
         <!-- mobile menu -->
-        <div class="flex flex-col md:hidden gap-1 h-screen border justify-between">
-            <div class="flex flex-col">
-                <a routerLink="dashboard">
-                    <i class="fa-solid fa-chart-line text-2xl text-light-1"></i>
+        <div class="flex flex-col md:hidden gap-1 h-screen justify-between px-5">
+            <div class="flex flex-col gap-6">
+                <a routerLink="dashboard" title="Dashboard" class="self-center ">
+                    <i class="fa-solid fa-chart-line text-2xl text-gray  hover:text-light-4 transition-all duration-300"></i>
                 </a>
-                <a routerLink="inventory">
-                    <i class="fa-solid fa-warehouse text-2xl text-light-1"></i>
+                <a routerLink="inventory" title="Inventory" class="self-center">
+                    <i class="fa-solid fa-warehouse text-2xl text-gray hover:text-light-4 transition-all duration-300"></i>
+                </a>
+                <a routerLink="account-manager" title="Account Manager" class="self-center">
+                    <i class="fa-solid fa-user-tie text-2xl text-gray hover:text-light-4 transition-all duration-300"></i>
                 </a>
             </div>
-            <a (click)="logoutPrompt()">
-                <i class="fa-solid fa-arrow-right-from-bracket text-2xl text-light-1 cursor-pointer"></i>
+            <a (click)="logoutPrompt()" title="Logout" class="self-center mb-5">
+                <i class="fa-solid fa-arrow-right-from-bracket text-2xl text-gray cursor-pointer hover:text-light-4"></i>
             </a>
         </div>
         <!-- desktop menu -->
-        <div class="hidden md:flex md:flex-col h-screen justify-between border">
-            <div class="flex flex-col">
-                <a class="cursor-pointer" routerLink="dashboard">Dashboard</a>
-                <a class="cursor-pointer" routerLink="inventory">Inventory</a>
+        <div class="hidden md:flex md:flex-col h-screen justify-between px-5">
+            <div class="flex flex-col gap-4">
+                <a class="cursor-pointer text-center tracking-wider font-mono text-2xl text-gray hover:text-light-4 transition-all duration-300" title="Dashboard" routerLink="dashboard">Dashboard</a>
+                <a class="cursor-pointer text-center tracking-wider font-mono text-2xl text-gray hover:text-light-4 transition-all duration-300" title="Inventory" routerLink="inventory">Inventory</a>
+                <a class="cursor-pointer text-center tracking-wider font-mono text-2xl text-gray hover:text-light-4 transition-all duration-300" title="Account Manager" routerLink="account-manager">Account <span class="block">Manager</span> </a>
             </div>
-            <a class="cursor-pointer">Logout</a>
+            <!-- <a class="cursor-pointer" title="Logout" (click)="logoutPrompt()">Logout</a> -->
+            <a (click)="logoutPrompt()" title="Logout" class="self-center mb-5">
+                <i class="fa-solid fa-arrow-right-from-bracket text-2xl text-gray cursor-pointer hover:text-light-4"></i>
+            </a>
         </div>
     </div>
-    <div>
-        <div class="h-max border border-red-400">
+    <div class="flex-1">
+        <div class=" h-full bg-gray-300">
             <router-outlet></router-outlet>
         </div>
     </div>
