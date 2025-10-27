@@ -1,12 +1,36 @@
-<div class="flex flex-col">
+<div class="flex flex-col pl-4 space-y-8">
     <!-- header  -->
-    <div class="bg-white ml-4 rounded-bl-2xl text-gray ">
+    <div class="bg-white rounded-bl-2xl text-gray">
         <h1 class="capitalize text-3xl pl-5 pt-5 md:text-4xl">Cesca System</h1>
         <p class="capitalize text-l pl-5 pb-3 md:text-xl">Supplier</p>
     </div>
     <!-- filter field -->
-    <div>
-        
+    <div class="flex flex-col pr-4 gap-3">
+        <!-- search textbox -->
+         <div class="flex justify-end gap-2">
+            <input
+                class="items-end border border-gray px-3 py-2 rounded-lg text-gray focus:ring-0 focus:outline-none hover:border-light-3 hover:scale-110 transition-all duration-300" 
+                type="text" 
+                name="search" 
+                title="Search supplier name"
+                placeholder="Supplier Name"/>
+            <button 
+                class="cursor-pointer font-extrabold text-2xl text-light-3 hover:scale-150 transition-all duration-300"
+                type="button"
+                title="Search">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+         </div>
+        <!-- customized filters  -->
+         <div class="border">
+            <h2 class="font-sans tracking-wider text-lg font-semibold pl-2">Filters:</h2>
+            <mat-checkbox
+                name="isArchived"
+                [(ngModel)]="searchParams.isArchived"
+                >
+                <span class="text-light-1">Archived Items Only</span>
+            </mat-checkbox>
+         </div>
     </div>
 </div>
 
