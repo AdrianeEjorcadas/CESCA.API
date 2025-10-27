@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
+import { SupplierSearchParameter } from '../../models/search-parameter';
 
 @Component({
   selector: 'app-supplier',
@@ -7,5 +8,5 @@ import { Component } from '@angular/core';
   styleUrl: './supplier.css'
 })
 export class Supplier {
-
+  
 }

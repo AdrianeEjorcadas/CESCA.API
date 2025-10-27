@@ -23,6 +23,11 @@
                             routerLinkActive="text-light-4" 
                             [routerLinkActiveOptions]="{exact: true}"></i>
                 </a>
+                <a [routerLink]="['supplier']"  title="Supplier" class="self-center">
+                        <i class="fa-solid fa-truck-field text-2xl text-gray hover:text-light-4 transition-all duration-300"
+                            routerLinkActive="text-light-4" 
+                            [routerLinkActiveOptions]="{exact: true}"></i>
+                </a>
                 <a [routerLink]="['account-manager']"  title="Account Manager" class="self-center">
                         <i class="fa-solid fa-user-tie text-2xl text-gray hover:text-light-4 transition-all duration-300"
                             routerLinkActive="text-light-4" 
@@ -30,7 +35,7 @@
                 </a>
             </div>
             <a (click)="logoutPrompt()" title="Logout" class="self-center mb-5">
-                <i class="fa-solid fa-arrow-right-from-bracket text-2xl text-gray cursor-pointer hover:text-light-4"></i>
+                <i class="fa-solid fa-arrow-right-from-bracket text-2xl text-gray cursor-pointer hover:text-light-4 transition-all duration-300"></i>
             </a>
         </div>
         <!-- desktop menu -->
@@ -51,6 +56,13 @@
                         Inventory
                 </a>
                 <a class="cursor-pointer text-center tracking-wider font-mono text-2xl text-gray hover:text-light-4 transition-all duration-300" 
+                    title="Supplier" 
+                    [routerLink]="['supplier']"
+                    routerLinkActive="text-light-4" 
+                    [routerLinkActiveOptions]="{exact: true}">
+                        Supplier
+                </a>
+                <a class="cursor-pointer text-center tracking-wider font-mono text-2xl text-gray hover:text-light-4 transition-all duration-300" 
                     title="Account Manager" 
                     [routerLink]="['account-manager']"
                     routerLinkActive="text-light-4" 
@@ -60,7 +72,7 @@
             </div>
             <!-- <a class="cursor-pointer" title="Logout" (click)="logoutPrompt()">Logout</a> -->
             <a (click)="logoutPrompt()" title="Logout" class="self-center mb-5">
-                <i class="fa-solid fa-arrow-right-from-bracket text-2xl text-gray cursor-pointer hover:text-light-4"></i>
+                <i class="fa-solid fa-arrow-right-from-bracket text-2xl text-gray cursor-pointer hover:text-light-4 transition-all duration-300"></i>
             </a>
         </div>
     </div>
