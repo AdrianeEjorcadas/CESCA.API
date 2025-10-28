@@ -13,23 +13,43 @@
                 type="text" 
                 name="search" 
                 title="Search supplier name"
+                [(ngModel)] ="searchParams.searchTerm"
                 placeholder="Supplier Name"/>
             <button 
                 class="cursor-pointer font-extrabold text-2xl text-light-3 hover:scale-150 transition-all duration-300"
-                type="button"
+                (click)="search()"
                 title="Search">
                     <i class="fa-solid fa-magnifying-glass"></i>
             </button>
          </div>
-        <!-- customized filters  -->
-         <div class="border">
-            <h2 class="font-sans tracking-wider text-lg font-semibold pl-2">Filters:</h2>
-            <mat-checkbox
-                name="isArchived"
-                [(ngModel)]="searchParams.isArchived"
-                >
-                <span class="text-light-1">Archived Items Only</span>
-            </mat-checkbox>
+         <!-- toggle button for advanced filter -->
+         <div>
+            <button 
+                class="cursor-pointer transition-all duration-300 hover:scale-110 tracking-wider font-bold"
+                type="button" 
+                (click)=" toggleAdvancedFilter()">
+                Advanced Filter
+            </button>
+         </div>
+        <!-- advanced filters  -->
+         <div class="border border-gray rounded-xl" [ngClass]="advancedFilterFlag ? 'block' : 'hidden'">
+            <h2 class="font-sans tracking-wider text-lg font-semibold pl-2">Advanced Filters:</h2>
+            <div class="flex flex-row gap-3">
+                <!-- archived items -->
+                <mat-checkbox
+                    name="isArchived"
+                    [(ngModel)]="searchParams.isArchived"
+                    >
+                    <span class="text-light-1">Archived Items</span>
+                </mat-checkbox>
+                <!-- deleted items -->
+                <mat-checkbox
+                    name="isDeleted"
+                    [(ngModel)]="searchParams.isDeleted"
+                    >
+                    <span class="text-light-1">Deleted Items</span>
+                </mat-checkbox>
+            </div>
          </div>
     </div>
 </div>

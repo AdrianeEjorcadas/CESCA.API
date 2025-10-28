@@ -7,6 +7,5 @@ namespace CESCA.API.Helpers.Pagination.Parameters
     /// </summary>
     public class SupplierParameters : RequestParamaters
     {
-        public string? Address { get; set; }
     }
 }

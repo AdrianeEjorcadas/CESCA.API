@@ -24,5 +24,6 @@
         //Filters
         public string? SearchTerm { get; set; }
         public bool? IsArchived { get; set; }
+        public bool? IsDeleted { get; set; }
     }
 }
