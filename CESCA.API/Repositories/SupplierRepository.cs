@@ -63,6 +63,12 @@ namespace CESCA.API.Repositories
                 query = query.Where(q => q.SupplierName.Contains(supplierParameters.SearchTerm));
             }
 
+            //Archived Items
+            if (supplierParameters.IsArchived is true)
+            {
+                query = query.Where(q => q.IsArchived);
+            }
+
             var result = await query
                 .AsNoTracking()
                 .OrderBy(s => s.SupplierName)

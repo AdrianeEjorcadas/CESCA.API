@@ -13,9 +13,11 @@ export class SupplierApiService {
   private http = inject(HttpClient);
   private supplierUrl = `${environment.apiUrl}/supplier`;
 
-  getSuppliers(supplierSearchParameter : SupplierSearchParameter) : Observable<ReturnResponse<SupplierResponse[]>>{
+  getSuppliers$(supplierSearchParameter : SupplierSearchParameter) : Observable<ReturnResponse<SupplierResponse[]>>{
+    
     let params = new HttpParams();
     
+    //convert obj to params[key-value pair]
     Object.entries(supplierSearchParameter).forEach(([key, value]) => {
       params = params.set(key, value as any);
     });
@@ -23,6 +25,6 @@ export class SupplierApiService {
     return this.http.get<ReturnResponse<SupplierResponse[]>>(`${this.supplierUrl}/get-suppliers?${params}`)
     .pipe(
       catchError(err => throwError(() => err ))
-    )
+    );
   }
 }

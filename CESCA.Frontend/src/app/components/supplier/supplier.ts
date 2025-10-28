@@ -1,4 +1,4 @@
-import { Component, inject, model, OnInit, signal } from '@angular/core';
+import { Component, inject, model, OnDestroy, OnInit, signal } from '@angular/core';
 import { SupplierSearchParameter } from '../../models/search-parameter';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
@@ -7,7 +7,8 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import { NgClass } from '@angular/common';
 import { SupplierApiService } from '../../services/supplier-api-service';
 import { SupplierResponse } from '../../models/component-models/supplier-response';
-
+import { Subscription } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-supplier',
@@ -18,7 +19,8 @@ import { SupplierResponse } from '../../models/component-models/supplier-respons
 export class Supplier implements OnInit {
 
   private supplierApiService = inject(SupplierApiService);
-  
+  private toastr = inject(ToastrService);
+
   suppliers = signal<SupplierResponse[]>([]); 
 
   searchParams : SupplierSearchParameter = {
@@ -36,17 +38,17 @@ export class Supplier implements OnInit {
   }
 
   getSuppliers(){
-    this.supplierApiService.getSuppliers(this.searchParams).subscribe({
+    this.supplierApiService.getSuppliers$(this.searchParams).subscribe({
       next: (res) => {
         this.suppliers.set(res.data);
-        console.log(res);
+        if(res.statusCode === 404){
+          console.log('No suppliers found');
+        }
       },
       error: (err) => {
-        if(err.status === 400){
-          console.log('No supplier found');
-        }
+        this.toastr.error('Error getting suppliers', err || err.message);
       }
-    })
+    });
   }
 
   toggleAdvancedFilter(){
@@ -67,5 +69,6 @@ export class Supplier implements OnInit {
   // for archived items
 
   //for deleted items
+
   
 }
