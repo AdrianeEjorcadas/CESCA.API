@@ -82,7 +82,11 @@ namespace CESCA.API.Controllers
             {
                 StatusCode = 200,
                 Message = "Successfully retrieve suppliers",
-                Data = result.suppliers
+                Data = new
+                {
+                    Suppliers = result.suppliers,
+                    MetaData = result.metaData
+                }
             });
         }
 

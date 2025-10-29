@@ -9,10 +9,11 @@ import { SupplierApiService } from '../../services/supplier-api-service';
 import { SupplierResponse } from '../../models/component-models/supplier-response';
 import { Subscription } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
+import {MatTableModule}from '@angular/material/table';
 
 @Component({
   selector: 'app-supplier',
-  imports: [FormsModule, MatInputModule, MatFormFieldModule, MatCheckboxModule, NgClass],
+  imports: [FormsModule, MatInputModule, MatFormFieldModule, MatCheckboxModule, NgClass, MatTableModule],
   templateUrl: './supplier.html',
   styleUrl: './supplier.css'
 })
@@ -33,6 +34,8 @@ export class Supplier implements OnInit {
 
   advancedFilterFlag: boolean = false;
 
+  displayedColumns: string[] = ['index', 'supplierName', 'email', 'contactNumber', 'address'];
+
   ngOnInit(): void {
     this.getSuppliers();
   }
@@ -41,6 +44,7 @@ export class Supplier implements OnInit {
     this.supplierApiService.getSuppliers$(this.searchParams).subscribe({
       next: (res) => {
         this.suppliers.set(res.data);
+        console.log(res);
         if(res.statusCode === 404){
           console.log('No suppliers found');
         }

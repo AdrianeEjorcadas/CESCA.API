@@ -32,8 +32,8 @@
             </button>
          </div>
         <!-- advanced filters  -->
-         <div class="border border-gray rounded-xl" [ngClass]="advancedFilterFlag ? 'block' : 'hidden'">
-            <h2 class="font-sans tracking-wider text-lg font-semibold pl-2">Advanced Filters:</h2>
+         <div class="border border-gray rounded-xl p-2 md:p-6 lg:px-12" [ngClass]="advancedFilterFlag ? 'block' : 'hidden'">
+            <h2 class="font-sans tracking-wider text-lg font-semibold">Advanced Filters:</h2>
             <div class="flex flex-row gap-3">
                 <!-- archived items -->
                 <mat-checkbox
@@ -50,7 +50,50 @@
                     <span class="text-light-1">Deleted Items</span>
                 </mat-checkbox>
             </div>
+            <div class="flex justify-end">
+                <!-- filter button -->
+                 <button
+                    class="px-3 py-2 rounded-2xl bg-light-3 cursor-pointer text-white transition-all duration-300 hover:text-light-3 hover:bg-white hover:border hover:border-light-3"
+                    title="Apply Filter"
+                    type="button">Apply Filter</button>
+            </div>
          </div>
+    </div>
+    <div class="pr-4">
+        <table mat-table [dataSource]="suppliers()" class="cursor-pointer w-full min-w-max ">
+            <!-- column 1 -->
+             <ng-container matColumnDef="index">
+                <th mat-header-cell *matHeaderCellDef>No.</th>
+                <td mat-cell *matCellDef="let element; let i = index">
+                    {{i + 1}}
+                </td>
+             </ng-container>
+            <!-- column 2 -->
+             <ng-container matColumnDef="supplierName">
+                <th mat-header-cell *matHeaderCellDef>Supplier Name</th>
+                <td mat-cell *matCellDef="let element">{{element.supplierName}}</td>
+             </ng-container>
+            <!-- column 3 -->
+             <ng-container matColumnDef="email">
+                <th mat-header-cell *matHeaderCellDef>Email</th>
+                <td mat-cell *matCellDef="let element">{{element.email}}</td>
+             </ng-container>
+            <!-- column 4 -->
+             <ng-container matColumnDef="contactNumber">
+                <th mat-header-cell *matHeaderCellDef>Contact No.</th>
+                <td mat-cell *matCellDef="let element">{{element.contactNumber}}</td>
+             </ng-container>
+            <!-- column 4 -->
+             <ng-container matColumnDef="address">
+                <th mat-header-cell *matHeaderCellDef>Address</th>
+                <td mat-cell *matCellDef="let element">{{element.address}}</td>
+             </ng-container>
+
+             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+             <tr 
+                class="hover:bg-highlight!"
+                mat-row *matRowDef="let row; columns: displayedColumns;" ></tr>
+        </table>
     </div>
 </div>
 
