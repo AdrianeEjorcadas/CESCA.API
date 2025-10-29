@@ -1,8 +1,8 @@
+import { MetadataModel } from "./metadata-model"
+import { SupplierModel } from "./supplier-model"
+
+
 export interface SupplierResponse{
-    supplierId: string,
-    supplierName: string,
-    email: string,
-    contactNumber: string,
-    address: string,
-    isDeleted: boolean
+    suppliers: SupplierModel[],
+    metadata: MetadataModel
 }

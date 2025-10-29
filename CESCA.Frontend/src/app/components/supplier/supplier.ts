@@ -10,6 +10,7 @@ import { SupplierResponse } from '../../models/component-models/supplier-respons
 import { Subscription } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import {MatTableModule}from '@angular/material/table';
+import { SupplierModel } from '../../models/component-models/supplier-model';
 
 @Component({
   selector: 'app-supplier',
@@ -22,7 +23,9 @@ export class Supplier implements OnInit {
   private supplierApiService = inject(SupplierApiService);
   private toastr = inject(ToastrService);
 
-  suppliers = signal<SupplierResponse[]>([]); 
+  suppliersWithMetadata = signal<SupplierResponse | null>(null); 
+  suppliers = signal<SupplierModel[]>([]);
+
 
   searchParams : SupplierSearchParameter = {
     pageNumber: 1,
@@ -43,8 +46,8 @@ export class Supplier implements OnInit {
   getSuppliers(){
     this.supplierApiService.getSuppliers$(this.searchParams).subscribe({
       next: (res) => {
-        this.suppliers.set(res.data);
-        console.log(res);
+        this.suppliers.set(res.data.suppliers);
+        console.log(res.data.suppliers);
         if(res.statusCode === 404){
           console.log('No suppliers found');
         }
@@ -67,6 +70,11 @@ export class Supplier implements OnInit {
 
   search(){
     console.log(this.searchParams);
+    this.getSuppliers();
+  }
+
+  refreshTable(){
+    this.searchParams.searchTerm = '';
     this.getSuppliers();
   }
 

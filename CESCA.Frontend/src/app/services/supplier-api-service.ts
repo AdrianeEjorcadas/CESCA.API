@@ -13,7 +13,7 @@ export class SupplierApiService {
   private http = inject(HttpClient);
   private supplierUrl = `${environment.apiUrl}/supplier`;
 
-  getSuppliers$(supplierSearchParameter : SupplierSearchParameter) : Observable<ReturnResponse<SupplierResponse[]>>{
+  getSuppliers$(supplierSearchParameter : SupplierSearchParameter) : Observable<ReturnResponse<SupplierResponse>>{
     
     let params = new HttpParams();
     
@@ -22,7 +22,7 @@ export class SupplierApiService {
       params = params.set(key, value as any);
     });
 
-    return this.http.get<ReturnResponse<SupplierResponse[]>>(`${this.supplierUrl}/get-suppliers?${params}`)
+    return this.http.get<ReturnResponse<SupplierResponse>>(`${this.supplierUrl}/get-suppliers?${params}`)
     .pipe(
       catchError(err => throwError(() => err ))
     );
