@@ -1,4 +1,5 @@
 ﻿using Azure.Core;
+using CESCA.API.Helpers.Pagination;
 using CESCA.API.Helpers.Pagination.Parameters;
 using CESCA.API.Middleware.Filters;
 using CESCA.API.Models;
@@ -70,7 +71,7 @@ namespace CESCA.API.Controllers
         /// <param name="ct"></param>
         /// <returns></returns>
         [HttpGet("get-suppliers")]
-        public async Task<ActionResult<ReturnResponse<object>>> GetSuppliersAsync([FromQuery] SupplierParameters supplierParameters, 
+        public async Task<ActionResult<ReturnResponse<SupplierResponseDTO>>> GetSuppliersAsync([FromQuery] SupplierParameters supplierParameters, 
             CancellationToken ct = default)
         {
             var result = await _supplierService.GetSupplierAsync(supplierParameters, ct);
@@ -78,11 +79,11 @@ namespace CESCA.API.Controllers
             // frontend metadata
             Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(result.metaData));
 
-            return Ok(new ReturnResponse<object>
+            return Ok(new ReturnResponse<SupplierResponseDTO>
             {
                 StatusCode = 200,
                 Message = "Successfully retrieve suppliers",
-                Data = new
+                Data = new SupplierResponseDTO
                 {
                     Suppliers = result.suppliers,
                     MetaData = result.metaData
