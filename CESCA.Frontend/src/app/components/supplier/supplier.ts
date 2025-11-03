@@ -1,4 +1,4 @@
-import { Component, inject, model, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, inject, model, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
 import { SupplierSearchParameter } from '../../models/search-parameter';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
@@ -9,12 +9,16 @@ import { SupplierApiService } from '../../services/supplier-api-service';
 import { SupplierResponse } from '../../models/component-models/supplier-response';
 import { Subscription } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
-import {MatTableModule}from '@angular/material/table';
+import {MatTableDataSource, MatTableModule}from '@angular/material/table';
 import { SupplierModel } from '../../models/component-models/supplier-model';
+import { NgIf } from '@angular/common';
+import {MatPaginator, PageEvent} from '@angular/material/paginator';
+import { MetadataModel } from '../../models/component-models/metadata-model';
+
 
 @Component({
   selector: 'app-supplier',
-  imports: [FormsModule, MatInputModule, MatFormFieldModule, MatCheckboxModule, NgClass, MatTableModule],
+  imports: [FormsModule, MatInputModule, MatFormFieldModule, MatCheckboxModule, NgClass, MatTableModule, MatPaginator],
   templateUrl: './supplier.html',
   styleUrl: './supplier.css'
 })
@@ -25,7 +29,7 @@ export class Supplier implements OnInit {
 
   suppliersWithMetadata = signal<SupplierResponse | null>(null); 
   suppliers = signal<SupplierModel[]>([]);
-
+  dataSource = new MatTableDataSource<SupplierModel>([]); // data source for mat table
 
   searchParams : SupplierSearchParameter = {
     pageNumber: 1,
@@ -35,19 +39,39 @@ export class Supplier implements OnInit {
     isDeleted: false
   };
 
+  //paginator
+  paginatorMetadata : MetadataModel | null = null;
+
+
   advancedFilterFlag: boolean = false;
 
   displayedColumns: string[] = ['index', 'supplierName', 'email', 'contactNumber', 'address'];
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   ngOnInit(): void {
     this.getSuppliers();
   }
 
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+  }
+
   getSuppliers(){
     this.supplierApiService.getSuppliers$(this.searchParams).subscribe({
       next: (res) => {
-        this.suppliers.set(res.data.suppliers);
-        console.log(res.data.suppliers);
+        this.dataSource.data = res.data.suppliers ?? [];
+        this.paginatorMetadata = res.data.metaData;
+        //map metaData
+        console.log("metadata " + JSON.stringify(this.paginatorMetadata));
+        // // this.suppliersWithMetadata.set(res.data);
+        // console.log(this.dataSource.data);
+        // console.log('Datasource length:', this.dataSource.data.length);
+        if(this.dataSource.data.length === 0){
+          this.toastr.info('No suppliers found');
+        } else {
+          this.toastr.success('Suppliers fetched successfully');
+        }
         if(res.statusCode === 404){
           console.log('No suppliers found');
         }
@@ -57,6 +81,14 @@ export class Supplier implements OnInit {
       }
     });
   }
+
+  onPageChange(event: PageEvent) {
+    this.searchParams.pageNumber = event.pageIndex + 1;
+    this.searchParams.pageSize = event.pageSize;
+    console.log("search params " + this.searchParams.pageNumber);
+    this.getSuppliers();
+  }
+
 
   toggleAdvancedFilter(){
     this.advancedFilterFlag = !this.advancedFilterFlag;
@@ -70,12 +102,20 @@ export class Supplier implements OnInit {
 
   search(){
     console.log(this.searchParams);
+    // this.resetPaginator();
     this.getSuppliers();
   }
 
   refreshTable(){
     this.searchParams.searchTerm = '';
+    this.clearAdvanceFilter();
+    this.toggleAdvancedFilter();
+    // this.resetPaginator();
     this.getSuppliers();
+  }
+
+  resetPaginator(){
+    this.paginatorMetadata = null;
   }
 
   // for archived items

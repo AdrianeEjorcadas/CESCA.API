@@ -41,28 +41,29 @@
         <!-- desktop menu -->
         <div class="hidden md:flex md:flex-col h-screen justify-between px-5">
             <div class="flex flex-col gap-4">
-                <a class="cursor-pointer text-center tracking-wider font-mono text-2xl text-gray hover:text-light-4 transition-all duration-300" 
+                <a class="cursor-pointer text-center font-bold tracking-wider font-mono text-xl text-gray hover:text-light-4 transition-all duration-300" 
                     title="Dashboard" 
                     [routerLink]="['dashboard']"
                     routerLinkActive="text-light-4" 
                     [routerLinkActiveOptions]="{exact: true}">
-                        Dashboard
+                        <!-- <i class="fa-solid fa-chart-line"></i> -->
+                        <span class="pl-2">Dashboard</span>
                 </a>
-                <a class="cursor-pointer text-center tracking-wider font-mono text-2xl text-gray hover:text-light-4 transition-all duration-300" 
+                <a class="cursor-pointer text-center font-bold tracking-wider font-mono text-xl text-gray hover:text-light-4 transition-all duration-300" 
                     title="Inventory" 
                     [routerLink]="['inventory']"
                     routerLinkActive="text-light-4" 
                     [routerLinkActiveOptions]="{exact: true}">
                         Inventory
                 </a>
-                <a class="cursor-pointer text-center tracking-wider font-mono text-2xl text-gray hover:text-light-4 transition-all duration-300" 
+                <a class="cursor-pointer text-center font-bold tracking-wider font-mono text-xl text-gray hover:text-light-4 transition-all duration-300" 
                     title="Supplier" 
                     [routerLink]="['supplier']"
                     routerLinkActive="text-light-4" 
                     [routerLinkActiveOptions]="{exact: true}">
                         Supplier
                 </a>
-                <a class="cursor-pointer text-center tracking-wider font-mono text-2xl text-gray hover:text-light-4 transition-all duration-300" 
+                <a class="cursor-pointer text-center font-bold tracking-wider font-mono text-xl text-gray hover:text-light-4 transition-all duration-300" 
                     title="Account Manager" 
                     [routerLink]="['account-manager']"
                     routerLinkActive="text-light-4" 

@@ -5,6 +5,14 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+.mat-header-cell{
+    @apply text-xs lg:text-sm !font-bold;
+}
+
+.mat-cell{
+    @apply text-xs lg:text-sm;
+}
+
 
 @theme{
     

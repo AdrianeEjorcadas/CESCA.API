@@ -24,6 +24,10 @@ namespace CESCA.API.Data
                 .HasForeignKey(p => p.SupplierId)
                 .IsRequired();
 
+            modelBuilder.Entity<Product>()
+                .Property(p => p.Price)
+                .HasPrecision(18, 2);
+
             modelBuilder.Entity<Supplier>().HasQueryFilter(e => !e.IsDeleted);
             modelBuilder.Entity<Product>().HasQueryFilter(e => !e.IsDeleted);
         }

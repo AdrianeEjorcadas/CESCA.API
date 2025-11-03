@@ -4,5 +4,5 @@ import { SupplierModel } from "./supplier-model"
 
 export interface SupplierResponse{
     suppliers: SupplierModel[],
-    metadata: MetadataModel
+    metaData: MetadataModel
 }
