@@ -1,0 +1,52 @@
+        <!-- mat table -->
+        <div class="overflow-x-auto">
+            <table mat-table [dataSource]="dataSource" class="cursor-pointer w-full min-w-max">
+                <!-- column 1 -->
+                <ng-container matColumnDef="index" >
+                    <th mat-header-cell *matHeaderCellDef class="mat-header-cell">No.</th>
+                    <td mat-cell *matCellDef="let element; let i = index" class="mat-cell">
+                        {{ i + 1 + (paginator.pageIndex * paginator.pageSize) }}
+                    </td>
+                </ng-container>
+                <!-- column 2 -->
+                <ng-container matColumnDef="supplierName">
+                    <th mat-header-cell *matHeaderCellDef class="mat-header-cell">Supplier Name</th>
+                    <td mat-cell *matCellDef="let element" class="mat-cell">{{element.supplierName}}</td>
+                </ng-container>
+                <!-- column 3 -->
+                <ng-container matColumnDef="email">
+                    <th mat-header-cell *matHeaderCellDef class="mat-header-cell">Email</th>
+                    <td mat-cell *matCellDef="let element" class="mat-cell">{{element.email}}</td>
+                </ng-container>
+                <!-- column 4 -->
+                <ng-container matColumnDef="contactNumber">
+                    <th mat-header-cell *matHeaderCellDef class="mat-header-cell">Contact No.</th>
+                    <td mat-cell *matCellDef="let element" class="mat-cell">{{element.contactNumber}}</td>
+                </ng-container>
+                <!-- column 4 -->
+                <ng-container matColumnDef="address">
+                    <th mat-header-cell *matHeaderCellDef class="mat-header-cell">Address</th>
+                    <td mat-cell *matCellDef="let element" class="mat-cell">{{element.address}}</td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr 
+                    class="hover:bg-light-4! hover:text-white!"
+                    mat-row *matRowDef="let row; columns: displayedColumns;" >
+                </tr>
+
+                <!-- empty supplier -->
+                <tr matNoDataRow>
+                    <td [attr.colspan]="displayedColumns.length" class="text-center text-gray-500">
+                        No suppliers found!
+                    </td>
+                </tr>
+            </table>
+            <mat-paginator
+                [length]="paginatorMetadata?.totalCount ?? 0"
+                [pageSize]="paginatorMetadata?.pageSize ?? 10"
+                [pageIndex]="(paginatorMetadata?.currentPage ?? 1) - 1"
+                [pageSizeOptions]="[10]"
+                (page)="onPageChange($event)">
+            </mat-paginator>
+        </div>

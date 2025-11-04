@@ -7,7 +7,7 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import { NgClass } from '@angular/common';
 import { SupplierApiService } from '../../services/supplier-api-service';
 import { SupplierResponse } from '../../models/component-models/supplier-response';
-import { Subscription } from 'rxjs';
+import { finalize, Subscription } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import {MatTableDataSource, MatTableModule}from '@angular/material/table';
 import { SupplierModel } from '../../models/component-models/supplier-model';
@@ -30,6 +30,9 @@ export class Supplier implements OnInit {
   suppliersWithMetadata = signal<SupplierResponse | null>(null); 
   suppliers = signal<SupplierModel[]>([]);
   dataSource = new MatTableDataSource<SupplierModel>([]); // data source for mat table
+
+  // table variables
+  isLoading = signal<boolean>(true);
 
   searchParams : SupplierSearchParameter = {
     pageNumber: 1,
@@ -58,15 +61,17 @@ export class Supplier implements OnInit {
   }
 
   getSuppliers(){
-    this.supplierApiService.getSuppliers$(this.searchParams).subscribe({
+    this.isLoading.set(true);
+    this.supplierApiService.getSuppliers$(this.searchParams)
+    .pipe(
+      finalize(() => this.isLoading.set(false))
+    )
+    .subscribe({
       next: (res) => {
-        this.dataSource.data = res.data.suppliers ?? [];
-        this.paginatorMetadata = res.data.metaData;
+        //set data to supplier signal
+        this.suppliers.set(res.data.suppliers);
         //map metaData
-        console.log("metadata " + JSON.stringify(this.paginatorMetadata));
-        // // this.suppliersWithMetadata.set(res.data);
-        // console.log(this.dataSource.data);
-        // console.log('Datasource length:', this.dataSource.data.length);
+        console.log("metadata " + JSON.stringify(this.suppliers()));
         if(this.dataSource.data.length === 0){
           this.toastr.info('No suppliers found');
         } else {
@@ -86,6 +91,7 @@ export class Supplier implements OnInit {
     this.searchParams.pageNumber = event.pageIndex + 1;
     this.searchParams.pageSize = event.pageSize;
     console.log("search params " + this.searchParams.pageNumber);
+    
     this.getSuppliers();
   }
 
@@ -109,8 +115,7 @@ export class Supplier implements OnInit {
   refreshTable(){
     this.searchParams.searchTerm = '';
     this.clearAdvanceFilter();
-    this.toggleAdvancedFilter();
-    // this.resetPaginator();
+    this.resetPaginator();
     this.getSuppliers();
   }
 

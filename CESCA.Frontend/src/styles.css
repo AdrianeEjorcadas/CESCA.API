@@ -5,12 +5,16 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
-.mat-header-cell{
-    @apply text-xs lg:text-sm !font-bold;
+.table-header-cell{
+    @apply text-xs lg:text-sm px-2 py-2 text-center;
 }
 
 .mat-cell{
-    @apply text-xs lg:text-sm;
+    @apply text-xs lg:text-sm px-2 py-2 text-center;
+}
+
+.table-row{
+    @apply cursor-pointer hover:text-white hover:bg-light-3 transition-all duration-300;
 }
 
 

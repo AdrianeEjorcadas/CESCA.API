@@ -35,28 +35,28 @@
             </button>
          </div>
         <!-- advanced filters  -->
-         <div class="border border-gray rounded-xl p-2 md:p-6 lg:px-12" [ngClass]="advancedFilterFlag ? 'block' : 'hidden'">
-            <h2 class="font-sans tracking-wider text-lg font-semibold">Advanced Filters:</h2>
-            <div class="flex flex-row gap-3">
+         <div class="border border-gray rounded-xl p-2 lg:px-12" [ngClass]="advancedFilterFlag ? 'block' : 'hidden'">
+            <h2 class="font-sans tracking-wider text-md font-semibold">Advanced Filters:</h2>
+            <div class="flex flex-row gap-3 ">
                 <!-- archived items -->
                 <mat-checkbox
                     name="isArchived"
                     [(ngModel)]="searchParams.isArchived"
                     >
-                    <span class="text-light-1">Archived Items</span>
+                    <span class="text-light-1 text-xs">Archived Items</span>
                 </mat-checkbox>
                 <!-- deleted items -->
                 <mat-checkbox
                     name="isDeleted"
                     [(ngModel)]="searchParams.isDeleted"
                     >
-                    <span class="text-light-1">Deleted Items</span>
+                    <span class="text-light-1 text-xs">Deleted Items</span>
                 </mat-checkbox>
             </div>
             <div class="flex justify-end">
                 <!-- filter button -->
                  <button
-                    class="px-3 py-2 rounded-2xl bg-light-3 cursor-pointer text-white transition-all duration-300 hover:text-light-3 hover:bg-white hover:border hover:border-light-3"
+                    class="text-xs px-3 py-2 rounded-2xl bg-light-3 cursor-pointer text-white transition-all duration-300 hover:text-light-3 hover:bg-white hover:border hover:border-light-3"
                     title="Apply Filter"
                     (click)="search()"
                     type="button">Apply Filter</button>
@@ -73,68 +73,64 @@
                 title="Refresh Table">
             </i>
         </div>
-        <!-- table -->
+        <!-- table tailwind -->
         <div class="overflow-x-auto">
-            <table mat-table [dataSource]="dataSource" class="cursor-pointer w-full min-w-max">
-                <!-- column 1 -->
-                <ng-container matColumnDef="index" >
-                    <th mat-header-cell *matHeaderCellDef class="mat-header-cell">No.</th>
-                    <td mat-cell *matCellDef="let element; let i = index" class="mat-cell">
-                        {{ i + 1 + (paginator.pageIndex * paginator.pageSize) }}
-                    </td>
-                </ng-container>
-                <!-- column 2 -->
-                <ng-container matColumnDef="supplierName">
-                    <th mat-header-cell *matHeaderCellDef class="mat-header-cell">Supplier Name</th>
-                    <td mat-cell *matCellDef="let element" class="mat-cell">{{element.supplierName}}</td>
-                </ng-container>
-                <!-- column 3 -->
-                <ng-container matColumnDef="email">
-                    <th mat-header-cell *matHeaderCellDef class="mat-header-cell">Email</th>
-                    <td mat-cell *matCellDef="let element" class="mat-cell">{{element.email}}</td>
-                </ng-container>
-                <!-- column 4 -->
-                <ng-container matColumnDef="contactNumber">
-                    <th mat-header-cell *matHeaderCellDef class="mat-header-cell">Contact No.</th>
-                    <td mat-cell *matCellDef="let element" class="mat-cell">{{element.contactNumber}}</td>
-                </ng-container>
-                <!-- column 4 -->
-                <ng-container matColumnDef="address">
-                    <th mat-header-cell *matHeaderCellDef class="mat-header-cell">Address</th>
-                    <td mat-cell *matCellDef="let element" class="mat-cell">{{element.address}}</td>
-                </ng-container>
+            <table class="min-w-full divide-y divide-gray-200 not-visited:shadow-md bg-white">
+                <thead>
+                    <tr class="border-2">
+                        <th class="table-header-cell hidden md:block">No.</th>
+                        <th class="table-header-cell">Supplier Name</th>
+                        <th class="table-header-cell">Email</th>
+                        <th class="table-header-cell">Contact No.</th>
+                        <th class="table-header-cell">Address</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (isLoading()){
+                    <tr>
+                        <td colspan="6" class="px-6 py-4 text-start text-sm text-gray-500">
+                            <div class="flex justify-center items-center space-x-2">
+                                <span class="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-gray-500"></span>
+                                <span class="text-sm text-gray-500">Loading suppliers...</span>
+                            </div>
+                        </td>
+                    </tr>  
+                } 
+                @else if (suppliers().length > 0){
+                    @for (item of suppliers(); track $index) {
+                        <tr class="table-row border-b-1 border-b-gray" title="{{item.supplierName}}">
+                            <td class="mat-cell hidden md:block">{{$index + 1}}</td>
+                            <td class="mat-cell">{{item.supplierName}}</td>
+                            <td class="mat-cell">{{item.email}}</td>
+                            <td class="mat-cell">{{item.contactNumber}}</td>
+                            <td class="mat-cell">{{item.address}}</td>
+                        </tr>
+                    }
+                } @else {
+                    <tr class="border-b-1 border-b-gray">
+                        <td colspan="6" class="px-6 py-4 text-start text-sm text-gray-500">
+                            No supplier exists!
+                        </td>
+                    </tr>
+                }
+                </tbody>  
+                <tfoot>
+                    <tr>
+                        <td colspan="6" class="px-4 py-2">
+                            <div class="flex justify-center items-center space-x-2">
+                                <button class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">Previous</button>
+                                <button class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600">1</button>
+                                <button class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">2</button>
+                                <button class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">3</button>
+                                <button class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">Next</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tfoot>
 
-                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                <tr 
-                    class="hover:bg-light-4! hover:text-white!"
-                    mat-row *matRowDef="let row; columns: displayedColumns;" >
-                </tr>
-
-                <!-- empty supplier -->
-                <tr matNoDataRow>
-                    <td [attr.colspan]="displayedColumns.length" class="text-center text-gray-500">
-                        No suppliers found!
-                    </td>
-                </tr>
             </table>
-            <!-- <mat-paginator
-                [length]="paginatorMetadata?.totalCount ?? 0"
-                [pageSize]="paginatorMetadata?.pageSize ?? 10"
-                [pageIndex]="(paginatorMetadata?.currentPage ?? 1) - 1"
-                [pageSizeOptions]="[10]"
-                (page)="onPageChange($event)">
-            </mat-paginator> -->
-            
-            <mat-paginator 
-                [length]="paginatorMetadata?.totalCount" 
-                [pageSize]="paginatorMetadata?.pageSize" 
-                [pageIndex]="(paginatorMetadata?.currentPage ?? 1) - 1" 
-                [pageSizeOptions]="[10]" 
-                (page)="onPageChange($event)"> 
-            </mat-paginator> 
-
-
         </div>
     </div>
+
 </div>
 
