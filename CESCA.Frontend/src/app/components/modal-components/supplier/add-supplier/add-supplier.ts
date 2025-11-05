@@ -1,6 +1,7 @@
 import { Component, inject, Inject, OnInit } from '@angular/core';
 import { SupplierApiService } from '../../../../services/supplier-api-service';
 import { AddSupplierModel } from '../../../../models/component-models/add-supplier-model';
+import { ToastrService } from 'ngx-toastr';
 
 import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -18,6 +19,8 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 })
 export class AddSupplier implements OnInit{
   private supplierService = inject(SupplierApiService);
+  private toastr = inject(ToastrService);
+
 
   protected addSupplierForm! : FormGroup;
   private formBuilder = inject(FormBuilder);
@@ -41,7 +44,25 @@ export class AddSupplier implements OnInit{
   }
 
   onSubmit(){
-    console.log(this.addSupplierForm.value);
+    const formData: AddSupplierModel = this.addSupplierForm.value;
+    console.log(formData);
+    this.supplierService.addSupplier(formData).subscribe({
+       next: (res) => {
+        if(res.statusCode === 201){
+          this.toastr.success('Supplier added successfully');
+          this.dialogRef.close(res.statusCode);
+        } else {
+          this.toastr.error('Error adding supplier');
+        }
+       }, 
+       error: (err) => {
+        this.toastr.error('Server Error. Please contact your administrator.'); 
+       }
+    })
+  }
+
+  cancel(){
+    this.dialogRef.close();
   }
 
 }

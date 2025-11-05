@@ -135,7 +135,10 @@ export class Supplier implements OnInit {
       disableClose: true,
     });
 
+    dialogRef.afterClosed().subscribe(result => {
+      if(result === 201){
+        this.refreshTable();
+      }
+    });
   }
-
-  
 }

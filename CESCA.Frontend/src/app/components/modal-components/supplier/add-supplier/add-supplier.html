@@ -16,7 +16,7 @@
             <mat-form-field class="mat-input-element">
                 <mat-label>Contact Number</mat-label>
                 <span matTextPrefix>+63 &nbsp;</span>
-                <input type="tel" matInput placeholder="955-555-1234">
+                <input formControlName="contactNumber" type="tel" matInput placeholder="955-555-1234">
                 <mat-icon matSuffix>mode_edit</mat-icon>
             </mat-form-field>
             <!-- address -->
@@ -24,6 +24,20 @@
                 <mat-label>Address</mat-label>
                 <textarea formControlName="address" matInput placeholder="Address"></textarea>
              </mat-form-field>
+             <!-- button -->
+             <div class="flex justify-end gap-2">
+                <button type="button"
+                    (click)="cancel()"
+                    class="bg-red-700 text-white px-3 py-2 rounded-2xl cursor-pointer transition-all duration-300 hover:text-red-600 hover:bg-white hover:border hover:border-red-600" >
+                    Cancel
+                </button>
+                <button 
+                    [disabled]="!addSupplierForm.valid"
+                    class="bg-light-3 text-white px-3 py-2 rounded-2xl cursor-pointer transition-all duration-300 hover:text-light-3 hover:bg-white hover:border hover:border-light-3" 
+                    type="submit">
+                        Submit
+                    </button>
+             </div>
         </form>
     </div>
 </div>
