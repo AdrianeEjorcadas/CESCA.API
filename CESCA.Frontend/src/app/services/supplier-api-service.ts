@@ -5,6 +5,8 @@ import { SupplierSearchParameter } from '../models/search-parameter';
 import { catchError, Observable, throwError } from 'rxjs';
 import { ReturnResponse } from '../models/return-response';
 import { SupplierResponse } from '../models/component-models/supplier-response';
+import { AddSupplierModel } from '../models/component-models/add-supplier-model';
+import { SupplierModel } from '../models/component-models/supplier-model';
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +25,13 @@ export class SupplierApiService {
     });
 
     return this.http.get<ReturnResponse<SupplierResponse>>(`${this.supplierUrl}/get-suppliers?${params}`)
+    .pipe(
+      catchError(err => throwError(() => err ))
+    );
+  }
+
+  addSupplier(supplier: AddSupplierModel) : Observable<ReturnResponse<SupplierModel>>{
+    return this.http.post<ReturnResponse<SupplierModel>>(`${this.supplierUrl}/add-supplier`, supplier)
     .pipe(
       catchError(err => throwError(() => err ))
     );

@@ -18,6 +18,11 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 }
 
 
+/* mat input */
+.mat-input-element{
+    @apply !text-xs p-0 min-h-min;
+}
+
 @theme{
     
     /* color theme */

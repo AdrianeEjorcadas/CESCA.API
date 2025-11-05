@@ -1,0 +1,29 @@
+<div class="bg-white">
+    <div class="p-4 flex flex-col">
+        <h2 class="text-gray text-lg">Add Supplier</h2>
+        <form [formGroup]="addSupplierForm" (ngSubmit)="onSubmit()" class="flex flex-col">
+            <!-- supplier name -->
+            <mat-form-field class="mat-input-element">
+                <mat-label>Supplier Name</mat-label>
+                <input formControlName="supplierName" matInput title="Supplier Name">
+            </mat-form-field>
+            <!-- email -->
+            <mat-form-field class="mat-input-element">
+                <mat-label>Email</mat-label>
+                <input formControlName="email" matInput title="Email">
+            </mat-form-field>
+            <!-- contact number -->
+            <mat-form-field class="mat-input-element">
+                <mat-label>Contact Number</mat-label>
+                <span matTextPrefix>+63 &nbsp;</span>
+                <input type="tel" matInput placeholder="955-555-1234">
+                <mat-icon matSuffix>mode_edit</mat-icon>
+            </mat-form-field>
+            <!-- address -->
+             <mat-form-field class="mat-input-element">
+                <mat-label>Address</mat-label>
+                <textarea formControlName="address" matInput placeholder="Address"></textarea>
+             </mat-form-field>
+        </form>
+    </div>
+</div>

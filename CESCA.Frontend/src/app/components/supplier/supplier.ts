@@ -10,26 +10,32 @@ import { SupplierResponse } from '../../models/component-models/supplier-respons
 import { finalize, Subscription } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import {MatTableDataSource, MatTableModule}from '@angular/material/table';
+import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { SupplierModel } from '../../models/component-models/supplier-model';
 import { NgIf } from '@angular/common';
 import {MatPaginator, PageEvent} from '@angular/material/paginator';
 import { MetadataModel } from '../../models/component-models/metadata-model';
 
+// modals
+import { AddSupplier } from '../modal-components/supplier/add-supplier/add-supplier';
 
 @Component({
   selector: 'app-supplier',
-  imports: [FormsModule, MatInputModule, MatFormFieldModule, MatCheckboxModule, NgClass, MatTableModule, MatPaginator],
+  imports: [FormsModule, MatInputModule, MatFormFieldModule, MatCheckboxModule, NgClass, MatTableModule, MatPaginator, MatDialogModule],
   templateUrl: './supplier.html',
   styleUrl: './supplier.css'
 })
 export class Supplier implements OnInit {
 
   private supplierApiService = inject(SupplierApiService);
+  // taostr service
   private toastr = inject(ToastrService);
+  //dialog
+  private dialog = inject(MatDialog);
 
   suppliersWithMetadata = signal<SupplierResponse | null>(null); 
   suppliers = signal<SupplierModel[]>([]);
-  dataSource = new MatTableDataSource<SupplierModel>([]); // data source for mat table
+  // dataSource = new MatTableDataSource<SupplierModel>([]); // data source for mat table
 
   // table variables
   isLoading = signal<boolean>(true);
@@ -56,9 +62,9 @@ export class Supplier implements OnInit {
     this.getSuppliers();
   }
 
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-  }
+  // ngAfterViewInit() {
+  //   this.dataSource.paginator = this.paginator; for mat-table
+  // }
 
   getSuppliers(){
     this.isLoading.set(true);
@@ -71,8 +77,9 @@ export class Supplier implements OnInit {
         //set data to supplier signal
         this.suppliers.set(res.data.suppliers);
         //map metaData
-        console.log("metadata " + JSON.stringify(this.suppliers()));
-        if(this.dataSource.data.length === 0){
+        this.paginatorMetadata = res.data.metaData;
+        // console.log("metadata " + JSON.stringify(this.suppliers()));
+        if(res.data.suppliers.length === 0){
           this.toastr.info('No suppliers found');
         } else {
           this.toastr.success('Suppliers fetched successfully');
@@ -89,9 +96,7 @@ export class Supplier implements OnInit {
 
   onPageChange(event: PageEvent) {
     this.searchParams.pageNumber = event.pageIndex + 1;
-    this.searchParams.pageSize = event.pageSize;
-    console.log("search params " + this.searchParams.pageNumber);
-    
+    this.searchParams.pageSize = event.pageSize; 
     this.getSuppliers();
   }
 
@@ -123,9 +128,14 @@ export class Supplier implements OnInit {
     this.paginatorMetadata = null;
   }
 
-  // for archived items
+  //add supplier
+  addSupplier(){
+    const dialogRef = this.dialog.open(AddSupplier,{
+      width: '400px',
+      disableClose: true,
+    });
 
-  //for deleted items
+  }
 
   
 }

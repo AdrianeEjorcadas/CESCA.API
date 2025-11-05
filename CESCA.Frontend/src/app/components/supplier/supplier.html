@@ -1,11 +1,11 @@
-<div class="flex flex-col pl-4 space-y-8">
+<div class="flex flex-col pl-4 space-y-4">
     <!-- header  -->
     <div class="bg-white rounded-bl-2xl text-gray">
         <h1 class="capitalize text-3xl pl-5 pt-5 md:text-4xl">Cesca System</h1>
         <p class="capitalize text-l pl-5 pb-3 md:text-xl">Supplier</p>
     </div>
     <!-- filter field -->
-    <div class="flex flex-col pr-4 gap-3">
+    <div class="flex flex-col pr-4 ">
         <!-- search textbox -->
          <div class="flex justify-end gap-2">
             <input
@@ -26,7 +26,7 @@
          <!-- toggle button for advanced filter -->
          <div>
             <button 
-                class="cursor-pointer transition-all duration-300 hover:scale-110 tracking-wider font-bold"
+                class="cursor-pointer transition-all duration-300 hover:scale-110 tracking-wider font-bold pl-1"
                 type="button" 
                 (click)=" toggleAdvancedFilter()"
                 >
@@ -65,14 +65,22 @@
     </div>
     <!-- table content -->
     <div class="pr-4">
-        <!-- refresh button -->
-        <div class="flex justify-end pb-2">
+        <!-- table function button -->
+        <div class="flex justify-end pb-2 gap-2">
+            <!-- add supplier -->
+            <i 
+                (click)="addSupplier()"
+                class="fa-solid fa-plus cursor-pointer font-extrabold text-xl text-light-3 hover:scale-130 transition-all duration-300" 
+                title="Add Supplier">
+            </i>
+            <!-- refresh -->
             <i 
                 (click)="refreshTable()"
-                class="fa-solid fa-arrows-rotate cursor-pointer font-extrabold text-2xl text-light-3 hover:animate-spin transition-all duration-300" 
+                class="fa-solid fa-arrows-rotate cursor-pointer font-extrabold text-lg text-light-3 hover:animate-spin transition-all duration-300" 
                 title="Refresh Table">
             </i>
         </div>
+
         <!-- table tailwind -->
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200 not-visited:shadow-md bg-white">
@@ -113,24 +121,18 @@
                         </td>
                     </tr>
                 }
-                </tbody>  
-                <tfoot>
-                    <tr>
-                        <td colspan="6" class="px-4 py-2">
-                            <div class="flex justify-center items-center space-x-2">
-                                <button class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">Previous</button>
-                                <button class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600">1</button>
-                                <button class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">2</button>
-                                <button class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">3</button>
-                                <button class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">Next</button>
-                            </div>
-                        </td>
-                    </tr>
-                </tfoot>
-
+                </tbody> 
             </table>
+            @if (suppliers().length > 0) {
+            <mat-paginator
+                [length]="paginatorMetadata?.totalCount ?? 0"
+                [pageSize]="paginatorMetadata?.pageSize ?? 10"
+                [pageIndex]="(paginatorMetadata?.currentPage ?? 1) - 1"
+                [pageSizeOptions]="[10]"
+                (page)="onPageChange($event)">
+            </mat-paginator>
+        }
         </div>
     </div>
-
 </div>
 
