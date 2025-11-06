@@ -124,13 +124,13 @@
                                                 <mat-icon>edit</mat-icon>
                                                 <span>Edit</span>
                                             </button>
-                                            <button mat-menu-item (click)="archivedSupplier(item.supplierId)">
+                                            <button mat-menu-item (click)="archivedSupplier(item.supplierId, item.supplierName)">
                                                 <mat-icon>archived</mat-icon>
                                                 <span>Archive</span>
                                             </button>
                                         }@else{
                                         <!-- display if archived flag is true -->
-                                            <button mat-menu-item (click)="archivedSupplier(item.supplierId)">
+                                            <button mat-menu-item (click)="archivedSupplier(item.supplierId, item.supplierName)">
                                                 <mat-icon>restore</mat-icon>
                                                 <span>Restore</span>
                                             </button>

@@ -36,4 +36,12 @@ export class SupplierApiService {
       catchError(err => throwError(() => err ))
     );
   }
+
+  archivedSupplier(supplierId: string) : Observable<ReturnResponse<SupplierModel>>{
+    return this.http.put<ReturnResponse<SupplierModel>>(`${this.supplierUrl}/archived-supplier?supplierId=${supplierId}`, null)
+    .pipe(
+      catchError(err => throwError(() => err ))
+    );
+  }
+
 }
