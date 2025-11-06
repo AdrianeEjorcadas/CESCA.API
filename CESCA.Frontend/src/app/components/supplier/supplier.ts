@@ -23,6 +23,7 @@ import {MatButtonModule} from '@angular/material/button';
 // modals
 import { AddSupplier } from '../modal-components/supplier/add-supplier/add-supplier';
 import { ArchivedSupplier } from '../modal-components/supplier/archived-supplier/archived-supplier';
+import { RestoreSupplier } from '../modal-components/supplier/restore-supplier/restore-supplier';
 
 @Component({
   selector: 'app-supplier',
@@ -178,8 +179,30 @@ export class Supplier implements OnInit {
   }
 
   // restore supplier
-  restoreSupplier(supplierId: string){
-    console.log("restore: " + supplierId);
+  restoreSupplier(supplierId: string, supplierName: string){
+    const dialogRef = this.dialog.open(RestoreSupplier, {
+      width: '400px',
+      disableClose: true,
+      data: supplierName
+    });
+
+    dialogRef.afterClosed().subscribe(result =>{
+      if(result === true){
+        this.supplierApiService.archivedSupplier(supplierId).subscribe({
+          next: (res) => {
+            if(res.statusCode === 200){
+              this.toastr.success('Supplier restored successfully');
+              this.refreshTable();
+            } else {
+              this.toastr.error('Error restoring supplier');
+            }
+          },
+          error: (err) => {
+            this.toastr.error('Server Error. Please contact your administrator.' + err || err.message || err.error);
+          }
+        }); 
+      }
+    });
   }
 
   //delete supplier

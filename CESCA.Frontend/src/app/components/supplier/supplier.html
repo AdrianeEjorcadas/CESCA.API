@@ -108,7 +108,7 @@
                     @else if (suppliers().length > 0){
                         @for (item of suppliers(); track $index) {
                             <tr class="table-row border-b-1 border-b-gray" title="{{item.supplierName}}">
-                                <td class="mat-cell hidden md:block">{{$index + 1}}</td>
+                                <td class="mat-cell hidden md:block">{{$index + 1 + (paginator.pageIndex * paginator.pageSize)}}</td>
                                 <td class="mat-cell">{{item.supplierName}}</td>
                                 <td class="mat-cell">{{item.email}}</td>
                                 <td class="mat-cell">{{item.contactNumber}}</td>
@@ -130,7 +130,7 @@
                                             </button>
                                         }@else{
                                         <!-- display if archived flag is true -->
-                                            <button mat-menu-item (click)="archivedSupplier(item.supplierId, item.supplierName)">
+                                            <button mat-menu-item (click)="restoreSupplier(item.supplierId, item.supplierName)">
                                                 <mat-icon>restore</mat-icon>
                                                 <span>Restore</span>
                                             </button>
