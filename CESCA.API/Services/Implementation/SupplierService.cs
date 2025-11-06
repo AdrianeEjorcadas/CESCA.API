@@ -90,5 +90,19 @@ namespace CESCA.API.Services.Implementation
 
             return result;
         }
+
+        public async Task<SupplierDTO> ArchivedSupplierAsync(Guid supplierId, CancellationToken ct)
+        {
+            var result = await _supplierRepository.ArchivedSupplierAsync(supplierId, ct);
+
+            if (result is null)
+            {
+                throw new InvalidOperationException("Error on archiving or restoring supplier");
+            }
+
+            return result;
+        }
     }
 }
+
+

@@ -130,5 +130,22 @@ namespace CESCA.API.Controllers
             });
         }
 
+        /// <summary>
+        /// Archive or restore supplier
+        /// </summary>
+        /// <param name="supplierId"></param>
+        /// <param name="ct"></param>
+        /// <returns></returns>
+        [HttpPut("archived-supplier")]
+        public async Task<ActionResult<ReturnResponse<SupplierDTO>>> ArchivedSupplierAsync([FromQuery] Guid supplierId, CancellationToken ct = default)
+        {
+            var result = await _supplierService.ArchivedSupplierAsync(supplierId, ct);
+            return Ok(new ReturnResponse<SupplierDTO>
+            {
+                StatusCode = 200,
+                Message = $"{result.SupplierName.ToUpper()} has been successfully updated",
+                Data = result
+            });
+        }
     }
 }

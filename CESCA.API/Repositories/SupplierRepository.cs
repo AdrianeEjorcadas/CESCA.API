@@ -68,23 +68,26 @@ namespace CESCA.API.Repositories
             if (supplierParameters.IsArchived is true)
             {
                 query = query.Where(q => q.IsArchived);
+            } else
+            {
+                query = query.Where(q => !q.IsArchived);
             }
 
-            var result = await query
-                .AsNoTracking()
-                .OrderBy(s => s.SupplierName)
-                .Skip((supplierParameters.PageNumber - 1) * supplierParameters.PageSize)
-                .Take(supplierParameters.PageSize)
-                .Select(s => new SupplierDTO
-                {
-                    SupplierId = s.SupplierId,
-                    SupplierName = s.SupplierName,
-                    Email = s.Email,
-                    ContactNumber = s.ContactNumber,
-                    Address = s.Address,
-                    IsDeleted = s.IsDeleted
-                })
-                .ToListAsync(cancellationToken);
+                var result = await query
+                    .AsNoTracking()
+                    .OrderBy(s => s.SupplierName)
+                    .Skip((supplierParameters.PageNumber - 1) * supplierParameters.PageSize)
+                    .Take(supplierParameters.PageSize)
+                    .Select(s => new SupplierDTO
+                    {
+                        SupplierId = s.SupplierId,
+                        SupplierName = s.SupplierName,
+                        Email = s.Email,
+                        ContactNumber = s.ContactNumber,
+                        Address = s.Address,
+                        IsDeleted = s.IsDeleted
+                    })
+                    .ToListAsync(cancellationToken);
 
 
             if (!string.IsNullOrEmpty(supplierParameters.SearchTerm))
@@ -92,7 +95,9 @@ namespace CESCA.API.Repositories
                 count = result.Count();
             } else
             {
-                count = await _context.Suppliers.CountAsync(cancellationToken);
+                count = await _context.Suppliers
+                    .Where(s => !s.IsArchived)
+                    .CountAsync(cancellationToken);
             }
 
             return PagedList<SupplierDTO>
@@ -137,6 +142,30 @@ namespace CESCA.API.Repositories
             await _context.SaveChangesAsync();
 
             return supplierToUpdate;
+        }
+
+        public async Task<SupplierDTO?> ArchivedSupplierAsync(Guid supplierId, CancellationToken cancellationToken)
+        {
+            var supplierToArchived = await _context.Suppliers
+                .FindAsync(supplierId, cancellationToken);
+
+            if (supplierToArchived is null)
+            {
+                return null;
+            }
+
+            supplierToArchived.IsArchived = !supplierToArchived.IsArchived;
+            await _context.SaveChangesAsync(cancellationToken);
+
+            return new SupplierDTO
+            {
+                SupplierId = supplierToArchived.SupplierId,
+                SupplierName = supplierToArchived.SupplierName,
+                Email = supplierToArchived.Email,
+                Address = supplierToArchived.Address,
+                ContactNumber = supplierToArchived.ContactNumber,
+                IsDeleted = supplierToArchived.IsDeleted,
+            };
         }
     }
 }

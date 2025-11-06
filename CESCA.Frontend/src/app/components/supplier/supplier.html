@@ -96,69 +96,71 @@
                 </thead>
                 <tbody>
                     @if (isLoading()){
-                    <tr>
-                        <td colspan="6" class="px-6 py-4 text-start text-sm text-gray-500">
-                            <div class="flex justify-center items-center space-x-2">
-                                <span class="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-gray-500"></span>
-                                <span class="text-sm text-gray-500">Loading suppliers...</span>
-                            </div>
-                        </td>
-                    </tr>  
-                } 
-                @else if (suppliers().length > 0){
-                    @for (item of suppliers(); track $index) {
-                        <tr class="table-row border-b-1 border-b-gray" title="{{item.supplierName}}">
-                            <td class="mat-cell hidden md:block">{{$index + 1}}</td>
-                            <td class="mat-cell">{{item.supplierName}}</td>
-                            <td class="mat-cell">{{item.email}}</td>
-                            <td class="mat-cell">{{item.contactNumber}}</td>
-                            <td class="mat-cell">{{item.address}}</td>
-                            <td class="mat-cell">
-                                <button matIconButton [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-                                    <mat-icon>more_vert</mat-icon>
-                                </button>
-                                <mat-menu #menu="matMenu">
-                                    @if(!searchParams.isArchived){
-                                        <button mat-menu-item (click)="editSupplier(item.supplierId)">
-                                            <mat-icon>edit</mat-icon>
-                                            <span>Edit</span>
-                                        </button>
-                                        <button mat-menu-item (click)="archivedSupplier(item.supplierId)">
-                                            <mat-icon>archived</mat-icon>
-                                            <span>Archive</span>
-                                        </button>
-                                    }@else{
-                                        <button mat-menu-item (click)="archivedSupplier(item.supplierId)">
-                                            <mat-icon>restore</mat-icon>
-                                            <span>Restore</span>
-                                        </button>
-                                    }
-                                    <button mat-menu-item (click)="deleteSupplier(item.supplierId)">
-                                        <mat-icon>delete</mat-icon>
-                                        <span>Delete</span>
+                        <tr>
+                            <td colspan="6" class="px-6 py-4 text-start text-sm text-gray-500">
+                                <div class="flex justify-center items-center space-x-2">
+                                    <span class="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-gray-500"></span>
+                                    <span class="text-sm text-gray-500">Loading suppliers...</span>
+                                </div>
+                            </td>
+                        </tr>  
+                    } 
+                    @else if (suppliers().length > 0){
+                        @for (item of suppliers(); track $index) {
+                            <tr class="table-row border-b-1 border-b-gray" title="{{item.supplierName}}">
+                                <td class="mat-cell hidden md:block">{{$index + 1}}</td>
+                                <td class="mat-cell">{{item.supplierName}}</td>
+                                <td class="mat-cell">{{item.email}}</td>
+                                <td class="mat-cell">{{item.contactNumber}}</td>
+                                <td class="mat-cell">{{item.address}}</td>
+                                <td class="mat-cell">
+                                    <button matIconButton [matMenuTriggerFor]="menu" aria-label="{{item.supplierName}} menu" title="Open {{item.supplierName}} Menu">
+                                        <mat-icon>more_vert</mat-icon>
                                     </button>
-                                </mat-menu>
+                                    <mat-menu #menu="matMenu">
+                                        <!-- display if archived flag is false -->
+                                        @if (!searchParams.isArchived) {
+                                            <button mat-menu-item (click)="editSupplier(item.supplierId)">
+                                                <mat-icon>edit</mat-icon>
+                                                <span>Edit</span>
+                                            </button>
+                                            <button mat-menu-item (click)="archivedSupplier(item.supplierId)">
+                                                <mat-icon>archived</mat-icon>
+                                                <span>Archive</span>
+                                            </button>
+                                        }@else{
+                                        <!-- display if archived flag is true -->
+                                            <button mat-menu-item (click)="archivedSupplier(item.supplierId)">
+                                                <mat-icon>restore</mat-icon>
+                                                <span>Restore</span>
+                                            </button>
+                                        }
+                                        <button mat-menu-item (click)="deleteSupplier(item.supplierId)">
+                                            <mat-icon>delete</mat-icon>
+                                            <span>Delete</span>
+                                        </button>
+                                    </mat-menu>
+                                </td>
+                            </tr>
+                        }
+                    } @else {
+                        <tr class="border-b-1 border-b-gray">
+                            <td colspan="6" class="px-6 py-4 text-start text-sm text-gray-500">
+                                No supplier exists!
                             </td>
                         </tr>
                     }
-                } @else {
-                    <tr class="border-b-1 border-b-gray">
-                        <td colspan="6" class="px-6 py-4 text-start text-sm text-gray-500">
-                            No supplier exists!
-                        </td>
-                    </tr>
-                }
                 </tbody> 
             </table>
             @if (suppliers().length > 0) {
-            <mat-paginator
-                [length]="paginatorMetadata?.totalCount ?? 0"
-                [pageSize]="paginatorMetadata?.pageSize ?? 10"
-                [pageIndex]="(paginatorMetadata?.currentPage ?? 1) - 1"
-                [pageSizeOptions]="[10]"
-                (page)="onPageChange($event)">
-            </mat-paginator>
-        }
+                <mat-paginator
+                    [length]="paginatorMetadata?.totalCount ?? 0"
+                    [pageSize]="paginatorMetadata?.pageSize ?? 10"
+                    [pageIndex]="(paginatorMetadata?.currentPage ?? 1) - 1"
+                    [pageSizeOptions]="[10]"
+                    (page)="onPageChange($event)">
+                </mat-paginator>
+            }
         </div>
     </div>
 </div>
