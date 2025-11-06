@@ -91,6 +91,7 @@
                         <th class="table-header-cell">Email</th>
                         <th class="table-header-cell">Contact No.</th>
                         <th class="table-header-cell">Address</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -112,6 +113,32 @@
                             <td class="mat-cell">{{item.email}}</td>
                             <td class="mat-cell">{{item.contactNumber}}</td>
                             <td class="mat-cell">{{item.address}}</td>
+                            <td class="mat-cell">
+                                <button matIconButton [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                                    <mat-icon>more_vert</mat-icon>
+                                </button>
+                                <mat-menu #menu="matMenu">
+                                    @if(!searchParams.isArchived){
+                                        <button mat-menu-item (click)="editSupplier(item.supplierId)">
+                                            <mat-icon>edit</mat-icon>
+                                            <span>Edit</span>
+                                        </button>
+                                        <button mat-menu-item (click)="archivedSupplier(item.supplierId)">
+                                            <mat-icon>archived</mat-icon>
+                                            <span>Archive</span>
+                                        </button>
+                                    }@else{
+                                        <button mat-menu-item (click)="archivedSupplier(item.supplierId)">
+                                            <mat-icon>restore</mat-icon>
+                                            <span>Restore</span>
+                                        </button>
+                                    }
+                                    <button mat-menu-item (click)="deleteSupplier(item.supplierId)">
+                                        <mat-icon>delete</mat-icon>
+                                        <span>Delete</span>
+                                    </button>
+                                </mat-menu>
+                            </td>
                         </tr>
                     }
                 } @else {

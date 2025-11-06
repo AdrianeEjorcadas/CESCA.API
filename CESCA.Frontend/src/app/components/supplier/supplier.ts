@@ -15,13 +15,17 @@ import { SupplierModel } from '../../models/component-models/supplier-model';
 import { NgIf } from '@angular/common';
 import {MatPaginator, PageEvent} from '@angular/material/paginator';
 import { MetadataModel } from '../../models/component-models/metadata-model';
+import {MatIconModule} from '@angular/material/icon';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatButtonModule} from '@angular/material/button';
+
 
 // modals
 import { AddSupplier } from '../modal-components/supplier/add-supplier/add-supplier';
 
 @Component({
   selector: 'app-supplier',
-  imports: [FormsModule, MatInputModule, MatFormFieldModule, MatCheckboxModule, NgClass, MatTableModule, MatPaginator, MatDialogModule],
+  imports: [FormsModule, MatInputModule, MatFormFieldModule, MatCheckboxModule, NgClass, MatTableModule, MatPaginator, MatDialogModule, MatIconModule, MatMenuModule, MatButtonModule],
   templateUrl: './supplier.html',
   styleUrl: './supplier.css'
 })
@@ -58,6 +62,7 @@ export class Supplier implements OnInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
+
   ngOnInit(): void {
     this.getSuppliers();
   }
@@ -77,8 +82,9 @@ export class Supplier implements OnInit {
         //set data to supplier signal
         this.suppliers.set(res.data.suppliers);
         //map metaData
+        this.paginatorMetadata = null;
         this.paginatorMetadata = res.data.metaData;
-        // console.log("metadata " + JSON.stringify(this.suppliers()));
+        console.log("metadata " + JSON.stringify(res.data.metaData));
         if(res.data.suppliers.length === 0){
           this.toastr.info('No suppliers found');
         } else {
@@ -113,7 +119,7 @@ export class Supplier implements OnInit {
 
   search(){
     console.log(this.searchParams);
-    // this.resetPaginator();
+    this.resetPaginator();
     this.getSuppliers();
   }
 
@@ -140,5 +146,25 @@ export class Supplier implements OnInit {
         this.refreshTable();
       }
     });
+  }
+
+  //archived supplier
+  archivedSupplier(supplierId: string){
+    console.log("archived: " + supplierId);
+  }
+
+  // restore supplier
+  restoreSupplier(supplierId: string){
+    console.log("restore: " + supplierId);
+  }
+  
+  //delete supplier
+  deleteSupplier(supplierId: string){
+    console.log("delete: " + supplierId);
+  }
+
+  //edit supplier
+  editSupplier(supplierId: string){
+    console.log("edit: " + supplierId);
   }
 }

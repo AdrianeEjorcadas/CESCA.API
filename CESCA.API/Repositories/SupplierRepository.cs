@@ -56,7 +56,8 @@ namespace CESCA.API.Repositories
         public async Task<PagedList<SupplierDTO>> GetSupplierAsync(SupplierParameters supplierParameters, CancellationToken cancellationToken)
         {
             var query = _context.Suppliers.AsQueryable();
-            
+            var count = 0;
+
             //Search Term
             if (!string.IsNullOrEmpty(supplierParameters.SearchTerm))
             {
@@ -85,7 +86,14 @@ namespace CESCA.API.Repositories
                 })
                 .ToListAsync(cancellationToken);
 
-            var count = await _context.Suppliers.CountAsync(cancellationToken);
+
+            if (!string.IsNullOrEmpty(supplierParameters.SearchTerm))
+            {
+                count = result.Count();
+            } else
+            {
+                count = await _context.Suppliers.CountAsync(cancellationToken);
+            }
 
             return PagedList<SupplierDTO>
                 .ToPagedList(result, count, supplierParameters.PageNumber, supplierParameters.PageSize);

@@ -14,7 +14,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 }
 
 .table-row{
-    @apply cursor-pointer hover:text-white hover:bg-light-3 transition-all duration-300;
+    @apply hover:text-white hover:bg-light-3 transition-all duration-300;
 }
 
 
