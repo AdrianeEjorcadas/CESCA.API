@@ -24,6 +24,7 @@ import {MatButtonModule} from '@angular/material/button';
 import { AddSupplier } from '../modal-components/supplier/add-supplier/add-supplier';
 import { ArchivedSupplier } from '../modal-components/supplier/archived-supplier/archived-supplier';
 import { RestoreSupplier } from '../modal-components/supplier/restore-supplier/restore-supplier';
+import { DeleteSupplier } from '../modal-components/supplier/delete-supplier/delete-supplier';
 
 @Component({
   selector: 'app-supplier',
@@ -67,6 +68,7 @@ export class Supplier implements OnInit {
 
   ngOnInit(): void {
     this.getSuppliers();
+    console.log(this.suppliers());
   }
 
   // ngAfterViewInit() {
@@ -206,8 +208,30 @@ export class Supplier implements OnInit {
   }
 
   //delete supplier
-  deleteSupplier(supplierId: string){
-    console.log("delete: " + supplierId);
+  deleteSupplier(supplierId: string, supplierName: string){
+    const dialogRef = this.dialog.open(DeleteSupplier, {
+      width: '400px',
+      disableClose: true,
+      data: supplierName
+    });
+
+    dialogRef.afterClosed().subscribe(result =>{
+      if(result === true){
+        this.supplierApiService.deleteSupplier(supplierId).subscribe({
+          next: (res) => {
+            if(res.statusCode === 200){
+              this.toastr.success('Supplier deleted successfully');
+              this.refreshTable();
+            } else {
+              this.toastr.error('Error deleting supplier');
+            }
+          },
+          error: (err) => {
+            this.toastr.error('Server Error. Please contact your administrator.' + err || err.message || err.error);
+          }
+        }); 
+      }
+    });
   }
 
   //edit supplier

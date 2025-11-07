@@ -44,4 +44,11 @@ export class SupplierApiService {
     );
   }
 
+  deleteSupplier(supplierId: string) : Observable<ReturnResponse<SupplierModel>>{
+    return this.http.delete<ReturnResponse<SupplierModel>>(`${this.supplierUrl}/delete-supplier?supplierId=${supplierId}`)
+    .pipe(
+      catchError(err => throwError(() => err ))
+    );
+  }
+
 }

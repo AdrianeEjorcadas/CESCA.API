@@ -108,7 +108,7 @@
                     @else if (suppliers().length > 0){
                         @for (item of suppliers(); track $index) {
                             <tr class="table-row border-b-1 border-b-gray" title="{{item.supplierName}}">
-                                <td class="mat-cell hidden md:block">{{$index + 1 + (paginator.pageIndex * paginator.pageSize)}}</td>
+                                <td class="mat-cell hidden md:block">{{ $index + 1 + ((paginator?.pageIndex || 0) * (paginator?.pageSize || 0)) }}</td>
                                 <td class="mat-cell">{{item.supplierName}}</td>
                                 <td class="mat-cell">{{item.email}}</td>
                                 <td class="mat-cell">{{item.contactNumber}}</td>
@@ -135,7 +135,7 @@
                                                 <span>Restore</span>
                                             </button>
                                         }
-                                        <button mat-menu-item (click)="deleteSupplier(item.supplierId)">
+                                        <button mat-menu-item (click)="deleteSupplier(item.supplierId, item.supplierName)">
                                             <mat-icon>delete</mat-icon>
                                             <span>Delete</span>
                                         </button>
