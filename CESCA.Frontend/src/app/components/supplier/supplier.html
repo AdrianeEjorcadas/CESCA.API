@@ -120,7 +120,7 @@
                                     <mat-menu #menu="matMenu">
                                         <!-- display if archived flag is false -->
                                         @if (!searchParams.isArchived) {
-                                            <button mat-menu-item (click)="editSupplier(item.supplierId)">
+                                            <button mat-menu-item (click)="editSupplier(item)">
                                                 <mat-icon>edit</mat-icon>
                                                 <span>Edit</span>
                                             </button>

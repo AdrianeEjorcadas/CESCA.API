@@ -235,7 +235,7 @@ export class Supplier implements OnInit {
   }
 
   //edit supplier
-  editSupplier(supplierId: string){
-    console.log("edit: " + supplierId);
+  editSupplier(supplier: SupplierModel){
+    console.log("edit: " + JSON.stringify(supplier));
   }
 }
