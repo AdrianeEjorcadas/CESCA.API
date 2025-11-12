@@ -25,6 +25,8 @@ import { AddSupplier } from '../modal-components/supplier/add-supplier/add-suppl
 import { ArchivedSupplier } from '../modal-components/supplier/archived-supplier/archived-supplier';
 import { RestoreSupplier } from '../modal-components/supplier/restore-supplier/restore-supplier';
 import { DeleteSupplier } from '../modal-components/supplier/delete-supplier/delete-supplier';
+import { UpdateSupplier } from '../modal-components/supplier/update-supplier/update-supplier';
+import { UpdateSupplierModel } from '../../models/component-models/update-supplier';
 
 @Component({
   selector: 'app-supplier',
@@ -236,6 +238,19 @@ export class Supplier implements OnInit {
 
   //edit supplier
   editSupplier(supplier: SupplierModel){
-    console.log("edit: " + JSON.stringify(supplier));
+    const dialogRef = this.dialog.open(UpdateSupplier, {
+      width: '400px',
+      disableClose: true,
+      data: {
+        supplier: supplier,
+        updatedBy: 'a3f1c9e2-7b6d-4c8a-9f3e-2d1b6f4a8c9e'
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result === 200){
+        this.refreshTable();
+      }
+    })
   }
 }

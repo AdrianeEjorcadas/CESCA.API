@@ -1,1 +1,44 @@
-<p>update-supplier works!</p>
+<div class="bg-white">
+    <div class="p-4 flex flex-col">
+        <h2 class="text-gray text-lg">Update Supplier</h2>
+        <hr class="border-t border-gray-300 my-4" />
+        <form *ngIf="updateSupplierForm" [formGroup]="updateSupplierForm" (ngSubmit)="onSubmit()" class="flex flex-col">
+            <!-- supplier name -->
+            <mat-form-field class="mat-input-element">
+                <mat-label>Supplier Name</mat-label>
+                <input formControlName="supplierName" matInput title="Supplier Name">
+            </mat-form-field>
+            <!-- email -->
+            <mat-form-field class="mat-input-element">
+                <mat-label>Email</mat-label>
+                <input formControlName="email" matInput title="Email">
+            </mat-form-field>
+            <!-- contact number -->
+            <mat-form-field class="mat-input-element">
+                <mat-label>Contact Number</mat-label>
+                <!-- <span matTextPrefix>+63 &nbsp;</span> -->
+                <input formControlName="contactNumber" type="tel" matInput title="Contact Number">
+                <mat-icon matSuffix>mode_edit</mat-icon>
+            </mat-form-field>
+            <!-- address -->
+             <mat-form-field class="mat-input-element">
+                <mat-label>Address</mat-label>
+                <textarea formControlName="address" matInput placeholder="Address"></textarea>
+             </mat-form-field>
+             <!-- button -->
+             <div class="flex justify-end gap-2">
+                <button type="button"
+                    (click)="cancel()"
+                    class="bg-red-700 text-white px-3 py-2 rounded-2xl cursor-pointer transition-all duration-300 hover:text-red-600 hover:bg-white hover:border hover:border-red-600" >
+                    Cancel
+                </button>
+                <button 
+                    [disabled]="!updateSupplierForm.valid"
+                    class="bg-light-3 text-white px-3 py-2 rounded-2xl cursor-pointer transition-all duration-300 hover:text-light-3 hover:bg-white hover:border hover:border-light-3" 
+                    type="submit">
+                        Submit
+                    </button>
+             </div>
+        </form>
+    </div>
+</div>

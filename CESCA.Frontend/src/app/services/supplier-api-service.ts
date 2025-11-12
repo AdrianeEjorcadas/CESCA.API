@@ -7,7 +7,7 @@ import { ReturnResponse } from '../models/return-response';
 import { SupplierResponse } from '../models/component-models/supplier-response';
 import { AddSupplierModel } from '../models/component-models/add-supplier-model';
 import { SupplierModel } from '../models/component-models/supplier-model';
-import { UpdateSupplier } from '../models/component-models/update-supplier';
+import { UpdateSupplierModel } from '../models/component-models/update-supplier';
 
 @Injectable({
   providedIn: 'root'
@@ -52,7 +52,7 @@ export class SupplierApiService {
     );
   }
 
-  updateSupplier(supplier: UpdateSupplier) : Observable<ReturnResponse<SupplierModel>>{
+  updateSupplier(supplier: UpdateSupplierModel) : Observable<ReturnResponse<SupplierModel>>{
     return this.http.put<ReturnResponse<SupplierModel>>(`${this.supplierUrl}/update-supplier`, supplier)
     .pipe(
       catchError(err => throwError(() => err))

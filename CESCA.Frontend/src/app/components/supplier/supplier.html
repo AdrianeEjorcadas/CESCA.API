@@ -82,7 +82,7 @@
         </div>
 
         <!-- table tailwind -->
-        <div class="overflow-x-auto">
+        <div class="max-h-[600px] overflow-y-auto overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200 not-visited:shadow-md bg-white">
                 <thead>
                     <tr class="border-2">
@@ -152,6 +152,7 @@
                     }
                 </tbody> 
             </table>
+        </div>
             @if (suppliers().length > 0) {
                 <mat-paginator
                     [length]="paginatorMetadata?.totalCount ?? 0"
@@ -161,7 +162,6 @@
                     (page)="onPageChange($event)">
                 </mat-paginator>
             }
-        </div>
     </div>
 </div>
 

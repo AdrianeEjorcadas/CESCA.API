@@ -5,11 +5,15 @@ import { UpdateSupplierModel } from '../../../../models/component-models/update-
 
 import { MatDialogRef } from '@angular/material/dialog';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {MatIconModule} from '@angular/material/icon';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
 import { ToastrService } from 'ngx-toastr';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-update-supplier',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, MatIconModule, MatInputModule, MatFormFieldModule, NgIf],
   templateUrl: './update-supplier.html',
   styleUrl: './update-supplier.css'
 })
@@ -27,18 +31,25 @@ export class UpdateSupplier implements OnInit{
   ){}
 
   ngOnInit(): void {
+    console.log(this.data);
     this.initializeForm();
+    console.log(this.updateSupplierForm.value);
   }
 
   initializeForm(){
+    const supplier = this.data.supplier;
+    const updatedBy = this.data.updatedBy;
+
     this.updateSupplierForm = this.formBuilder.group({
-      supplierName : ['',Validators.required],
-      email : ['',Validators.email],
-      contactNumber : [''],
-      address : [''],
-      isDeleted: [false],
-      updatedBy: ['']
+      supplierId : [supplier.supplierId, Validators.required],
+      supplierName : [supplier.supplierName ?? '', Validators.required],
+      email : [supplier.email ?? '', Validators.email],
+      contactNumber : [supplier.contactNumber ?? ''],
+      address : [supplier.address ?? ''],
+      isDeleted: [supplier.isDeleted ?? false],
+      updatedBy: [updatedBy ?? 'test']
     });
+
   }
 
   onSubmit(){
