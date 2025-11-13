@@ -129,7 +129,7 @@ namespace CESCA.API.Repositories
             else
             {
 
-                count = await _context.Suppliers
+                count = await _context.Products
                     .Where(s => !s.IsArchived)
                     .CountAsync(ct);
             }

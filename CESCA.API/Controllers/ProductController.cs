@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace CESCA.API.Controllers
 {
@@ -73,14 +74,22 @@ namespace CESCA.API.Controllers
         }
 
         [HttpGet("get-products")]
-        public async Task<ActionResult<ReturnResponse<object>>> GetProductsAsync([FromQuery]ProductParameters productParameters,CancellationToken ct = default)
+        public async Task<ActionResult<ReturnResponse<ProductGetResponseDTO>>> GetProductsAsync([FromQuery]ProductParameters productParameters,CancellationToken ct = default)
         {
             var result = await _productService.GetProductAsync(productParameters, ct);
-            return Ok(new ReturnResponse<object>
+
+            //frontend meta dataa
+            Response.Headers.Add("Product-Pagination", JsonSerializer.Serialize(result.metaData));
+
+            return Ok(new ReturnResponse<ProductGetResponseDTO>
             {
                 StatusCode = 200,
                 Message = "Successfully retrieve products",
-                Data = result.products
+                Data = new ProductGetResponseDTO
+                {
+                    Products = result.products,
+                    MetaData = result.metaData
+                }
             });
         }
 
