@@ -32,7 +32,8 @@ export const routes: Routes = [
                 path: 'account-manager',
                 title: 'Cesca ~ Account Manager',
                 loadComponent: () => import('../app/components/account-manager/account-manager').then(m => m.AccountManager),
-                canActivate: [authGuard]
+                canActivate: [authGuard],
+               data: { role: 'Admin' }
            },
            {
                 path: 'supplier',
@@ -46,6 +47,11 @@ export const routes: Routes = [
                 pathMatch: 'full'
            }
         ]
+    },
+    {
+     path: 'unathourized',
+     title: 'Unauthorized',
+     loadComponent: () => import('../app/components/unathorized/unathorized').then(m => m.Unathorized)
     },
     {
         path: '**',

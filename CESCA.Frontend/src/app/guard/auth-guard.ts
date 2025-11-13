@@ -8,7 +8,24 @@ export const authGuard: CanActivateFn = (route, state) : boolean | UrlTree => {
   const tokenService = inject(TokenService);
   const router = inject(Router)
 
-  return tokenService.getAccessToken()
-    ? true
-    : router.parseUrl('/login');  
+  // return tokenService.getAccessToken()
+  //   ? true
+  //   : router.parseUrl('/login');  
+
+  const token = tokenService.getAccessToken();
+
+  if (!token){
+    return router.parseUrl('/login');
+  }
+
+  //decode token
+  const role = authService.getRoleFromToken(token);
+  //get required role
+  const requiredRole = route.data['role'] as 'Admin' | 'User';
+
+  if (requiredRole && role !== requiredRole){
+    return router.parseUrl('/unathourized');
+  }
+
+  return true;
 };

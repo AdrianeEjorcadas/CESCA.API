@@ -5,6 +5,9 @@ import { catchError, Observable, of, tap, throwError } from 'rxjs';
 import { Login } from '../models/login';
 import { ReturnResponse } from '../models/return-response';
 import { TokenService } from './token-service';
+import { jwtDecode } from 'jwt-decode';
+import { JwtPayload } from '../models/jwt-payload';
+
 
 @Injectable({
   providedIn: 'root'
@@ -46,5 +49,26 @@ private apiUrl = 'https://localhost:7259';
       catchError(err => throwError(() => err))
     )
   }
+
+  getRoleFromToken(token: string ) : string | null {
+    try {
+      const decoded = jwtDecode<JwtPayload>(token);
+      console.log("role " + decoded.role);
+      return decoded.role;
+    } catch {
+      return null;
+    }
+  }
+
+  getUserInfo(token: string) : JwtPayload | null {
+    try {
+      const decoded = jwtDecode<JwtPayload>(token);
+      console.log("user" + decoded);
+      return decoded;
+    } catch {
+      return null;
+    }
+  }
+
 
 }

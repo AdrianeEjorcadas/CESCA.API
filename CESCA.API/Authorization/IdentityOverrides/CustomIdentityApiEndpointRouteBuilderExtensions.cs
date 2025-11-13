@@ -113,8 +113,8 @@ public static class CustomIdentityApiEndpointRouteBuilderExtensions
 
                 await SendConfirmationEmailAsync(user, userManager, context, email);
                 return TypedResults.Ok();
-            })
-            .RequireAuthorization(new AuthorizeAttribute { Roles = "Admin" });
+            });
+            //.RequireAuthorization(new AuthorizeAttribute { Roles = "Admin" });
         }
 
         //if (!configOptions.ExcludeLoginPost)
@@ -183,11 +183,12 @@ public static class CustomIdentityApiEndpointRouteBuilderExtensions
                  };
                  foreach (var role in roles)
                  {
-                     claims.Add(new Claim(ClaimTypes.Role, role));
-                 }
+                    //claims.Add(new Claim(ClaimTypes.Role, role)); results to ["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
+                    claims.Add(new Claim("role", role));
+                }
 
-                 // Build JWT
-                 var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JWT_SECRET"]!));
+                // Build JWT
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["JWT_SECRET"]!));
                  var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
                  var token = new JwtSecurityToken(

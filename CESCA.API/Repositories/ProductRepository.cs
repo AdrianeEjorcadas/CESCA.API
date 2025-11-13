@@ -8,6 +8,7 @@ using CESCA.API.Models.Dtos.Product;
 using CESCA.API.Repositories.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using System.Threading;
 
 namespace CESCA.API.Repositories
 {
@@ -94,6 +95,7 @@ namespace CESCA.API.Repositories
         public async Task<PagedList<ProductResponseDTO>> GetProductsAsync(ProductParameters productParameters, CancellationToken ct)
         {
             var query = _context.Products.AsQueryable();
+            var count = 0;
 
             //Search Term
             if (!string.IsNullOrEmpty(productParameters.SearchTerm)){
@@ -120,7 +122,17 @@ namespace CESCA.API.Repositories
                 .ProjectTo<ProductResponseDTO>(_mapper.ConfigurationProvider) //map data to ProductResponseDTO
                 .ToListAsync(ct);
 
-            var count = await _context.Products.CountAsync(ct);
+            if (!string.IsNullOrEmpty(productParameters.SearchTerm) || (productParameters.IsArchived is true))
+            {
+                count = result.Count();
+            }
+            else
+            {
+
+                count = await _context.Suppliers
+                    .Where(s => !s.IsArchived)
+                    .CountAsync(ct);
+            }
 
             return PagedList<ProductResponseDTO>
                 .ToPagedList(result, count, productParameters.PageNumber, productParameters.PageSize);
