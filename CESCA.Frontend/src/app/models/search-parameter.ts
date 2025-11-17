@@ -11,3 +11,6 @@ export interface SearchParameter{
 // supplier
 export interface SupplierSearchParameter extends SearchParameter{
 }
+
+export interface InventorySearchParameter extends SearchParameter{
+}

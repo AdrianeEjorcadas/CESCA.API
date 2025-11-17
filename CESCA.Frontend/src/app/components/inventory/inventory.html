@@ -1,4 +1,27 @@
-<div class="bg-white ml-4 rounded-bl-2xl text-gray ">
-    <h1 class="capitalize text-3xl pl-5 pt-5 md:text-4xl">Cesca System</h1>
-    <p class="capitalize text-l pl-5 pb-3 md:text-xl">Inventory</p>
-</div>
+<div class="flex flex-col pl-4 space-y-4">
+    <!-- header  -->
+    <div class="bg-white ml-4 rounded-bl-2xl text-gray ">
+        <h1 class="capitalize text-3xl pl-5 pt-5 md:text-4xl">Cesca System</h1>
+        <p class="capitalize text-l pl-5 pb-3 md:text-xl">Inventory</p>
+    </div>
+    <!-- filter field -->
+    <div class="flex flex-col pr-4">
+        <!-- search textbox -->
+        <div class="flex justify-end gap-2">
+            <input
+                class="items-end border border-gray px-3 py-2 rounded-lg text-gray focus:ring-0 focus:outline-none hover:border-light-3 hover:scale-110 transition-all duration-300" 
+                type="text" 
+                name="search" 
+                title="Search supplier name"
+                [(ngModel)] ="searchParams.searchTerm"
+                (keyup.enter)="search()"
+                placeholder="Product Name"/>
+            <button 
+                class="cursor-pointer font-extrabold text-2xl text-light-3 hover:scale-150 transition-all duration-300"
+                (click)="search()"
+                title="Search">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+         </div>
+    </div>
+</div>  
