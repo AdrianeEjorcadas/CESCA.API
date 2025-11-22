@@ -5,11 +5,20 @@ import { InventoryModel } from '../../models/component-models/inventory/inventor
 import { InventorySearchParameter } from '../../models/search-parameter';
 import { MetadataModel } from '../../models/component-models/metadata-model';
 import { FormsModule } from '@angular/forms';
+import { NgClass } from '@angular/common';
 
+//mat
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import { finalize } from 'rxjs';
+
+//Pipe
+import { NormalizeDatePipePipe}    from '../../pipe/normalize-date-pipe-pipe';
 
 @Component({
   selector: 'app-inventory',
-  imports: [FormsModule],
+  imports: [FormsModule, NgClass, MatInputModule, MatFormFieldModule, MatCheckboxModule, NormalizeDatePipePipe],
   templateUrl: './inventory.html',
   styleUrl: './inventory.css'
 })
@@ -23,14 +32,19 @@ export class Inventory implements OnInit {
   //paginator
   paginatorMetaData : MetadataModel | null = null;
 
+  // table variables
+  isLoading = signal<boolean>(true);
+
   // search params
   searchParams : InventorySearchParameter = {
     pageNumber: 1,
     pageSize: 10,
     searchTerm: '',
-    isArchived: true,
+    isArchived: false,
     isDeleted: false
   };
+
+  advancedFilterFlag: boolean = false;
 
   ngOnInit(): void {
     this.getInventoryItems();
@@ -38,6 +52,9 @@ export class Inventory implements OnInit {
 
   getInventoryItems(){
     this.inventoryService.getInventoryItems$(this.searchParams)
+    .pipe(
+      finalize(() => this.isLoading.set(false))
+    )
     .subscribe({
         next: (res) => {
           this.inventory.set(res.data.products);
@@ -61,7 +78,26 @@ export class Inventory implements OnInit {
   }
 
   search(){
-    console.log('searching');
-  } 
+    this.getInventoryItems();
+  }
+  
+  addProduct(){
+    console.log('adding product');
+  }
+
+  refreshTable(){
+    this.searchParams.searchTerm = '';
+    this.clearAdvanceFilter(); 
+    this.getInventoryItems();
+  }
+
+  toggleAdvancedFilter(){
+    this.advancedFilterFlag = !this.advancedFilterFlag;
+  }
+
+  clearAdvanceFilter(){
+    this.searchParams.isArchived = false;
+    this.searchParams.isDeleted = false;
+  }
 
 }

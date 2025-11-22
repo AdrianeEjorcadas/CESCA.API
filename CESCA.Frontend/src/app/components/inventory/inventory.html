@@ -23,5 +23,117 @@
                     <i class="fa-solid fa-magnifying-glass"></i>
             </button>
          </div>
+         <!-- toggle button for advanced filter -->
+         <div>
+            <button 
+                class="cursor-pointer transition-all duration-300 hover:scale-110 tracking-wider font-bold pl-1"
+                type="button" 
+                (click)=" toggleAdvancedFilter()"
+                >
+                Advanced Filter
+                <span><i class="fa-solid fa-filter"></i></span>
+            </button>
+         </div>
+        <!-- advanced filters  -->
+         <div class="border border-gray rounded-xl p-2 lg:px-12" [ngClass]="advancedFilterFlag ? 'block' : 'hidden'">
+            <h2 class="font-sans tracking-wider text-md font-semibold">Advanced Filters:</h2>
+            <div class="flex flex-row gap-3 ">
+                <!-- archived items -->
+                <mat-checkbox
+                    name="isArchived"
+                    [(ngModel)]="searchParams.isArchived"
+                    >
+                    <span class="text-light-1 text-xs">Archived Items</span>
+                </mat-checkbox>
+                <!-- deleted items -->
+                <mat-checkbox
+                    name="isDeleted"
+                    [(ngModel)]="searchParams.isDeleted"
+                    >
+                    <span class="text-light-1 text-xs">Deleted Items</span>
+                </mat-checkbox>
+            </div>
+            <div class="flex justify-end">
+                <!-- filter button -->
+                 <button
+                    class="text-xs px-3 py-2 rounded-2xl bg-light-3 cursor-pointer text-white transition-all duration-300 hover:text-light-3 hover:bg-white hover:border hover:border-light-3"
+                    title="Apply Filter"
+                    (click)="search()"
+                    type="button">Apply Filter</button>
+            </div>
+         </div>
     </div>
+    <!-- table content -->
+     <div class="pr-4">
+        <!-- table function button -->
+        <div class="flex justify-end pb-2 gap-2">
+            <!-- add product -->
+            <i 
+                (click)="addProduct()"
+                class="fa-solid fa-plus cursor-pointer font-extrabold text-xl text-light-3 hover:scale-130 transition-all duration-300" 
+                title="Add Supplier">
+            </i>
+            <!-- refresh -->
+            <i 
+                (click)="refreshTable()"
+                class="fa-solid fa-arrows-rotate cursor-pointer font-extrabold text-lg text-light-3 hover:animate-spin transition-all duration-300" 
+                title="Refresh Table">
+            </i>
+        </div>
+        <!-- table tailwind -->
+         <div class="max-h-[600px] overflow-y-auto overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200 not-visited:shadow-md bg-white">
+                <thead>
+                    <tr class="border-2">
+                        <th class="table-header-cell hidden md:block">No.</th>
+                        <th class="table-header-cell">Product Name</th>
+                        <th class="table-header-cell">Generic Name</th>
+                        <th class="table-header-cell">Brand Name</th>
+                        <th class="table-header-cell">Form</th>
+                        <th class="table-header-cell">Strength</th>
+                        <th class="table-header-cell">Unit Size</th>
+                        <th class="table-header-cell">Unit Price</th>
+                        <th class="table-header-cell">Stock Quantity</th>
+                        <th class="table-header-cell">Expiration Date</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (isLoading()){
+                        <tr>
+                            <td colspan="6" class="px-6 py-4 text-start text-sm text-gray-500">
+                                <div class="flex justify-center items-center space-x-2">
+                                    <span class="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-gray-500"></span>
+                                    <span class="text-sm text-gray-500">Loading items...</span>
+                                </div>
+                            </td>
+                        </tr>  
+                    } 
+                    @else if(inventory().length > 0){
+                        @for (item of inventory(); track $index){
+                            <tr class="table-row border-b-1 border-b-gray" title="{{item.productName}}">
+                                <td class="mat-cell hidden md:block">{{$index + 1}}</td>
+                                <td class="mat-cell">{{item.productName}}</td>
+                                <td class="mat-cell">{{item.genericName}}</td>
+                                <td class="mat-cell">{{item.brand}}</td>
+                                <td class="mat-cell">{{item.form}}</td>
+                                <td class="mat-cell">{{item.strengthOrSize}}</td>
+                                <td class="mat-cell">{{item.unitSize}}</td>
+                                <td class="mat-cell">{{item.price}}</td>
+                                <td class="mat-cell">{{item.stockQuantity}}</td>
+                                <td class="mat-cell">{{item.expirationDate | toYYYYmmdd}}</td>
+                            </tr>
+                        }
+                    }
+                    @else {
+                        <tr class="border-b-1 border-b-gray">
+                            <td colspan="6" class="px-6 py-4 text-start text-sm text-gray-500">
+                                No item exists!
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+         </div>
+     </div>
 </div>  
