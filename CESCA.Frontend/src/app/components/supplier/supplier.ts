@@ -42,7 +42,7 @@ export class Supplier implements OnInit {
   //dialog
   private dialog = inject(MatDialog);
 
-  suppliersWithMetadata = signal<SupplierResponse | null>(null); 
+  // suppliersWithMetadata = signal<SupplierResponse | null>(null); 
   suppliers = signal<SupplierModel[]>([]);
   // dataSource = new MatTableDataSource<SupplierModel>([]); // data source for mat table
 

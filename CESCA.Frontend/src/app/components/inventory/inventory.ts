@@ -1,4 +1,4 @@
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, inject, signal, OnInit, ViewChild } from '@angular/core';
 import { InventoryService } from '../../services/inventory-service';
 import { ToastrService } from 'ngx-toastr';
 import { InventoryModel } from '../../models/component-models/inventory/inventory-model';
@@ -13,12 +13,15 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { finalize } from 'rxjs';
 
+//paginator
+import {MatPaginator, PageEvent} from '@angular/material/paginator';
+
 //Pipe
 import { NormalizeDatePipePipe}    from '../../pipe/normalize-date-pipe-pipe';
 
 @Component({
   selector: 'app-inventory',
-  imports: [FormsModule, NgClass, MatInputModule, MatFormFieldModule, MatCheckboxModule, NormalizeDatePipePipe],
+  imports: [FormsModule, NgClass, MatInputModule, MatFormFieldModule, MatCheckboxModule, NormalizeDatePipePipe, MatPaginator],
   templateUrl: './inventory.html',
   styleUrl: './inventory.css'
 })
@@ -45,6 +48,8 @@ export class Inventory implements OnInit {
   };
 
   advancedFilterFlag: boolean = false;
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   ngOnInit(): void {
     this.getInventoryItems();
@@ -98,6 +103,29 @@ export class Inventory implements OnInit {
   clearAdvanceFilter(){
     this.searchParams.isArchived = false;
     this.searchParams.isDeleted = false;
+  }
+
+  isExpired(itemExpirationDate: string) : boolean{
+    var inputDate = new Date(itemExpirationDate);
+    var today = new Date();
+
+    // Strip time so comparison is only by date
+  const input = new Date(inputDate.getFullYear(), inputDate.getMonth(), inputDate.getDate());
+  const now = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+  return input < now; // true if expired
+  }
+
+  //paginator
+
+   onPageChange(event: PageEvent) {
+    this.searchParams.pageNumber = event.pageIndex + 1;
+    this.searchParams.pageSize = event.pageSize; 
+    this.getInventoryItems();
+  }
+
+   resetPaginator(){
+    this.paginatorMetaData = null;
   }
 
 }

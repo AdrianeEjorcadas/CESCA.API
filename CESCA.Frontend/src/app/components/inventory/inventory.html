@@ -111,7 +111,8 @@
                     } 
                     @else if(inventory().length > 0){
                         @for (item of inventory(); track $index){
-                            <tr class="table-row border-b-1 border-b-gray" title="{{item.productName}}">
+                            <tr class="table-row border-b-1 border-b-gray" title="{{item.productName}}"  
+                             [ngClass] = "{ 'text-red-500': isExpired(item.expirationDate) }">
                                 <td class="mat-cell hidden md:block">{{$index + 1}}</td>
                                 <td class="mat-cell">{{item.productName}}</td>
                                 <td class="mat-cell">{{item.genericName}}</td>
@@ -135,5 +136,14 @@
                 </tbody>
             </table>
          </div>
+            @if (inventory().length > 0) {
+                <mat-paginator
+                    [length]="paginatorMetaData?.totalCount ?? 0"
+                    [pageSize]="paginatorMetaData?.pageSize ?? 10"
+                    [pageIndex]="(paginatorMetaData?.currentPage ?? 1) - 1"
+                    [pageSizeOptions]="[10]"
+                    (page)="onPageChange($event)">
+                </mat-paginator>
+            }
      </div>
 </div>  
