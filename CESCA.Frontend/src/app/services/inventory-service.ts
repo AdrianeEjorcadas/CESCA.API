@@ -5,6 +5,7 @@ import { InventoryModel } from '../models/component-models/inventory/inventory-m
 import { InventoryResponse } from '../models/component-models/inventory/inventory-response';
 import { InventorySearchParameter } from '../models/search-parameter';
 import { ReturnResponse } from '../models/return-response';
+import { AddProduct } from '../components/modal-components/inventory/add-product/add-product';
 
 @Injectable({
   providedIn: 'root'
@@ -27,6 +28,13 @@ export class InventoryService {
     return this.http.get<ReturnResponse<InventoryResponse>>(`${this.apiUrl}/product/get-products?${params}`)
     .pipe(
       catchError(err => throwError(()=> err))
+    );
+  }
+  
+  addProduct(product: AddProduct) : Observable<ReturnResponse<InventoryModel>>{
+    return this.http.post<ReturnResponse<InventoryModel>>(`${this.apiUrl}/product/add-product`, product)
+    .pipe(
+      catchError(err => throwError(() => err))
     );
   }
 

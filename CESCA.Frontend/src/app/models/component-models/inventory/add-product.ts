@@ -1,5 +1,4 @@
-export interface InventoryModel{
-    productId: string,
+export interface AddProduct{
     productName: string,
     genericName: string,
     category: string,
@@ -8,20 +7,16 @@ export interface InventoryModel{
     form: string,
     strengthOrSize: string,
     unitSize: string,
-    price: string, //STRING FOR NOW
+    price: number,
     stockQuantity: number,
     reorderLevel: number,
     isPerishable: boolean,
     expirationDate: string, // convert manually
     isPrescriptionOnly: boolean,
     barCode: string,
-    supplierId: string,
 
     //location metadata
     shelfLocation: string,
     rackNumber: string,
     aisle: string
-
-    isArchived: boolean,
-    isDeleted: boolean
 }

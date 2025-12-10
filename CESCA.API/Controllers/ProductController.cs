@@ -25,10 +25,10 @@ namespace CESCA.API.Controllers
 
         [HttpPost("add-product")]
         [ValidateModelState]
-        public async Task<ActionResult<ReturnResponse<ProductDTO>>> AddProductAsync([FromBody] ProductDTO productDTO, CancellationToken ct = default)
+        public async Task<ActionResult<ReturnResponse<ProductResponseDTO>>> AddProductAsync([FromBody] ProductDTO productDTO, CancellationToken ct = default)
         {
             var result = await _productService.AddProductAsync(productDTO, ct);
-            return Created(string.Empty, new ReturnResponse<ProductDTO>
+            return Created(string.Empty, new ReturnResponse<ProductResponseDTO>
             {
                 StatusCode = 201,
                 Message = "Product registration completed",

@@ -12,12 +12,14 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { finalize } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
 
 //paginator
 import {MatPaginator, PageEvent} from '@angular/material/paginator';
 
 //Pipe
 import { NormalizeDatePipePipe}    from '../../pipe/normalize-date-pipe-pipe';
+import { AddProduct } from '../modal-components/inventory/add-product/add-product';
 
 @Component({
   selector: 'app-inventory',
@@ -28,6 +30,8 @@ import { NormalizeDatePipePipe}    from '../../pipe/normalize-date-pipe-pipe';
 export class Inventory implements OnInit {
   private inventoryService = inject(InventoryService);
   private toastr = inject(ToastrService);
+
+  private dialog = inject(MatDialog);
 
   // inventory items
   inventory = signal<InventoryModel[]>([]);
@@ -87,7 +91,10 @@ export class Inventory implements OnInit {
   }
   
   addProduct(){
-    console.log('adding product');
+    const dialogRef = this.dialog.open(AddProduct, {
+      width: '400px',
+      disableClose: false,
+    });
   }
 
   refreshTable(){
