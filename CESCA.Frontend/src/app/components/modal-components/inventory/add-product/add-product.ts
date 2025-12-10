@@ -1,8 +1,10 @@
 import { Component, inject } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InventoryService } from '../../../../services/inventory-service';
 import { ToastrService } from 'ngx-toastr';
 import { OnInit } from '@angular/core';
+
+import { DateValidator } from '../../../../validators/date-validator';
 
 @Component({
   selector: 'app-add-product',
@@ -23,9 +25,25 @@ export class AddProduct implements OnInit {
 
   initializedForm(){
     this.addProductForm = this.formBuilder.group({
-
+      productName: ['', [Validators.required]],
+      genericName: '',
+      category: ['', [Validators.required]],
+      subCategory: [''],
+      brand: [''],
+      form: ['', [Validators.required]],
+      strengthOrSize: ['', [Validators.required]],
+      unitSize: '',
+      price: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
+      stockQuantity: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      reorderLevel: ['', [Validators.required, Validators.pattern(/^\d+$/)]],
+      isPerishable:  [false],
+      expirationDate: ['', [Validators.required, DateValidator.LessThanToday]],
+      isPrescriptionOnly: [false],
+      barCode: [''],
+      shelfLocation: [''],
+      rackNumber: [''],
+      aisle: ['']
     });
   }
  
-
 }
