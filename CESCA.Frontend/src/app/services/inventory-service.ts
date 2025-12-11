@@ -5,8 +5,7 @@ import { InventoryModel } from '../models/component-models/inventory/inventory-m
 import { InventoryResponse } from '../models/component-models/inventory/inventory-response';
 import { InventorySearchParameter } from '../models/search-parameter';
 import { ReturnResponse } from '../models/return-response';
-import { AddProduct } from '../components/modal-components/inventory/add-product/add-product';
-
+import { AddProduct } from '../models/component-models/inventory/add-product';
 @Injectable({
   providedIn: 'root'
 })

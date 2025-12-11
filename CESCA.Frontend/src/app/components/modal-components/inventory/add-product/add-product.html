@@ -1,1 +1,181 @@
-<p>add-product works!</p>
+<div class="bg-white">
+    <div class="flex flex-col p-4">
+      <h2 class="text-gray text-lg">Add Product</h2>  
+        <hr class="border-t border-gray-300 my-4" />
+    <!-- form -->
+     <form [formGroup]="addProductForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-2">
+        <!-- product name and brand -->
+         <div class="flex flex-col gap-2">
+            <!-- Product Name -->
+            <div class="flex flex-col">
+                <label class="text-slate-500 text-xs" for="productName">Product Name:</label>
+                <input 
+                    class="border border-slate-500 w-full rounded-md placeholder-slate-500 focus:outline-none focus:ring focus:ring-blue-500 p-1 text-xs" 
+                    title="Product Name" type="text" name="productName" placeholder="e.g., Alaxan"
+                    formControlName="productName">
+            </div>
+            <!-- generic name -->
+            <div class="flex flex-col">
+                <label class="text-slate-500 text-xs" for="genericName">Generic Name:</label>
+                <input 
+                    class="border border-slate-500 w-full rounded-md placeholder-slate-500 focus:outline-none focus:ring focus:ring-blue-500 p-1 text-xs" 
+                    title="Generic Name" type="text" name="genericName" placeholder="e.g., Ibuprofen and paracetamol"
+                    formControlName="genericName">
+            </div>
+            <!-- brand name -->
+            <div class="flex flex-col">
+                <label class="text-slate-500 text-xs" for="brand">Brand Name:</label>
+                <input 
+                    class="border border-slate-500 w-full rounded-md placeholder-slate-500 focus:outline-none focus:ring focus:ring-blue-500 p-1 text-xs" 
+                    title="Brand Name" type="text" name="brand" placeholder="e.g., Alaxan"
+                    formControlName="brand">
+            </div>
+         </div>
+        <!-- category -->
+        <div class="flex flex-row gap-3">
+            <!-- category -->
+            <div class="flex flex-col">
+                <label class="text-slate-500 text-xs" for="category">Category:</label>
+                <input 
+                    class="border border-slate-500 w-full rounded-md placeholder-slate-500 focus:outline-none focus:ring focus:ring-blue-500 p-1 text-xs" 
+                    title="Category" type="text" name="category" placeholder="e.g., Medicine, Personal Care"
+                    formControlName="category">
+            </div>
+            <!-- subCategory -->
+            <div class="flex flex-col">
+                <label class="text-slate-500 text-xs" for="subCategory">Sub-Category:</label>
+                <input 
+                    class="border border-slate-500 w-full rounded-md placeholder-slate-500 focus:outline-none focus:ring focus:ring-blue-500 p-1 text-xs" 
+                    title="Category" type="text" name="subCategory" placeholder="e.g., Antibiotic, Shampoo"
+                    formControlName="subCategory">
+            </div>
+            <!-- form -->
+            <div class="flex flex-col">
+                <label class="text-slate-500 text-xs" for="form">Form:</label>
+                <input 
+                    class="border border-slate-500 w-full rounded-md placeholder-slate-500 focus:outline-none focus:ring focus:ring-blue-500 p-1 text-xs" 
+                    title="Form" type="text" name="form" placeholder="e.g., Tablet, Liquid, Pack"
+                    formControlName="form">
+            </div>
+        </div>
+        <!-- Strength , unit size -->
+        <div class="flex flex-row gap-3">
+            <!-- Strength -->
+            <div class="flex flex-col">
+                <label class="text-slate-500 text-xs" for="strengthOrSize">Strength/Size:</label>
+                <input 
+                    class="border border-slate-500 w-full rounded-md placeholder-slate-500 focus:outline-none focus:ring focus:ring-blue-500 p-1 text-xs" 
+                    title="Strength/Size" type="text" name="strengthOrSize" placeholder="e.g., Medicine, Personal Care"
+                    formControlName="strengthOrSize">
+            </div>
+            <!-- unitSize -->
+            <div class="flex flex-col">
+                <label class="text-slate-500 text-xs" for="unitSize">Unit Size:</label>
+                <input 
+                    class="border border-slate-500 w-full rounded-md placeholder-slate-500 focus:outline-none focus:ring focus:ring-blue-500 p-1 text-xs" 
+                    title="Category" type="" name="unitSize" placeholder="e.g., 10 tablets, 1 bottle"
+                    formControlName="unitSize">
+            </div>
+        </div>
+        <!-- isPerishable , isPrescriptionOnly -->
+        <div class="flex flex-row gap-5">
+            <!-- isPerishable -->
+            <label class="flex items-center gap-1 cursor-pointer">
+                <input title="Perishable Product" type="checkbox" name="isPerishable" formControlName="isPerishable">
+                <span class="text-slate-500 text-xs">Perishable</span>
+            </label>
+            <!-- isPrescriptionOnly -->
+            <label class="flex items-center gap-1 cursor-pointer">
+                <input title="Need Prescription" type="checkbox" name="isPrescriptionOnly" formControlName="isPerishable">
+                <span class="text-slate-500 text-xs">Need Prescription</span>
+            </label>
+        </div>
+        <!-- expirationDate -->
+        <div class="flex flex-col gap-1">
+            <label class="text-slate-500 text-xs" for="expirationDate">Expiration Date:</label>
+            <input 
+                class="border border-slate-500 w-fit rounded-md placeholder-slate-500 focus:outline-none focus:ring focus:ring-blue-500 p-1 text-xs" 
+                title="Expiration Date" name="expirationDate" 
+                type="date" [min]="today"
+                formControlName="expirationDate">
+        </div>
+        <hr class="border-t border-gray-300"/>
+
+        <!-- pricing details -->
+        <h2 class="text-gray text-sm capitalize">pricing details</h2>
+        <div class="flex flex-col">  
+            <!-- Price -->
+            <div class="flex flex-col">
+                <label class="text-slate-500 text-xs" for="price">Price:</label>
+                <input 
+                    class="border border-slate-500 w-fit rounded-md placeholder-slate-500 focus:outline-none focus:ring focus:ring-blue-500 p-1 text-xs" 
+                    title="Price" type="text" name="price" placeholder="0.00"
+                    formControlName="price">
+            </div> 
+        </div>
+        <div class="flex flex-row gap-3">  
+            <!-- stockQuantity -->
+            <div class="flex flex-col">
+                <label class="text-slate-500 text-xs" for="stockQuantity">Stock Quantity:</label>
+                <input 
+                    class="border border-slate-500 w-full rounded-md placeholder-slate-500 focus:outline-none focus:ring focus:ring-blue-500 p-1 text-xs" 
+                    title="Stock Quantity" type="text" name="stockQuantity" placeholder="0"
+                    formControlName="stockQuantity">
+            </div> 
+            <!-- reorderLevel -->
+            <div class="flex flex-col">
+                <label class="text-slate-500 text-xs" for="reorderLevel">Reorder Level:</label>
+                <input 
+                    class="border border-slate-500 w-full rounded-md placeholder-slate-500 focus:outline-none focus:ring focus:ring-blue-500 p-1 text-xs" 
+                    title="Reorder Level" type="text" name="reorderLevel" placeholder="0"
+                    formControlName="reorderLevel">
+            </div> 
+        </div> 
+        
+        <!-- Location metadata -->
+        <h2 class="text-gray text-sm capitalize">location details</h2>
+        <hr class="border-t border-gray-300"/>
+        <div class="flex flex-row gap-3">
+            <!-- shelfLocation -->
+            <div class="flex flex-col">
+                <label class="text-slate-500 text-xs capitalize" for="shelfLocation">shelf Location:</label>
+                <input 
+                    class="border border-slate-500 w-fit rounded-md placeholder-slate-500 focus:outline-none focus:ring focus:ring-blue-500 p-1 text-xs" 
+                    title="Shelf Location" type="text" name="shelfLocation" placeholder="e.g., A3-Top"
+                    formControlName="shelfLocation">
+            </div> 
+            <!-- rackNumber -->
+            <div class="flex flex-col">
+                <label class="text-slate-500 text-xs capitalize" for="rackNumber">rack Number:</label>
+                <input 
+                    class="border border-slate-500 w-fit rounded-md placeholder-slate-500 focus:outline-none focus:ring focus:ring-blue-500 p-1 text-xs" 
+                    title="Rack Number" type="text" name="rackNumber" placeholder="e.g., Rack-12"
+                    formControlName="rackNumber">
+            </div> 
+        </div>
+        <!-- aisle -->
+        <div class="flex flex-col">
+            <label class="text-slate-500 text-xs capitalize" for="rackNumber">aisle:</label>
+            <input 
+                class="border border-slate-500 w-fit rounded-md placeholder-slate-500 focus:outline-none focus:ring focus:ring-blue-500 p-1 text-xs" 
+                title="Aisle" type="text" name="aisle" placeholder="e.g., Health-2"
+                formControlName="aisle">
+        </div> 
+
+         <!-- button -->
+        <div class="flex justify-end gap-2">
+        <button type="button"
+            (click)="cancel()"
+            class="bg-red-700 text-white px-3 py-2 rounded-2xl cursor-pointer transition-all duration-300 hover:text-red-600 hover:bg-white hover:border hover:border-red-600" >
+            Cancel
+        </button>
+        <button 
+            [disabled]="!addProductForm.valid"
+            class="bg-light-3 text-white px-3 py-2 rounded-2xl cursor-pointer transition-all duration-300 hover:text-light-3 hover:bg-white hover:border hover:border-light-3" 
+            type="submit">
+                Submit
+            </button>
+        </div>
+     </form>
+    </div>
+</div>

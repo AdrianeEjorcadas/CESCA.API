@@ -8,7 +8,7 @@ import { DateValidator } from '../../../../validators/date-validator';
 
 @Component({
   selector: 'app-add-product',
-  imports: [],
+  imports: [ReactiveFormsModule],
   templateUrl: './add-product.html',
   styleUrl: './add-product.css'
 })
@@ -18,6 +18,8 @@ export class AddProduct implements OnInit {
 
   protected addProductForm! : FormGroup;
   private formBuilder = inject(FormBuilder);
+
+  protected today = new Date().toISOString().split('T')[0];
 
   ngOnInit(): void {
     this.initializedForm();
@@ -44,6 +46,14 @@ export class AddProduct implements OnInit {
       rackNumber: [''],
       aisle: ['']
     });
+  }
+
+  onSubmit(){
+    console.log(this.addProductForm.value);
+  }
+
+  cancel(){
+    console.log('cancel');
   }
  
 }
