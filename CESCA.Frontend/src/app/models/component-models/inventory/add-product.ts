@@ -18,5 +18,8 @@ export interface AddProduct{
     //location metadata
     shelfLocation: string,
     rackNumber: string,
-    aisle: string
+    aisle: string,
+
+    //foreign key for supplier
+    supplierId: string  
 }

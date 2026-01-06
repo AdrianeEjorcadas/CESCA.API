@@ -92,7 +92,7 @@ export class Inventory implements OnInit {
   
   addProduct(){
     const dialogRef = this.dialog.open(AddProduct, {
-      width: '400px',
+      width: '500px',
       disableClose: false,
     });
   }

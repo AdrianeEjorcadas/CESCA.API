@@ -8,10 +8,15 @@
          <div class="flex flex-col gap-2">
             <!-- Product Name -->
             <div class="flex flex-col">
-                <label class="text-slate-500 text-xs" for="productName">Product Name:</label>
+                <div class="flex flex-row gap-2">
+                    <label class="text-slate-500 text-xs" for="productName">Product Name:</label>
+                    <ng-container 
+                        *ngTemplateOutlet="error; context:{ control: addProductForm.get('productName'), message: {required:'Product name is required*'}}">
+                    </ng-container>
+                </div>
                 <input 
                     class="border border-slate-500 w-full rounded-md placeholder-slate-500 focus:outline-none focus:ring focus:ring-blue-500 p-1 text-xs" 
-                    title="Product Name" type="text" name="productName" placeholder="e.g., Alaxan"
+                    title="Product Name" type="text" id="productName" placeholder="e.g., Alaxan"
                     formControlName="productName">
             </div>
             <!-- generic name -->
@@ -19,7 +24,7 @@
                 <label class="text-slate-500 text-xs" for="genericName">Generic Name:</label>
                 <input 
                     class="border border-slate-500 w-full rounded-md placeholder-slate-500 focus:outline-none focus:ring focus:ring-blue-500 p-1 text-xs" 
-                    title="Generic Name" type="text" name="genericName" placeholder="e.g., Ibuprofen and paracetamol"
+                    title="Generic Name" type="text" id="genericName" placeholder="e.g., Ibuprofen and paracetamol"
                     formControlName="genericName">
             </div>
             <!-- brand name -->
@@ -27,7 +32,7 @@
                 <label class="text-slate-500 text-xs" for="brand">Brand Name:</label>
                 <input 
                     class="border border-slate-500 w-full rounded-md placeholder-slate-500 focus:outline-none focus:ring focus:ring-blue-500 p-1 text-xs" 
-                    title="Brand Name" type="text" name="brand" placeholder="e.g., Alaxan"
+                    title="Brand Name" type="text" id="brand" placeholder="e.g., Alaxan"
                     formControlName="brand">
             </div>
          </div>
@@ -35,10 +40,15 @@
         <div class="flex flex-row gap-3">
             <!-- category -->
             <div class="flex flex-col">
-                <label class="text-slate-500 text-xs" for="category">Category:</label>
+                <div class="flex flex-row">
+                    <label class="text-slate-500 text-xs" for="category">Category:</label>
+                    <ng-container 
+                        *ngTemplateOutlet="error; context:{ control: addProductForm.get('category'), message: {required:'*'}}">
+                    </ng-container>
+                </div>
                 <input 
                     class="border border-slate-500 w-full rounded-md placeholder-slate-500 focus:outline-none focus:ring focus:ring-blue-500 p-1 text-xs" 
-                    title="Category" type="text" name="category" placeholder="e.g., Medicine, Personal Care"
+                    title="Category" type="text" id="category" placeholder="e.g., Medicine, Personal Care"
                     formControlName="category">
             </div>
             <!-- subCategory -->
@@ -46,15 +56,20 @@
                 <label class="text-slate-500 text-xs" for="subCategory">Sub-Category:</label>
                 <input 
                     class="border border-slate-500 w-full rounded-md placeholder-slate-500 focus:outline-none focus:ring focus:ring-blue-500 p-1 text-xs" 
-                    title="Category" type="text" name="subCategory" placeholder="e.g., Antibiotic, Shampoo"
+                    title="Category" type="text" id="subCategory" placeholder="e.g., Antibiotic, Shampoo"
                     formControlName="subCategory">
             </div>
             <!-- form -->
             <div class="flex flex-col">
-                <label class="text-slate-500 text-xs" for="form">Form:</label>
+                <div class="flex flex-row">
+                    <label class="text-slate-500 text-xs" for="form">Form:</label>
+                    <ng-container 
+                        *ngTemplateOutlet="error; context:{ control: addProductForm.get('form'), message: {required:'*'}}">
+                    </ng-container>
+                </div>
                 <input 
                     class="border border-slate-500 w-full rounded-md placeholder-slate-500 focus:outline-none focus:ring focus:ring-blue-500 p-1 text-xs" 
-                    title="Form" type="text" name="form" placeholder="e.g., Tablet, Liquid, Pack"
+                    title="Form" type="text" id="form" placeholder="e.g., Tablet, Liquid, Pack"
                     formControlName="form">
             </div>
         </div>
@@ -62,10 +77,15 @@
         <div class="flex flex-row gap-3">
             <!-- Strength -->
             <div class="flex flex-col">
-                <label class="text-slate-500 text-xs" for="strengthOrSize">Strength/Size:</label>
+                <div class="flex flex-row">
+                    <label class="text-slate-500 text-xs" for="strengthOrSize">Strength/Size:</label>
+                    <ng-container 
+                        *ngTemplateOutlet="error; context:{ control: addProductForm.get('strengthOrSize'), message: {required:'*'}}">
+                    </ng-container>
+                </div>  
                 <input 
                     class="border border-slate-500 w-full rounded-md placeholder-slate-500 focus:outline-none focus:ring focus:ring-blue-500 p-1 text-xs" 
-                    title="Strength/Size" type="text" name="strengthOrSize" placeholder="e.g., Medicine, Personal Care"
+                    title="Strength/Size" type="text" id="strengthOrSize" placeholder="e.g., Medicine, Personal Care"
                     formControlName="strengthOrSize">
             </div>
             <!-- unitSize -->
@@ -73,7 +93,7 @@
                 <label class="text-slate-500 text-xs" for="unitSize">Unit Size:</label>
                 <input 
                     class="border border-slate-500 w-full rounded-md placeholder-slate-500 focus:outline-none focus:ring focus:ring-blue-500 p-1 text-xs" 
-                    title="Category" type="" name="unitSize" placeholder="e.g., 10 tablets, 1 bottle"
+                    title="Category" type="" id="unitSize" placeholder="e.g., 10 tablets, 1 bottle"
                     formControlName="unitSize">
             </div>
         </div>
@@ -81,12 +101,12 @@
         <div class="flex flex-row gap-5">
             <!-- isPerishable -->
             <label class="flex items-center gap-1 cursor-pointer">
-                <input title="Perishable Product" type="checkbox" name="isPerishable" formControlName="isPerishable">
+                <input title="Perishable Product" type="checkbox" formControlName="isPerishable">
                 <span class="text-slate-500 text-xs">Perishable</span>
             </label>
             <!-- isPrescriptionOnly -->
             <label class="flex items-center gap-1 cursor-pointer">
-                <input title="Need Prescription" type="checkbox" name="isPrescriptionOnly" formControlName="isPerishable">
+                <input title="Need Prescription" type="checkbox" formControlName="isPerishable">
                 <span class="text-slate-500 text-xs">Need Prescription</span>
             </label>
         </div>
@@ -95,7 +115,7 @@
             <label class="text-slate-500 text-xs" for="expirationDate">Expiration Date:</label>
             <input 
                 class="border border-slate-500 w-fit rounded-md placeholder-slate-500 focus:outline-none focus:ring focus:ring-blue-500 p-1 text-xs" 
-                title="Expiration Date" name="expirationDate" 
+                title="Expiration Date" id="expirationDate" 
                 type="date" [min]="today"
                 formControlName="expirationDate">
         </div>
@@ -106,28 +126,43 @@
         <div class="flex flex-col">  
             <!-- Price -->
             <div class="flex flex-col">
-                <label class="text-slate-500 text-xs" for="price">Price:</label>
+                <div class="flex flex-row gap-2">
+                    <label class="text-slate-500 text-xs" for="price">Price:</label>
+                    <ng-container
+                        *ngTemplateOutlet="error, context: {control: addProductForm.get('price'), message: {required: 'Price is required*', pattern: 'Price must be a number*'}}">
+                    </ng-container>
+                </div>
                 <input 
                     class="border border-slate-500 w-fit rounded-md placeholder-slate-500 focus:outline-none focus:ring focus:ring-blue-500 p-1 text-xs" 
-                    title="Price" type="text" name="price" placeholder="0.00"
+                    title="Price" type="text" id="price" placeholder="0.00"
                     formControlName="price">
             </div> 
         </div>
-        <div class="flex flex-row gap-3">  
+        <div class="flex flex-row gap-6">  
             <!-- stockQuantity -->
             <div class="flex flex-col">
-                <label class="text-slate-500 text-xs" for="stockQuantity">Stock Quantity:</label>
+                <div class="felx flex-row">
+                    <label class="text-slate-500 text-xs" for="stockQuantity">Stock Quantity:</label>
+                    <ng-container
+                        *ngTemplateOutlet="error, context: {control: addProductForm.get('stockQuantity'), message: {required: '*', pattern: 'Stock Qty must be a number*'}}">
+                    </ng-container>
+                </div>  
                 <input 
                     class="border border-slate-500 w-full rounded-md placeholder-slate-500 focus:outline-none focus:ring focus:ring-blue-500 p-1 text-xs" 
-                    title="Stock Quantity" type="text" name="stockQuantity" placeholder="0"
+                    title="Stock Quantity" type="text" id="stockQuantity" placeholder="0"
                     formControlName="stockQuantity">
             </div> 
             <!-- reorderLevel -->
             <div class="flex flex-col">
-                <label class="text-slate-500 text-xs" for="reorderLevel">Reorder Level:</label>
+                <div class="flex flex-row gap-2">
+                    <label class="text-slate-500 text-xs" for="reorderLevel">Reorder Level:</label>
+                    <ng-container
+                        *ngTemplateOutlet="error, context: {control: addProductForm.get('reorderLevel'), message: {required: '*', pattern: 'Reorder Level must be a number*'}}">
+                    </ng-container>
+                </div>
                 <input 
                     class="border border-slate-500 w-full rounded-md placeholder-slate-500 focus:outline-none focus:ring focus:ring-blue-500 p-1 text-xs" 
-                    title="Reorder Level" type="text" name="reorderLevel" placeholder="0"
+                    title="Reorder Level" type="text" id="reorderLevel" placeholder="0"
                     formControlName="reorderLevel">
             </div> 
         </div> 
@@ -141,7 +176,7 @@
                 <label class="text-slate-500 text-xs capitalize" for="shelfLocation">shelf Location:</label>
                 <input 
                     class="border border-slate-500 w-fit rounded-md placeholder-slate-500 focus:outline-none focus:ring focus:ring-blue-500 p-1 text-xs" 
-                    title="Shelf Location" type="text" name="shelfLocation" placeholder="e.g., A3-Top"
+                    title="Shelf Location" type="text" id="shelfLocation" placeholder="e.g., A3-Top"
                     formControlName="shelfLocation">
             </div> 
             <!-- rackNumber -->
@@ -149,16 +184,16 @@
                 <label class="text-slate-500 text-xs capitalize" for="rackNumber">rack Number:</label>
                 <input 
                     class="border border-slate-500 w-fit rounded-md placeholder-slate-500 focus:outline-none focus:ring focus:ring-blue-500 p-1 text-xs" 
-                    title="Rack Number" type="text" name="rackNumber" placeholder="e.g., Rack-12"
+                    title="Rack Number" type="text" id="rackNumber" placeholder="e.g., Rack-12"
                     formControlName="rackNumber">
             </div> 
         </div>
         <!-- aisle -->
         <div class="flex flex-col">
-            <label class="text-slate-500 text-xs capitalize" for="rackNumber">aisle:</label>
+            <label class="text-slate-500 text-xs capitalize" for="aisle">aisle:</label>
             <input 
                 class="border border-slate-500 w-fit rounded-md placeholder-slate-500 focus:outline-none focus:ring focus:ring-blue-500 p-1 text-xs" 
-                title="Aisle" type="text" name="aisle" placeholder="e.g., Health-2"
+                title="Aisle" type="text" id="aisle" placeholder="e.g., Health-2"
                 formControlName="aisle">
         </div> 
 
@@ -179,3 +214,12 @@
      </form>
     </div>
 </div>
+
+<!-- required error -->
+<ng-template #error let-control="control" let-message="message">
+    @if (control?.hasError('required') && control?.touched) {
+        <div class="text-red-500 text-xs">{{ message.required }}</div>
+    } @else if (control?.hasError('pattern') && control?.touched) {
+        <div class="text-red-500 text-xs">{{ message.pattern }}</div>
+    }
+</ng-template>
