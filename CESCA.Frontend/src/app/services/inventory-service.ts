@@ -37,4 +37,18 @@ export class InventoryService {
     );
   }
 
+  archivedProduct(productId: string) : Observable<ReturnResponse<InventoryModel>>{
+    return this.http.put<ReturnResponse<InventoryModel>>(`${this.apiUrl}/product/archived-product?productId=${productId}`, null)
+    .pipe(
+      catchError(err => throwError( () => err))
+    );
+  }
+
+  deleteProduct(productId: string) : Observable<ReturnResponse<InventoryModel>>{
+    return this.http.delete<ReturnResponse<InventoryModel>>(`${this.apiUrl}/product/delete-product?productId=${productId}`)
+    .pipe(
+      catchError ( err => throwError(() => err))
+    );
+  }
+
 }

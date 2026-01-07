@@ -6,6 +6,7 @@ import { OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { DateValidator } from '../../../../validators/date-validator';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-add-product',
@@ -22,6 +23,10 @@ export class AddProduct implements OnInit {
   private formBuilder = inject(FormBuilder);
 
   protected today = new Date().toISOString().split('T')[0];
+
+  constructor(
+    protected dialogRef: MatDialogRef<AddProduct>
+  ){}
 
   ngOnInit(): void {
     this.initializedForm();
@@ -58,7 +63,7 @@ export class AddProduct implements OnInit {
   }
 
   cancel(){
-    console.log('cancel');
+    this.dialogRef.close();
   }
 
   addProduct(){

@@ -27,7 +27,7 @@ export class AddSupplier implements OnInit{
 
   constructor(
     protected dialogRef: MatDialogRef<AddSupplier>,
-    @Inject(MAT_DIALOG_DATA) public data: AddSupplierModel
+    @Inject(MAT_DIALOG_DATA) public data: AddSupplierModel // retrieving of data from parent
   ){}
 
   ngOnInit(): void {

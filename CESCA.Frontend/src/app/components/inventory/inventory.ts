@@ -6,6 +6,7 @@ import { InventorySearchParameter } from '../../models/search-parameter';
 import { MetadataModel } from '../../models/component-models/metadata-model';
 import { FormsModule } from '@angular/forms';
 import { NgClass } from '@angular/common';
+import { InventoryDialog } from '../modal-components/inventory/inventory-dialog/inventory-dialog';
 
 //mat
 import { MatInputModule } from '@angular/material/input';
@@ -13,6 +14,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { finalize } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
 
 //paginator
 import {MatPaginator, PageEvent} from '@angular/material/paginator';
@@ -23,7 +27,7 @@ import { AddProduct } from '../modal-components/inventory/add-product/add-produc
 
 @Component({
   selector: 'app-inventory',
-  imports: [FormsModule, NgClass, MatInputModule, MatFormFieldModule, MatCheckboxModule, NormalizeDatePipePipe, MatPaginator],
+  imports: [FormsModule, NgClass, MatInputModule, MatFormFieldModule, MatCheckboxModule, NormalizeDatePipePipe, MatPaginator,MatIconModule, MatButtonModule, MatMenuModule],
   templateUrl: './inventory.html',
   styleUrl: './inventory.css'
 })
@@ -94,6 +98,97 @@ export class Inventory implements OnInit {
     const dialogRef = this.dialog.open(AddProduct, {
       width: '500px',
       disableClose: false,
+    });
+  }
+
+  editProduct(){
+    console.log('edit product');
+  }
+
+  deleteProduct(productId: string, productName: string){
+    const dialogRef = this.dialog.open(InventoryDialog,{
+      width: '400px',
+      disableClose: true,
+      data: {
+        process: 'Delete',
+        productName: productName
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result === true){
+        this.inventoryService.deleteProduct(productId).subscribe({
+          next: (res) => {
+            if(res.statusCode === 200){
+              this.toastr.success('Product deleted successfully');
+              this.refreshTable();
+            } else {
+              this.toastr.error('Error deleting product');
+            }
+          }, 
+          error: (err) => {
+            this.toastr.error('Server Error. Please contact your administrator.' + err || err.message || err.error);
+          }
+        });
+      }
+    });
+  }
+
+  archivedProduct(productId: string, productName: string){
+    const dialogRef = this.dialog.open(InventoryDialog,{
+      width: '400px',
+      disableClose: true,
+      data: {
+        process: 'Archive',
+        productName: productName
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result === true){
+        this.inventoryService.archivedProduct(productId).subscribe({
+          next: (res) => {
+            if(res.statusCode === 200){
+              this.toastr.success('Product archived successfully');
+              this.refreshTable();
+            } else {
+              this.toastr.error('Error archiving product');
+            }
+          }, 
+          error: (err) => {
+            this.toastr.error('Server Error. Please contact your administrator.' + err || err.message || err.error);
+          }
+        });
+      }
+    });
+  }
+
+  restoreProduct(productId: string, productName: string){
+    const dialogRef = this.dialog.open(InventoryDialog, {
+      width: '400px',
+      disableClose: true,
+      data: {
+        process: 'Restore',
+        productName: productName
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result === true){
+        this.inventoryService.archivedProduct(productId).subscribe({
+          next: (res) => {
+            if(res.statusCode === 200){
+              this.toastr.success('Product restored successfully');
+              this.refreshTable();
+            } else {
+              this.toastr.error('Error restoring product');
+            }
+          }, 
+          error: (err) => {
+            this.toastr.error('Server Error. Please contact your administrator.' + err || err.message || err.error);
+          }
+        });
+      }
     });
   }
 

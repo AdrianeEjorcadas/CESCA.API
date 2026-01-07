@@ -5,7 +5,7 @@ namespace CESCA.API.Models.Response
 {
     public class ProductGetResponseDTO
     {
-        public IEnumerable<ProductDTO> Products { get; set; }
+        public IEnumerable<ProductResponseDTO> Products { get; set; }
         public MetaData MetaData { get; set; }
     }
 }

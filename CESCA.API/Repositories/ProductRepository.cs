@@ -85,7 +85,7 @@ namespace CESCA.API.Repositories
                 return null;
             }
 
-            productEntity.IsArchived = true;
+            productEntity.IsArchived = !productEntity.IsArchived;
             await _context.SaveChangesAsync(ct);
 
             return _mapper.Map <ProductResponseDTO>(productEntity);

@@ -123,6 +123,34 @@
                                 <td class="mat-cell">{{item.price}}</td>
                                 <td class="mat-cell">{{item.stockQuantity}}</td>
                                 <td class="mat-cell">{{item.expirationDate | toYYYYmmdd}}</td>
+                                <td class="mat-cell">
+                                    <button matIconButton [matMenuTriggerFor]="menu" aria-label="{{item.productName}} menu" title="Open {{item.productName}} Menu">
+                                        <mat-icon>more_vert</mat-icon>
+                                    </button>
+                                    <mat-menu #menu="matMenu">
+                                        <!-- display if archived flag is false -->
+                                        @if (!searchParams.isArchived) {
+                                            <button mat-menu-item (click)="editProduct()">
+                                                <mat-icon>edit</mat-icon>
+                                                <span>Edit</span>
+                                            </button>
+                                            <button mat-menu-item (click)="archivedProduct(item.productId, item.productName)">
+                                                <mat-icon>archived</mat-icon>
+                                                <span>Archive</span>
+                                            </button>
+                                        }@else{
+                                        <!-- display if archived flag is true -->
+                                            <button mat-menu-item (click)="restoreProduct(item.productId, item.productName)">
+                                                <mat-icon>restore</mat-icon>
+                                                <span>Restore</span>
+                                            </button>
+                                        }
+                                        <button mat-menu-item (click)="deleteProduct(item.productId, item.productName)">
+                                            <mat-icon>delete</mat-icon>
+                                            <span>Delete</span>
+                                        </button>
+                                    </mat-menu>
+                                </td>
                             </tr>
                         }
                     }

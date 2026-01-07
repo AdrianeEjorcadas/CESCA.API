@@ -1,0 +1,9 @@
+<h2 mat-dialog-title>{{ content.process }} Product</h2>
+<mat-dialog-content>
+  Would you like to {{ content.process.toLowerCase() }} 
+  <span class="font-bold">{{ content.productName }}</span>?
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button matButton mat-dialog-close>No</button>
+  <button matButton [mat-dialog-close]="true" cdkFocusInitial>Yes</button>
+</mat-dialog-actions>
