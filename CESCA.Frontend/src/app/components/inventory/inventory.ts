@@ -24,6 +24,7 @@ import {MatPaginator, PageEvent} from '@angular/material/paginator';
 //Pipe
 import { NormalizeDatePipePipe}    from '../../pipe/normalize-date-pipe-pipe';
 import { AddProduct } from '../modal-components/inventory/add-product/add-product';
+import { EditProduct } from '../modal-components/inventory/edit-product/edit-product';
 
 @Component({
   selector: 'app-inventory',
@@ -97,12 +98,19 @@ export class Inventory implements OnInit {
   addProduct(){
     const dialogRef = this.dialog.open(AddProduct, {
       width: '500px',
-      disableClose: false,
+      disableClose: true,
     });
   }
 
-  editProduct(){
-    console.log('edit product');
+  editProduct(product: InventoryModel){
+    const dialogRef = this.dialog.open(EditProduct, {
+      width: '500px',
+      disableClose: false,
+      data: {
+        inventoryModel: product,
+        updatedBy: 'a3f1c9e2-7b6d-4c8a-9f3e-2d1b6f4a8c9e'
+      }
+    });
   }
 
   deleteProduct(productId: string, productName: string){
@@ -191,6 +199,8 @@ export class Inventory implements OnInit {
       }
     });
   }
+
+  
 
   refreshTable(){
     this.searchParams.searchTerm = '';

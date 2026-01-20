@@ -29,6 +29,13 @@ export class InventoryService {
       catchError(err => throwError(()=> err))
     );
   }
+
+  retrieveProduct(productId: string) : Observable<ReturnResponse<InventoryModel>>{
+    return this.http.get<ReturnResponse<InventoryModel>>(`${this.apiUrl}/product/get-product-by-id?productId=${productId}`)
+    .pipe(
+      catchError(err => throwError(() => err))
+    );
+  }
   
   addProduct(product: AddProduct) : Observable<ReturnResponse<InventoryModel>>{
     return this.http.post<ReturnResponse<InventoryModel>>(`${this.apiUrl}/product/add-product`, product)
