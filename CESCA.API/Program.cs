@@ -22,7 +22,6 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.Security.Claims;
 using System.Text;
@@ -49,7 +48,6 @@ Console.WriteLine($"Secret length: {jwtSecret?.Length}");
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 // Add environment variables
 builder.Configuration.AddEnvironmentVariables();
@@ -92,7 +90,6 @@ builder.Services.AddAuthentication(options =>
 
 //builder.Services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, AppClaimsPrincipalFactory>(); not needed since JWTBearer will be implemented
 
-builder.Services.AddAuthorization();
 
 // Add filter 
 builder.Services.AddControllers(options =>
@@ -127,20 +124,8 @@ builder.Services.AddAutoMapper(cfg =>
 //email
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 
-//Add Swagger
-builder.Services.AddSwaggerGen(options =>
-{
-    options.CustomSchemaIds(type => type.FullName);
-    options.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title = "Cesca API",
-        Version = "v1",
-        Description = "API for Cesca POS transaction"
-    });
-    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-    options.IncludeXmlComments(xmlPath);
-});
+// Registers the required services
+builder.Services.AddOpenApi();
 
 // Setup Auth0
 //var domain = $"https://{builder.Configuration["Auth0:Domain"]}/";
@@ -190,16 +175,18 @@ app.UseHttpsRedirection();
 
 //app.UseRouting();
 
+app.MapOpenApi();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Cesca API v1");
-        c.RoutePrefix = string.Empty; // Serve at root URL
+        // FIX: point to /openapi/v1.json
+        c.SwaggerEndpoint("/openapi/v1.json", "Cesca API v1");
     });
 }
+
 
 // role creation on startup
 using (var scope = app.Services.CreateScope())
