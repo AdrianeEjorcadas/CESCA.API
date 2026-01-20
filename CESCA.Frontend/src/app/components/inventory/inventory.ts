@@ -111,6 +111,12 @@ export class Inventory implements OnInit {
         updatedBy: 'a3f1c9e2-7b6d-4c8a-9f3e-2d1b6f4a8c9e'
       }
     });
+
+    dialogRef.afterClosed().subscribe( result => {
+      if (result === 200){
+        this.refreshTable();
+      }
+    });
   }
 
   deleteProduct(productId: string, productName: string){

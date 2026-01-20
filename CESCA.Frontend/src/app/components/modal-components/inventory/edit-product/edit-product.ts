@@ -44,6 +44,7 @@ export class EditProduct implements OnInit {
     const updatedBy = this.data?.updatedBy;
 
     this.editProductForm = this.formBuilder.group({
+      productId: [product.productId],
       productName: [product.productName, [Validators.required]],
       genericName: [product.genericName ?? ''],
       category: [product.category, [Validators.required]],
@@ -73,8 +74,7 @@ export class EditProduct implements OnInit {
       next: (res) => {
         if(res.statusCode === 200){
           this.toaster.success('Product updated successfully');
-        } else {
-          this.toaster.error('Error updating product');
+          this.dialogRef.close(res.statusCode);
         }
       }, 
       error: (err) => {
