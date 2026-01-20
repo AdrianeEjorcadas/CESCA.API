@@ -1,4 +1,4 @@
-export interface InventoryModel{
+export interface UpdateInventoryModel{
     productId: string,
     productName: string,
     genericName: string,
@@ -22,6 +22,5 @@ export interface InventoryModel{
     rackNumber: string,
     aisle: string
 
-    isArchived: boolean,
-    isDeleted: boolean
+    isArchived: boolean
 }

@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { catchError, Observable, pipe, throwError } from 'rxjs';
+import { catchError, Observable, pipe, RetryConfig, throwError } from 'rxjs';
 import { InventoryModel } from '../models/component-models/inventory/inventory-model';
 import { InventoryResponse } from '../models/component-models/inventory/inventory-response';
 import { InventorySearchParameter } from '../models/search-parameter';
@@ -55,6 +55,13 @@ export class InventoryService {
     return this.http.delete<ReturnResponse<InventoryModel>>(`${this.apiUrl}/product/delete-product?productId=${productId}`)
     .pipe(
       catchError ( err => throwError(() => err))
+    );
+  }
+
+  editProduct(product: InventoryModel) : Observable<ReturnResponse<InventoryModel>>{
+    return this.http.put<ReturnResponse<InventoryModel>>(`${this.apiUrl}/product/update-product`, product)
+    .pipe(
+      catchError(err => throwError(() => err))
     );
   }
 

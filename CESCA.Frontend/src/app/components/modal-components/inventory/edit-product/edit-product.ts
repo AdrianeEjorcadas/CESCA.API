@@ -60,7 +60,7 @@ export class EditProduct implements OnInit {
         ? new Date(product.expirationDate).toISOString().split('T')[0] : ''
         ,[Validators.required, DateValidator.NotLessThanToday]],
       isPrescriptionOnly: [product.isPrescriptionOnly],
-      barCode: [product.barCode],
+      barcode: [product.barcode],
       shelfLocation: [ product.shelfLocation ?? ''],
       rackNumber: [product.rackNumber ?? ''],
       aisle: [product.aisle ?? ''], 
@@ -69,7 +69,18 @@ export class EditProduct implements OnInit {
   }
 
   onSubmit(){
-    console.log('submit');
+    this.inventoryService.editProduct(this.editProductForm.value).subscribe({
+      next: (res) => {
+        if(res.statusCode === 200){
+          this.toaster.success('Product updated successfully');
+        } else {
+          this.toaster.error('Error updating product');
+        }
+      }, 
+      error: (err) => {
+        this.toaster.error('Server Error. Please contact your administrator.');
+      }
+    });
   }
 
   cancel(){
