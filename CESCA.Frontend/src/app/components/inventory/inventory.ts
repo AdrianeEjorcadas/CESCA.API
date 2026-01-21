@@ -25,6 +25,8 @@ import {MatPaginator, PageEvent} from '@angular/material/paginator';
 import { NormalizeDatePipePipe}    from '../../pipe/normalize-date-pipe-pipe';
 import { AddProduct } from '../modal-components/inventory/add-product/add-product';
 import { EditProduct } from '../modal-components/inventory/edit-product/edit-product';
+import { JwtPayload } from '../../models/jwt-payload';
+import { AuthService } from '../../services/auth-service';
 
 @Component({
   selector: 'app-inventory',
@@ -33,10 +35,14 @@ import { EditProduct } from '../modal-components/inventory/edit-product/edit-pro
   styleUrl: './inventory.css'
 })
 export class Inventory implements OnInit {
+  private authServicce = inject(AuthService);
   private inventoryService = inject(InventoryService);
   private toastr = inject(ToastrService);
 
   private dialog = inject(MatDialog);
+
+  //user info
+  private user : string | null = null;
 
   // inventory items
   inventory = signal<InventoryModel[]>([]);
@@ -61,7 +67,13 @@ export class Inventory implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   ngOnInit(): void {
+    this.getUserId();
     this.getInventoryItems();
+  }
+
+  getUserId(){
+    const token = sessionStorage.getItem('accessToken');
+    this.user = this.authServicce.getUserId(token!);
   }
 
   getInventoryItems(){
@@ -108,7 +120,7 @@ export class Inventory implements OnInit {
       disableClose: false,
       data: {
         inventoryModel: product,
-        updatedBy: 'a3f1c9e2-7b6d-4c8a-9f3e-2d1b6f4a8c9e'
+        updatedBy: this.user
       }
     });
 

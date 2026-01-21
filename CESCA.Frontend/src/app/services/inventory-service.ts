@@ -6,6 +6,7 @@ import { InventoryResponse } from '../models/component-models/inventory/inventor
 import { InventorySearchParameter } from '../models/search-parameter';
 import { ReturnResponse } from '../models/return-response';
 import { AddProduct } from '../models/component-models/inventory/add-product';
+import { UpdateInventoryModel } from '../models/component-models/inventory/update-inventory';
 @Injectable({
   providedIn: 'root'
 })
@@ -58,8 +59,8 @@ export class InventoryService {
     );
   }
 
-  editProduct(product: InventoryModel) : Observable<ReturnResponse<InventoryModel>>{
-    return this.http.put<ReturnResponse<InventoryModel>>(`${this.apiUrl}/product/update-product`, product)
+  editProduct(product: UpdateInventoryModel) : Observable<ReturnResponse<UpdateInventoryModel>>{
+    return this.http.put<ReturnResponse<UpdateInventoryModel>>(`${this.apiUrl}/product/update-product`, product)
     .pipe(
       catchError(err => throwError(() => err))
     );

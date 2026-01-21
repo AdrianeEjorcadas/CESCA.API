@@ -32,9 +32,9 @@ export class EditProduct implements OnInit {
   ){}
 
   ngOnInit(): void {
-    console.log( 'data:  ', this.data);
+    // console.log( 'data:  ', this.data);
     this.initializedForm();
-    console.log('controls:',  this.editProductForm.controls);
+    // console.log('controls:',  this.editProductForm.controls);
     // console.log( 'data:  ', this.data);
     // console.log( 'edit form: ', this.editProductForm.value);
   }
@@ -65,7 +65,8 @@ export class EditProduct implements OnInit {
       shelfLocation: [ product.shelfLocation ?? ''],
       rackNumber: [product.rackNumber ?? ''],
       aisle: [product.aisle ?? ''], 
-      supplierId: [product.supplierId]
+      supplierId: [product.supplierId],
+      updatedBy: [updatedBy]
     });
   }
 
@@ -81,6 +82,8 @@ export class EditProduct implements OnInit {
         this.toaster.error('Server Error. Please contact your administrator.');
       }
     });
+
+    // console.log(this.editProductForm.value);
   }
 
   cancel(){

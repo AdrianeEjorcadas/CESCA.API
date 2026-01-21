@@ -4,5 +4,6 @@
     {
         public Guid ProductId { get; set; }
         public bool IsArchived { get; set; }
+        public Guid UpdatedBy { get; set; }
     }
 }

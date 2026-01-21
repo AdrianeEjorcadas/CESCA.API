@@ -23,4 +23,5 @@ export interface UpdateInventoryModel{
     aisle: string
 
     isArchived: boolean
+    updatedBy: string
 }

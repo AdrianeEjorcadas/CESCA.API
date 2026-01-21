@@ -76,7 +76,7 @@ namespace CESCA.API.Data
             var entries = ChangeTracker.Entries()
                 .Where(e => e.State == EntityState.Modified);
 
-            var userForNow = Guid.NewGuid();
+            //var userForNow = Guid.NewGuid();
             DateTime now = DateTime.UtcNow;
 
             foreach (var entry in entries) 
@@ -87,7 +87,6 @@ namespace CESCA.API.Data
                     supplier.UpdatedAt = now;
                 } else if (entry.Entity is Product product)
                 {
-                    product.UpdatedBy = userForNow;
                     product.UpdatedAt = now;
                 }
             }

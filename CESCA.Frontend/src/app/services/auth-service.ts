@@ -70,5 +70,12 @@ private apiUrl = 'https://localhost:7259';
     }
   }
 
-
+  getUserId(token: string) : string | null {
+    try{
+      const decoded = jwtDecode<JwtPayload>(token);
+      return decoded.sub;
+    } catch{
+      return null;
+    }
+  }
 }
