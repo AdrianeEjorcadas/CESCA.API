@@ -78,4 +78,14 @@ private apiUrl = 'https://localhost:7259';
       return null;
     }
   }
+
+  getUserName(token: string) : string | null{
+    try{
+      const decoded = jwtDecode<JwtPayload>(token);
+      return decoded.unique_name;
+    } catch{
+      return null;
+    }
+  }
+  
 }

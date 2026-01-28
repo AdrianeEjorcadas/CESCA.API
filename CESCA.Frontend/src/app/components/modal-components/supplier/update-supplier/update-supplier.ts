@@ -31,9 +31,9 @@ export class UpdateSupplier implements OnInit{
   ){}
 
   ngOnInit(): void {
-    console.log(this.data);
+    // console.log(this.data);
     this.initializeForm();
-    console.log(this.updateSupplierForm.value);
+    // console.log(this.updateSupplierForm.value);
   }
 
   initializeForm(){
@@ -47,9 +47,8 @@ export class UpdateSupplier implements OnInit{
       contactNumber : [supplier.contactNumber ?? ''],
       address : [supplier.address ?? ''],
       isDeleted: [supplier.isDeleted ?? false],
-      updatedBy: [updatedBy ?? 'test']
+      updatedBy: [updatedBy ?? 'admin']
     });
-
   }
 
   onSubmit(){

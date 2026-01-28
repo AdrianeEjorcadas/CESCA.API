@@ -27,6 +27,8 @@ import { RestoreSupplier } from '../modal-components/supplier/restore-supplier/r
 import { DeleteSupplier } from '../modal-components/supplier/delete-supplier/delete-supplier';
 import { UpdateSupplier } from '../modal-components/supplier/update-supplier/update-supplier';
 import { UpdateSupplierModel } from '../../models/component-models/update-supplier';
+import { AuthService } from '../../services/auth-service';
+import { TokenService } from '../../services/token-service';
 
 @Component({
   selector: 'app-supplier',
@@ -36,6 +38,8 @@ import { UpdateSupplierModel } from '../../models/component-models/update-suppli
 })
 export class Supplier implements OnInit {
 
+  private authService = inject(AuthService);
+  private tokenService = inject(TokenService);
   private supplierApiService = inject(SupplierApiService);
   // taostr service
   private toastr = inject(ToastrService);
@@ -43,6 +47,7 @@ export class Supplier implements OnInit {
   private dialog = inject(MatDialog);
 
   // suppliersWithMetadata = signal<SupplierResponse | null>(null); 
+  private user: string | null = null;
   suppliers = signal<SupplierModel[]>([]);
   // dataSource = new MatTableDataSource<SupplierModel>([]); // data source for mat table
 
@@ -69,13 +74,19 @@ export class Supplier implements OnInit {
 
 
   ngOnInit(): void {
+    this.getUserId();
     this.getSuppliers();
-    console.log(this.suppliers());
+    // console.log(this.suppliers());
   }
 
   // ngAfterViewInit() {
   //   this.dataSource.paginator = this.paginator; for mat-table
   // }
+
+  getUserId(){
+    const token : string | null = this.tokenService.getAccessToken();
+    this.user = this.authService.getUserId(token!);
+  }
 
   getSuppliers(){
     this.isLoading.set(true);
@@ -243,7 +254,7 @@ export class Supplier implements OnInit {
       disableClose: true,
       data: {
         supplier: supplier,
-        updatedBy: 'a3f1c9e2-7b6d-4c8a-9f3e-2d1b6f4a8c9e'
+        updatedBy: this.user
       }
     });
 

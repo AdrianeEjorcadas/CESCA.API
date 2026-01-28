@@ -10,7 +10,15 @@ export const loginGuard: CanActivateFn = (route, state) => {
   const tokenService = inject(TokenService);
   const router = inject(Router)
 
-  return tokenService.getAccessToken()
-    ? router.parseUrl('/dashboard')
-    : true;
+  const token = tokenService.getAccessToken();
+
+  if (token) {
+    const role = authService.getRoleFromToken(token);
+    if (role === 'User') {
+      return router.parseUrl('/pos');
+    }
+    return router.parseUrl('/dashboard');
+  }
+
+  return true;
 };

@@ -13,24 +13,33 @@
         <!-- mobile menu -->
         <div class="flex flex-col md:hidden gap-1 h-screen justify-between px-5">
             <div class="flex flex-col gap-6">
+                <a [routerLink]="['pos']" title="Point of Sale" class="self-center ">
+                        <i class="fa-solid fa-cart-shopping text-2xl text-gray hover:text-light-4 transition-all duration-300" 
+                            routerLinkActive="text-light-4" 
+                            [routerLinkActiveOptions]="{exact: true}" ></i>
+                </a>
                 <a [routerLink]="['dashboard']" title="Dashboard" class="self-center ">
                         <i class="fa-solid fa-chart-line text-2xl text-gray hover:text-light-4 transition-all duration-300" 
                             routerLinkActive="text-light-4" 
+                            *ngIf="checkUserRole()"
                             [routerLinkActiveOptions]="{exact: true}" ></i>
                 </a>
                 <a [routerLink]="['inventory']" title="Inventory" class="self-center">
                         <i class="fa-solid fa-warehouse text-2xl text-gray hover:text-light-4 transition-all duration-300" 
                             routerLinkActive="text-light-4" 
+                            *ngIf="checkUserRole()"
                             [routerLinkActiveOptions]="{exact: true}"></i>
                 </a>
                 <a [routerLink]="['supplier']"  title="Supplier" class="self-center">
                         <i class="fa-solid fa-truck-field text-2xl text-gray hover:text-light-4 transition-all duration-300"
                             routerLinkActive="text-light-4" 
+                            *ngIf="checkUserRole()"
                             [routerLinkActiveOptions]="{exact: true}"></i>
                 </a>
                 <a [routerLink]="['account-manager']"  title="Account Manager" class="self-center">
                         <i class="fa-solid fa-user-tie text-2xl text-gray hover:text-light-4 transition-all duration-300"
                             routerLinkActive="text-light-4" 
+                            *ngIf="checkUserRole()"
                             [routerLinkActiveOptions]="{exact: true}"></i>
                 </a>
             </div>
@@ -42,7 +51,16 @@
         <div class="hidden md:flex md:flex-col h-screen justify-between px-5">
             <div class="flex flex-col gap-4">
                 <a class="cursor-pointer text-center font-bold tracking-wider font-mono text-xl text-gray hover:text-light-4 transition-all duration-300" 
+                    title="Point of Sale" 
+                    [routerLink]="['pos']"
+                    routerLinkActive="text-light-4" 
+                    [routerLinkActiveOptions]="{exact: true}">
+                        <!-- <i class="fa-solid fa-chart-line"></i> -->
+                        <span class="pl-2">Point of Sale</span>
+                </a>
+                <a class="cursor-pointer text-center font-bold tracking-wider font-mono text-xl text-gray hover:text-light-4 transition-all duration-300" 
                     title="Dashboard" 
+                    *ngIf="checkUserRole()"
                     [routerLink]="['dashboard']"
                     routerLinkActive="text-light-4" 
                     [routerLinkActiveOptions]="{exact: true}">
@@ -50,21 +68,24 @@
                         <span class="pl-2">Dashboard</span>
                 </a>
                 <a class="cursor-pointer text-center font-bold tracking-wider font-mono text-xl text-gray hover:text-light-4 transition-all duration-300" 
-                    title="Inventory" 
+                    title="Inventory"  
+                    *ngIf="checkUserRole()"
                     [routerLink]="['inventory']"
                     routerLinkActive="text-light-4" 
                     [routerLinkActiveOptions]="{exact: true}">
                         Inventory
                 </a>
                 <a class="cursor-pointer text-center font-bold tracking-wider font-mono text-xl text-gray hover:text-light-4 transition-all duration-300" 
-                    title="Supplier" 
+                    title="Supplier"  
+                    *ngIf="checkUserRole()"
                     [routerLink]="['supplier']"
                     routerLinkActive="text-light-4" 
                     [routerLinkActiveOptions]="{exact: true}">
                         Supplier
                 </a>
                 <a class="cursor-pointer text-center font-bold tracking-wider font-mono text-xl text-gray hover:text-light-4 transition-all duration-300" 
-                    title="Account Manager" 
+                    title="Account Manager"  
+                    *ngIf="checkUserRole()"
                     [routerLink]="['account-manager']"
                     routerLinkActive="text-light-4" 
                     [routerLinkActiveOptions]="{exact: true}">

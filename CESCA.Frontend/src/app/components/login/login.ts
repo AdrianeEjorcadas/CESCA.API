@@ -68,6 +68,9 @@ export class Login {
     this.authService.loginPost(this.loginForm.value).subscribe({
       next: (res) => {
         //navigate to home
+        setTimeout(() => {
+          
+        }, 500);
         this.router.navigate(['/dashboard']);
         this.toastrService.success('Login Successful!', 'Welcome madapaker');
       },

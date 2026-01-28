@@ -24,8 +24,12 @@ export const authGuard: CanActivateFn = (route, state) : boolean | UrlTree => {
   const requiredRole = route.data['role'] as 'Admin' | 'User';
 
   if (requiredRole && role !== requiredRole){
-    return router.parseUrl('/unathourized');
+    return router.parseUrl('/unauthorized');
+  }
+
+  if(role === 'User' && !state.url.startsWith('/pos')){
+    return router.parseUrl('/pos');
   }
 
   return true;
-};
+}

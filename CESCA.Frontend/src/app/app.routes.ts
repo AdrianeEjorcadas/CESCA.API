@@ -41,6 +41,12 @@ export const routes: Routes = [
                 loadComponent: () => import('../app/components/supplier/supplier').then(m => m.Supplier),
                 canActivate: [authGuard]
            },
+          {
+          path : 'pos',
+          title: 'Cesca ~ Point of Sale',
+          loadComponent: () => import('../app/components/point-of-sale/point-of-sale').then(m => m.PointOfSale),
+          canActivate: [authGuard]
+          },
            {
                 path: '',
                 redirectTo: 'dashboard',
@@ -49,7 +55,7 @@ export const routes: Routes = [
         ]
     },
     {
-     path: 'unathourized',
+     path: 'unauthorized',
      title: 'Unauthorized',
      loadComponent: () => import('../app/components/unathorized/unathorized').then(m => m.Unathorized)
     },
