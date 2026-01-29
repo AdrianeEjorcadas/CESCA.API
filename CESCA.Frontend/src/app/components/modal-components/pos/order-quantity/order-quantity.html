@@ -1,0 +1,17 @@
+<h2 mat-dialog-title>{{ productName }}</h2>
+<mat-dialog-content>
+  <span>Order Quantity for {{ productName }}:</span>
+  <input 
+    class="border ml-2 px-2 py-1 rounded-2xl w-20"
+    matInput 
+    type="number" [(ngModel)]="quantity" min="1" 
+    required title="Quantity" placeholder="1">
+</mat-dialog-content>
+<mat-dialog-actions class="flex flex-row gap-2">
+  <button 
+    class="px-2 py-1 rounded-xl cursor-pointer border border-red-400 bg-red-400 text-white hover:bg-red-500 transition-all duration-200"
+    matButton mat-dialog-close>No</button>
+  <button
+    class="px-2 py-1 rounded-xl cursor-pointer border border-light-1 bg-light-1 text-white hover:bg-light-2 transition-all duration-200"
+    matButton [mat-dialog-close]="quantity" cdkFocusInitial>Yes</button>
+</mat-dialog-actions>

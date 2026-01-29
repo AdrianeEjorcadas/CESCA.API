@@ -53,7 +53,7 @@ private apiUrl = 'https://localhost:7259';
   getRoleFromToken(token: string ) : string | null {
     try {
       const decoded = jwtDecode<JwtPayload>(token);
-      console.log("role " + decoded.role);
+      // console.log("role " + decoded.role);
       return decoded.role;
     } catch {
       return null;
@@ -63,7 +63,7 @@ private apiUrl = 'https://localhost:7259';
   getUserInfo(token: string) : JwtPayload | null {
     try {
       const decoded = jwtDecode<JwtPayload>(token);
-      console.log("user" + decoded);
+      // console.log("user" + decoded);
       return decoded;
     } catch {
       return null;
