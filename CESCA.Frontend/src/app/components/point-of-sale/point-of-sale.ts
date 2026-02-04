@@ -106,13 +106,17 @@ export class PointOfSale implements OnInit{
       const dialogRef = this.dialog.open(OrderQuantity, {
         width: '500px',
         disableClose: false,
-        data: product.productName
+        data: {productName: product.productName, quantity: product.quantity}
       });
 
-      // retrieve quantity and assign it to the product in the cart
+      // retrieve quantity and (assign it to the product in the cart OR remove the item if qty is 0)
       dialogRef.afterClosed().subscribe(result => {
           const quantity = result;
-          this.cart().find(cart => cart.productId === product.productId)!.quantity = quantity;
+          if(quantity > 0){
+            this.cart().find(cart => cart.productId === product.productId)!.quantity = quantity;
+          } else {
+            this.cart.update(items => items.filter(item => item.productId !== product.productId));
+          }
       });
 
       console.log(this.cart());

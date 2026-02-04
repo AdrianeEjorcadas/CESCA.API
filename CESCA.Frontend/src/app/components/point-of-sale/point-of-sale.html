@@ -61,7 +61,7 @@
                <mat-menu #menu="matMenu">
                   <button mat-menu-item (click)="addToCart(element)">
                      <mat-icon>add_shopping_cart</mat-icon>
-                     <span class="text-light-2">Add {{element.productName}} to Cart</span>
+                     <span class="text-light-2">Add <span class="text-red-500">{{element.productName}}</span> to Cart</span>
                   </button>
                </mat-menu>
             </td>
@@ -71,12 +71,12 @@
          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
       </table>
       @if (dataSource.length > 0) {
-                <mat-paginator
-                    [length]="paginatorMetadata?.totalCount ?? 0"
-                    [pageSize]="paginatorMetadata?.pageSize ?? 10"
-                    [pageIndex]="(paginatorMetadata?.currentPage ?? 1) - 1"
-                    (page)="onPageChange($event)">
-                </mat-paginator>
+         <mat-paginator
+            [length]="paginatorMetadata?.totalCount ?? 0"
+            [pageSize]="paginatorMetadata?.pageSize ?? 10"
+            [pageIndex]="(paginatorMetadata?.currentPage ?? 1) - 1"
+            (page)="onPageChange($event)">
+         </mat-paginator>
       }
    </section>
  </div>

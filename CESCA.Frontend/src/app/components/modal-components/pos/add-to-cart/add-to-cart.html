@@ -1,3 +1,66 @@
-<div>
-    
-</div>
+<div class="bg-white">
+    <div class="flex flex-col p-4">
+        <div class="flex flex-row">
+            <mat-icon class="!text-xl !text-gray">shopping_cart</mat-icon> 
+            <span class="text-gray text-xl">Cart</span>  
+        </div>
+
+      <table mat-table [dataSource]="data.cart" class="!bg-white">
+        
+         <!-- Product Name -->
+         <ng-container matColumnDef="productName">
+            <th mat-header-cell *matHeaderCellDef> Product Name </th>
+            <td mat-cell *matCellDef="let element"> {{element.productName}} </td>
+         </ng-container>
+
+         <!-- Price -->
+         <ng-container matColumnDef="price">
+            <th mat-header-cell *matHeaderCellDef> Price </th>
+            <td mat-cell *matCellDef="let element"> ₱{{(element.price).toFixed(2)}} </td>
+         </ng-container>
+
+         <!-- Ordered Qty -->
+         <ng-container matColumnDef="quantity">
+            <th mat-header-cell *matHeaderCellDef> Ordered Quantity </th>
+            <td mat-cell *matCellDef="let element"> {{element.quantity}} </td>
+         </ng-container>
+
+         <!-- Total per Item -->
+         <ng-container matColumnDef="totalPerItem">
+            <th mat-header-cell *matHeaderCellDef> Total per Item </th>
+            <td mat-cell *matCellDef="let element"> ₱{{totalPerItem(element.price, element.quantity)}} </td>
+         </ng-container>
+
+         <!-- Action -->
+         <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef> </th>
+            <td mat-cell *matCellDef="let element">
+               <button matIconButton [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                  <mat-icon>more_vert</mat-icon>
+               </button>
+               <mat-menu #menu="matMenu">
+                  <button mat-menu-item (click)="editItem()">
+                     <mat-icon class="!text-green-600">edit</mat-icon>
+                     <span class="text-light-2">Edit <span>{{element.productName}}</span> Quantity</span>
+                  </button>
+                  <button mat-menu-item (click)="removeItem()">
+                     <mat-icon class="!text-red-600">delete</mat-icon>
+                     <span class="text-light-2">Remove <span>{{element.productName}}</span></span>
+                  </button>
+               </mat-menu>
+             </td>
+         </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+
+      <!-- discount, total amount, total payment, total change -->
+      <div class="flex flex-col gap-2 mt-2">
+        <div class="flex flex-col">
+            <mat-checkbox class="example-margin" [(ngModel)]="isDiscounted">Apply Discount</mat-checkbox>
+        </div>
+      </div>
+
+    </div>
+</div>  
