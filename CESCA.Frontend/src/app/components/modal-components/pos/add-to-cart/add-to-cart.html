@@ -56,11 +56,54 @@
       </table>
 
       <!-- discount, total amount, total payment, total change -->
-      <div class="flex flex-col gap-2 mt-2">
-        <div class="flex flex-col">
-            <mat-checkbox class="example-margin" [(ngModel)]="isDiscounted">Apply Discount</mat-checkbox>
-        </div>
+      <div class="flex flex-col gap-2 mt-5">
+         <form [formGroup]="orderForm" >
+            <!-- DISCOUNT -->
+            <div class="flex flex-col">
+                  <mat-checkbox class="example-margin" formControlName="isDiscounted">Apply Discount</mat-checkbox>
+            </div>
+            <!-- TOTAL AMOUNT -->
+            <div class="flex flex-row">
+                     <div class="flex flex-row gap-2">
+                        <label class="text-slate-500 text-xs text-center" for="totalAmount">Total amount:</label>
+                        <span class="text-slate-500 text-xs">{{totalAmount()}}</span>
+                     </div>
+            </div>
+            <!-- PAYMENT -->
+            <div class="flex flex-row">
+                     <div class="flex flex-row gap-2">
+                        <label class="text-slate-500 text-xs text-center" for="payment">Total payment:</label>
+                        <ng-container
+                           *ngTemplateOutlet="error, 
+                           context: {control: orderForm.get('payment'), 
+                                     message: {required: 'Total payment is required*', 
+                                     pattern: 'Total payment must be a number*'}
+                                    }">
+                        </ng-container>
+                     </div>
+                     <input 
+                        class="border border-slate-500 w-fit rounded-md placeholder-slate-500 focus:outline-none focus:ring focus:ring-blue-500 p-1 text-xs" 
+                        title="payment" type="text" id="payment" placeholder="0.00"
+                        formControlName="payment">
+            </div>
+            <!-- CHANGE -->
+            <div class="flex flex-row">
+                     <div class="flex flex-row gap-2">
+                        <p class="text-slate-500 text-xs text-center" for="payment">Change:</p>
+                        <span>₱{{customerChange(orderForm.get('totalAmount')?.value, orderForm.get('payment')?.value)}}</span>
+                     </div>   
+            </div>
+         </form> 
       </div>
 
     </div>
 </div>  
+
+<!-- required error -->
+<ng-template #error let-control="control" let-message="message">
+    @if (control?.hasError('required') && control?.touched) {
+        <div class="text-red-500 text-xs">{{ message.required }}</div>
+    } @else if (control?.hasError('pattern') && control?.touched) {
+        <div class="text-red-500 text-xs">{{ message.pattern }}</div>
+    }
+</ng-template>
