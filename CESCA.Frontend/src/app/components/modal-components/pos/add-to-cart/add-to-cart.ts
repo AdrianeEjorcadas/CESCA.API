@@ -6,7 +6,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
-import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatCheckboxChange, MatCheckboxModule} from '@angular/material/checkbox';
 import { FormGroup, FormsModule, Validators } from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -28,8 +28,14 @@ export class AddToCart implements OnInit{
 
   displayedColumns: string[] = ['productName', 'price', 'quantity', 'totalPerItem', 'actions'];
 
+  disableInput: boolean = true;
   // public isDiscounted: boolean = false;
   // payment: number = 0;
+  totalOrderAmount: number = 0;
+  totalOrderAmountCopy: number = 0; // hold the original amount
+  change: number = 0;
+  readonly DISCOUNT_PERCENTAGE = 0.2;
+
 
   // public orderFormData : {
   //   payment: number,
@@ -50,6 +56,8 @@ export class AddToCart implements OnInit{
 
   ngOnInit(): void {
     this.initializedForm();
+    this.totalAmount();
+    console.log(this.totalOrderAmount);
   }
 
   closeDialog(){
@@ -60,8 +68,8 @@ export class AddToCart implements OnInit{
     this.orderForm = this.formBuilder.group({
       payment: [0, [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
       isDiscounted: [false],
-      totalAmount: [0, [Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
-      change: [0, [Validators.pattern(/^\d+(\.\d{1,2})?$/)]]
+      totalAmount: [this.totalOrderAmount],
+      change: [this.change.toFixed(2)]
     })
   }
 
@@ -71,18 +79,35 @@ export class AddToCart implements OnInit{
   }
 
   totalAmount(){
-    let total = 0;
     let items = this.data.cart;
 
-    items.forEach(item => {
-      total = item.price * item.quantity;
-    });
-
-    return total;
+   for (const item of items) {
+      this.totalOrderAmount += item.price * item.quantity;
+      this.totalOrderAmountCopy = this.totalOrderAmount;
+   }
   }
 
-  customerChange(totalAmount: number, payment: number){
-    return (totalAmount - payment).toFixed(2);
+  customerChange(totalAmount: number, payment: number): string{
+    if (payment <= 0){
+      return '0';
+    }
+
+    this.change = payment - totalAmount;
+
+    return this.change.toFixed(2);
+  }
+
+  onDiscountChange(event: MatCheckboxChange){
+    this.getDiscountedPrice(event.checked);
+  }
+
+  getDiscountedPrice(isChecked: boolean){
+    let discountedPrice = this.totalOrderAmountCopy * this.DISCOUNT_PERCENTAGE; 
+    if(isChecked){
+      this.totalOrderAmount = this.totalOrderAmount - discountedPrice;
+    } else {
+      this.totalOrderAmount = this.totalOrderAmountCopy;
+    }
   }
 
   editItem(){
@@ -91,6 +116,24 @@ export class AddToCart implements OnInit{
 
   removeItem(){
     console.log('remove item');
+  }
+
+  submit(){
+    this.populateOrderForm();
+    console.log(this.orderForm.value);
+  }
+
+  populateOrderForm(){
+    this.orderForm.patchValue({
+      payment: this.orderForm.value.payment,
+      isDiscounted: this.orderForm.value.isDiscounted,
+      totalAmount: this.totalOrderAmount,
+      change : this.change
+    });
+  }
+
+  cancel(){
+    this.dialogRef.close();
   }
 
 }

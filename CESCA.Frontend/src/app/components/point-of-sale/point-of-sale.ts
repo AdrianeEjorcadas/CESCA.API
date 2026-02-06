@@ -105,7 +105,7 @@ export class PointOfSale implements OnInit{
       //opend order qty dialog
       const dialogRef = this.dialog.open(OrderQuantity, {
         width: '500px',
-        disableClose: false,
+        disableClose: true,
         data: {productName: product.productName, quantity: product.quantity}
       });
 
