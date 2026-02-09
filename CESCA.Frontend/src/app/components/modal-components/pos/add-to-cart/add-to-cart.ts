@@ -1,4 +1,4 @@
-import { Component, inject, Inject, OnInit } from '@angular/core';
+import { Component, inject, Inject, OnInit, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { PosTableModel } from '../../../../models/component-models/pos/pos-table-model';
 import {MatTableModule} from '@angular/material/table';
@@ -13,6 +13,8 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import { FormBuilder } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { faL } from '@fortawesome/free-solid-svg-icons';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-add-to-cart',
@@ -24,31 +26,19 @@ export class AddToCart implements OnInit{
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { cart: PosTableModel[] }){}  
 
+    private toastr = inject(ToastrService);
   private dialogRef= inject(MatDialogRef<AddToCart>);
 
   displayedColumns: string[] = ['productName', 'price', 'quantity', 'totalPerItem', 'actions'];
 
-  disableInput: boolean = true;
+  disableInput: boolean = false;
+  disableRecalculation: boolean = false;
   // public isDiscounted: boolean = false;
   // payment: number = 0;
-  totalOrderAmount: number = 0;
-  totalOrderAmountCopy: number = 0; // hold the original amount
-  change: number = 0;
+  totalOrderAmount = signal<number>(0);
+  totalOrderAmountCopy = signal<number>(0); // hold the original amount
+  change : number = 0;
   readonly DISCOUNT_PERCENTAGE = 0.2;
-
-
-  // public orderFormData : {
-  //   payment: number,
-  //   isDiscounted: boolean,
-  //   totalAmount: number,
-  //   change: number
-  // } = {
-  //   payment: 0,
-  //   isDiscounted: false,
-  //   totalAmount: 0,
-  //   change: 0
-  // }
-
 
   orderForm! : FormGroup;
   private formBuilder = inject(FormBuilder);
@@ -82,8 +72,8 @@ export class AddToCart implements OnInit{
     let items = this.data.cart;
 
    for (const item of items) {
-      this.totalOrderAmount += item.price * item.quantity;
-      this.totalOrderAmountCopy = this.totalOrderAmount;
+      this.totalOrderAmount.set(item.price * item.quantity);
+      this.totalOrderAmountCopy.set(this.totalOrderAmount());
    }
   }
 
@@ -92,7 +82,7 @@ export class AddToCart implements OnInit{
       return '0';
     }
 
-    this.change = payment - totalAmount;
+    this.change = payment - totalAmount;  
 
     return this.change.toFixed(2);
   }
@@ -102,25 +92,52 @@ export class AddToCart implements OnInit{
   }
 
   getDiscountedPrice(isChecked: boolean){
-    let discountedPrice = this.totalOrderAmountCopy * this.DISCOUNT_PERCENTAGE; 
+    let discountedPrice = this.totalOrderAmountCopy() * this.DISCOUNT_PERCENTAGE; 
     if(isChecked){
-      this.totalOrderAmount = this.totalOrderAmount - discountedPrice;
+      this.totalOrderAmount.set(this.totalOrderAmountCopy() - discountedPrice)
     } else {
-      this.totalOrderAmount = this.totalOrderAmountCopy;
+      this.totalOrderAmount.set(this.totalOrderAmountCopy());
     }
+
+    console.log('total order amount: ' + this.totalOrderAmount());
+    console.log('total order amount copy: ' + this.totalOrderAmountCopy());
   }
 
   editItem(){
-    console.log('edit item');
+    this.disableRecalculation = !this.disableRecalculation;
+    this.disableInput = !this.disableInput;
   }
 
-  removeItem(){
-    console.log('remove item');
+  removeItem(productId: string){
+    this.data.cart = this.data.cart.filter(item => item.productId !== productId);
+    this.resetAmounts();
+    this.totalAmount();
+    console.log(this.data.cart)
+  }
+
+  resetAmounts(){
+    const reset = 0;
+
+    this.totalOrderAmount.update(value => reset);
+    this.totalOrderAmountCopy.update(value => reset);
+    this.change = 0;
+    this.orderForm.get('isDiscounted')?.setValue(false);
   }
 
   submit(){
-    this.populateOrderForm();
-    console.log(this.orderForm.value);
+    if(!this.disableRecalculation){
+      this.populateOrderForm();
+      this.toastr.success('Order submitted', 'Cesca\'\s Pharmacy');
+      this.dialogRef.close();
+    } else {
+      this.toastr.error('Please recalculate the order', 'Cesca\'\s Pharmacy');
+    }
+  }
+
+  recalculateAmount(){
+    this.totalAmount();
+    this.disableRecalculation = false;
+    this.toastr.info('Order recalculated', 'Cesca\'\s Pharmacy');
   }
 
   populateOrderForm(){

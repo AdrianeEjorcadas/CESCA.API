@@ -22,7 +22,13 @@
          <!-- Ordered Qty -->
          <ng-container matColumnDef="quantity">
             <th mat-header-cell *matHeaderCellDef> Ordered Quantity </th>
-            <td mat-cell *matCellDef="let element"> {{element.quantity}} </td>
+            <td mat-cell *matCellDef="let element"> 
+               <input
+                  class="w-20 text-center"
+                   matInput [(ngModel)]="element.quantity" type="number" min="0" title="Quantity" 
+                  [disabled]="!disableInput" [ngClass]="disableInput === true ? 'text-green-500 !border-green-500' : ''">   
+            </td>
+            <!-- <td mat-cell *matCellDef="let element"> {{element.quantity}} </td> -->
          </ng-container>
 
          <!-- Total per Item -->
@@ -43,7 +49,7 @@
                      <mat-icon class="!text-green-600">edit</mat-icon>
                      <span class="text-light-2">Edit <span>{{element.productName}}</span> Quantity</span>
                   </button>
-                  <button mat-menu-item (click)="removeItem()">
+                  <button mat-menu-item (click)="removeItem(element.productId)">
                      <mat-icon class="!text-red-600">delete</mat-icon>
                      <span class="text-light-2">Remove <span>{{element.productName}}</span></span>
                   </button>
@@ -66,7 +72,7 @@
             <div class="flex flex-row">
                      <div class="flex flex-row gap-4 px-2">
                         <label for="totalAmount">Total amount:</label>
-                        <span>₱{{totalOrderAmount.toFixed(2)}}</span>
+                        <span>₱{{totalOrderAmount().toFixed(2)}}</span>
                      </div>
             </div>
             <!-- PAYMENT -->
@@ -90,11 +96,15 @@
             <div class="flex flex-row">
                      <div class="flex flex-row gap-12 px-2">
                         <p class="text-center" for="payment">Change:</p>
-                        <span>₱{{customerChange(totalOrderAmount, orderForm.get('payment')?.value)}}</span>
+                        <span>₱{{customerChange(totalOrderAmount(), orderForm.get('payment')?.value)}}</span>
                      </div>   
             </div>
             <!-- SUBMIT --> 
              <div class="flex flex-row gap-2 justify-end mt-5">
+               <button
+                  type="button"
+                  class="px-2 py-1 rounded-xl bg-violet-500 text-white hover:bg-violet-600 transition-all duration-200 cursor-pointer"
+                  (click)="recalculateAmount()" [disabled]="!disableRecalculation">Recalculate</button>
                <button
                   class="px-2 py-1 rounded-xl bg-blue-500 text-white hover:bg-blue-600 transition-all duration-200 cursor-pointer"
                   type="submit">Submit</button>

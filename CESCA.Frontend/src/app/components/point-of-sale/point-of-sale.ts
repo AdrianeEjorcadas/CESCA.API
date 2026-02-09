@@ -127,13 +127,17 @@ export class PointOfSale implements OnInit{
 
   checkCart(){
     if(this.cart().length > 0){
-      this.dialog.open(AddToCart, {
+      const dialogRef = this.dialog.open(AddToCart, {
         width: '500px',
-        disableClose: false,
+        disableClose: true,
         data: {
           cart: this.cart()
         }
-      })
+      });
+
+      // dialogRef.afterClosed().subscribe(result => {
+      //   this.cart.set([]);
+      // });
     } else {
       this.toastrService.info('Cart is empty','Cesca\'\s Pharmacy')
     }
