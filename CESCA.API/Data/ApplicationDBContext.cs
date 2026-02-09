@@ -13,6 +13,10 @@ namespace CESCA.API.Data
 
         public DbSet<Supplier> Suppliers { get; set; }
 
+        public DbSet<Order> Orders { get; set; }
+
+        public DbSet<OrderDetails> OrderDetails { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -27,6 +31,16 @@ namespace CESCA.API.Data
             modelBuilder.Entity<Product>()
                 .Property(p => p.Price)
                 .HasPrecision(18, 2);
+
+            modelBuilder.Entity<OrderDetails>()
+                .HasOne(o => o.Order)
+                .WithMany(od => od.OrderDetails)
+                .HasForeignKey(o => o.OrderId)
+                .IsRequired();
+
+            modelBuilder.Entity<OrderDetails>()
+                .Property(od => od.OrderItemId)
+                .ValueGeneratedOnAdd();
 
             modelBuilder.Entity<Supplier>().HasQueryFilter(e => !e.IsDeleted);
             modelBuilder.Entity<Product>().HasQueryFilter(e => !e.IsDeleted);
