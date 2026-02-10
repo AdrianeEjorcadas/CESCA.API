@@ -12,5 +12,6 @@ namespace CESCA.API.Models
         public decimal FinalAmount { get; set; }
         public string? Status { get; set; }
         public ICollection<OrderDetails> OrderDetails { get; set; }
+        public string ProcessBy { get; set; }
     }
 }

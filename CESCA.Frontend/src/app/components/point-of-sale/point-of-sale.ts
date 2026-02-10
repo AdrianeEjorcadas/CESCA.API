@@ -135,9 +135,13 @@ export class PointOfSale implements OnInit{
         }
       });
 
-      // dialogRef.afterClosed().subscribe(result => {
-      //   this.cart.set([]);
-      // });
+      dialogRef.afterClosed().subscribe(result => {
+        if (result.length > 0){
+          this.cart.set(result);
+        } else {
+          this.cart.set([]);
+        }
+      });
     } else {
       this.toastrService.info('Cart is empty','Cesca\'\s Pharmacy')
     }

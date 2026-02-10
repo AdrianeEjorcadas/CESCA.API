@@ -15,6 +15,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { faL } from '@fortawesome/free-solid-svg-icons';
 import { ToastrService } from 'ngx-toastr';
+import { AuthService } from '../../../../services/auth-service';
+import { TokenService } from '../../../../services/token-service';
+import { OrderStatus } from '../../../enums/order/EOrder';
 
 @Component({
   selector: 'app-add-to-cart',
@@ -26,8 +29,12 @@ export class AddToCart implements OnInit{
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { cart: PosTableModel[] }){}  
 
-    private toastr = inject(ToastrService);
+  private toastr = inject(ToastrService);
   private dialogRef= inject(MatDialogRef<AddToCart>);
+  private authService = inject(AuthService);
+  private tokenServince = inject(TokenService);
+
+  userName: string | null = null;
 
   displayedColumns: string[] = ['productName', 'price', 'quantity', 'totalPerItem', 'actions'];
 
@@ -39,15 +46,22 @@ export class AddToCart implements OnInit{
   totalOrderAmountCopy = signal<number>(0); // hold the original amount
   change : number = 0;
   readonly DISCOUNT_PERCENTAGE = 0.2;
-
+  updatedCart : PosTableModel[] = []; // fill when removing items
   orderForm! : FormGroup;
   private formBuilder = inject(FormBuilder);
 
 
   ngOnInit(): void {
+    this.getUserName();
     this.initializedForm();
+    this.updatedCart = this.data.cart;
     this.totalAmount();
     console.log(this.totalOrderAmount);
+  }
+
+  getUserName(){
+    const token = this.tokenServince.getAccessToken();
+    this.userName = this.authService.getUserName(token!);
   }
 
   closeDialog(){
@@ -58,9 +72,12 @@ export class AddToCart implements OnInit{
     this.orderForm = this.formBuilder.group({
       payment: [0, [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
       isDiscounted: [false],
-      totalAmount: [this.totalOrderAmount],
-      change: [this.change.toFixed(2)]
-    })
+      originalAmount: [this.totalOrderAmountCopy()],
+      totalAmount: [this.totalOrderAmount()],
+      change: [this.change.toFixed(2)],
+      processBy: this.userName,
+      status: ['']
+    });
   }
 
   protected totalPerItem(price: number, quantity: number): string{
@@ -69,12 +86,18 @@ export class AddToCart implements OnInit{
   }
 
   totalAmount(){
-    let items = this.data.cart;
+  //   let items = this.data.cart;
 
-   for (const item of items) {
-      this.totalOrderAmount.set(item.price * item.quantity);
-      this.totalOrderAmountCopy.set(this.totalOrderAmount());
-   }
+  //  for (const item of items) {
+  //     this.totalOrderAmount.update(value => value + item.price * item.quantity);
+  //     this.totalOrderAmountCopy.set(this.totalOrderAmount());
+  //  }
+    const items = this.data.cart;
+    const sum = items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+
+    this.totalOrderAmount.set(sum);
+    this.totalOrderAmountCopy.set(sum);
+
   }
 
   customerChange(totalAmount: number, payment: number): string{
@@ -110,9 +133,10 @@ export class AddToCart implements OnInit{
 
   removeItem(productId: string){
     this.data.cart = this.data.cart.filter(item => item.productId !== productId);
+    this.updatedCart = this.data.cart;
     this.resetAmounts();
     this.totalAmount();
-    console.log(this.data.cart)
+    console.log('rmeove: '+ JSON.stringify(this.data.cart));
   }
 
   resetAmounts(){
@@ -125,18 +149,23 @@ export class AddToCart implements OnInit{
   }
 
   submit(){
-    if(!this.disableRecalculation){
-      this.populateOrderForm();
-      this.toastr.success('Order submitted', 'Cesca\'\s Pharmacy');
-      this.dialogRef.close();
-    } else {
+    if(this.disableRecalculation){
       this.toastr.error('Please recalculate the order', 'Cesca\'\s Pharmacy');
+    } else if(this.orderForm.value.payment <= 0 || this.orderForm.value.payment < this.totalOrderAmount()){
+      this.toastr.error('Please enter a valid payment amount', 'Cesca\'\s Pharmacy');
+    } else {
+      this.populateOrderForm();
+      this.emptyCart();
+      this.toastr.success('Order submitted', 'Cesca\'\s Pharmacy');
+      console.log(this.orderForm.value);
+      this.dialogRef.close();
     }
   }
 
   recalculateAmount(){
     this.totalAmount();
-    this.disableRecalculation = false;
+    this.disableRecalculation = !this.disableRecalculation;
+    this.disableInput = !this.disableInput;
     this.toastr.info('Order recalculated', 'Cesca\'\s Pharmacy');
   }
 
@@ -144,13 +173,22 @@ export class AddToCart implements OnInit{
     this.orderForm.patchValue({
       payment: this.orderForm.value.payment,
       isDiscounted: this.orderForm.value.isDiscounted,
-      totalAmount: this.totalOrderAmount,
-      change : this.change
+      totalAmount: this.totalOrderAmount(),
+      change : this.change,
+      status: OrderStatus.Completed,
+      processBy: this.userName,
+      originalAmount: this.totalOrderAmountCopy()
     });
   }
 
   cancel(){
-    this.dialogRef.close();
+    this.dialogRef.close(this.updatedCart);
+  }
+
+  emptyCart(){
+    if(this.data.cart.length > 0){
+      this.data.cart = [];
+    }
   }
 
 }
