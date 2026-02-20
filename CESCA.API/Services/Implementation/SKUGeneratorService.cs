@@ -12,6 +12,14 @@ namespace CESCA.API.Services.Implementation
             return $"{GetCategoryCode(category)}{GetProductCode(productName)}{date}{uniqueCode.ToUpper()}";
         }
 
+        public string GenerateOrderId()
+        {
+            const string PREFIX = "CESCA";
+            string uniqueCode = Guid.NewGuid().ToString().Substring(0, 8);
+
+            return PREFIX + uniqueCode;
+        }
+
         private string GetCategoryCode(string category)
         {
             return new string(category

@@ -6,7 +6,7 @@ namespace CESCA.API.Models
     {
         [Key]
         public int OrderItemId { get; set; }
-        public Guid OrderId { get; set; }
+        public string OrderId { get; set; }
         public Guid ProductId { get; set; }
         public int Quantity { get; set; }
         public decimal Price { get; set; }

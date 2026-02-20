@@ -3,5 +3,6 @@
     public interface ISKUGeneratorService
     {
         public string GenerateSKU(string category, string productName);
+        public string GenerateOrderId();
     }
 }

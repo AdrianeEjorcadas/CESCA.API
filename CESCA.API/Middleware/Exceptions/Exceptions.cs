@@ -39,5 +39,13 @@
                 
             }
         }
+
+        public class InsufficientProductException : Exception
+        {
+            public InsufficientProductException(string message) : base(message)
+            {
+                
+            }
+        }
     }
 }

@@ -105,10 +105,12 @@ builder.Services.AddProblemDetails();
 builder.Services.AddScoped<ISupplierService, SupplierService>();
 builder.Services.AddTransient<ISKUGeneratorService, SKUGeneratorService>();
 builder.Services.AddScoped<IProductService, ProductService>();  
+builder.Services.AddScoped<IOrderService, OrderService>();
 
 //Repo
 builder.Services.AddScoped<ISupplierRepository, SupplierRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 
 //Mapper
 //builder.Services.AddAutoMapper(cfg => { }, typeof(MappingProfile));

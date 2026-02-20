@@ -18,6 +18,7 @@ import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../../../services/auth-service';
 import { TokenService } from '../../../../services/token-service';
 import { OrderStatus } from '../../../enums/order/EOrder';
+import { OrderDetailsModel } from '../../../../models/component-models/pos/order-details-model';
 
 @Component({
   selector: 'app-add-to-cart',
@@ -50,6 +51,7 @@ export class AddToCart implements OnInit{
   orderForm! : FormGroup;
   private formBuilder = inject(FormBuilder);
 
+  orderDetails: OrderDetailsModel[] = [];
 
   ngOnInit(): void {
     this.getUserName();
@@ -179,6 +181,15 @@ export class AddToCart implements OnInit{
       processBy: this.userName,
       originalAmount: this.totalOrderAmountCopy()
     });
+  }
+
+  populateOrderDetails(){
+    this.orderDetails = this.data.cart.map(item => ({
+      productId: item.productId,
+      quantity: item.quantity,
+      price: item.price,
+      total: item.price * item.quantity
+    }));
   }
 
   cancel(){

@@ -81,6 +81,9 @@ namespace CESCA.API.Data
                 {
                     appUser.CreatedBy = userForNow;
                     appUser.CreatedAt = now;
+                } else if(entry.Entity is Order order)
+                {
+                    order.OrderDate = now;
                 }
             }
         }
