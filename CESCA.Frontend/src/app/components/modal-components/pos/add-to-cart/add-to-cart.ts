@@ -19,6 +19,9 @@ import { AuthService } from '../../../../services/auth-service';
 import { TokenService } from '../../../../services/token-service';
 import { OrderStatus } from '../../../enums/order/EOrder';
 import { OrderDetailsModel } from '../../../../models/component-models/pos/order-details-model';
+import { OrderModel } from '../../../../models/component-models/pos/order-model';
+import { CreateOrderRequest } from '../../../../models/component-models/pos/create-order-request-model';
+import { OrderService } from '../../../../services/order-service';
 
 @Component({
   selector: 'app-add-to-cart',
@@ -34,6 +37,7 @@ export class AddToCart implements OnInit{
   private dialogRef= inject(MatDialogRef<AddToCart>);
   private authService = inject(AuthService);
   private tokenServince = inject(TokenService);
+  private orderService = inject(OrderService);
 
   userName: string | null = null;
 
@@ -52,6 +56,8 @@ export class AddToCart implements OnInit{
   private formBuilder = inject(FormBuilder);
 
   orderDetails: OrderDetailsModel[] = [];
+  order: OrderModel[] = [];
+  orderRequest: CreateOrderRequest | null = null;
 
   ngOnInit(): void {
     this.getUserName();
@@ -157,9 +163,22 @@ export class AddToCart implements OnInit{
       this.toastr.error('Please enter a valid payment amount', 'Cesca\'\s Pharmacy');
     } else {
       this.populateOrderForm();
+      this.populateOrderDetails();
+      this.populateOrderRequest();
       this.emptyCart();
-      this.toastr.success('Order submitted', 'Cesca\'\s Pharmacy');
-      console.log(this.orderForm.value);
+      this.orderService.placeOrder(this.orderRequest!).subscribe({
+        next: (res) => {
+          if(res.statusCode === 200){
+            this.toastr.success('Order submitted', 'Cesca\'\s Pharmacy');
+          } else {
+            this.toastr.error('Order failed', 'Cesca\'\s Pharmacy');
+          }
+          this.dialogRef.close(res.statusCode);
+        },
+        error: (err) => {
+          this.toastr.error('Order failed', 'Cesca\'\s Pharmacy', err);
+        }
+      });
       this.dialogRef.close();
     }
   }
@@ -190,6 +209,21 @@ export class AddToCart implements OnInit{
       price: item.price,
       total: item.price * item.quantity
     }));
+  }
+
+  populateOrderRequest(){
+    this.orderRequest = {
+      OrderDTO : {
+        payment: this.orderForm.value.payment,
+        change: this.orderForm.value.change,
+        orderAmount: this.orderForm.value.originalAmount,
+        discountedApplied: this.orderForm.value.isDiscounted,
+        finalAmount: this.orderForm.value.totalAmount,
+        status: this.orderForm.value.status,
+        processBy: this.orderForm.value.processBy
+      }, 
+      OrderDetailsDTO: this.orderDetails
+    };
   }
 
   cancel(){

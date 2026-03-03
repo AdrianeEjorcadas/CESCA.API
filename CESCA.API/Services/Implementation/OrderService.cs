@@ -20,7 +20,8 @@ namespace CESCA.API.Services.Implementation
 
             var orders = new Order
             {
-                OrderId = $"CESCA-{DateTime.Now.Year.ToString()}-{orderSeq}",
+                OrderId = Guid.NewGuid(),
+                InvoiceNumber = $"CESCA-{DateTime.Now.Year.ToString()}-{orderSeq}",
                 OrderAmount = orderDTO.OrderAmount,
                 DiscountApplied = orderDTO.DiscountApplied,
                 FinalAmount = orderDTO.FinalAmout,
@@ -31,6 +32,7 @@ namespace CESCA.API.Services.Implementation
             var orderDetailList = orderDetailsDTO.Select(dto => new OrderDetails
             {
                 OrderId = orders.OrderId,
+                InvoiceNumber = orders.InvoiceNumber,
                 ProductId = dto.ProductId,
                 Price = dto.Price,
                 Quantity = dto.Quantity,
