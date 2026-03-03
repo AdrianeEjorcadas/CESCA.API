@@ -24,7 +24,7 @@ namespace CESCA.API.Services.Implementation
                 InvoiceNumber = $"CESCA-{DateTime.Now.Year.ToString()}-{orderSeq}",
                 OrderAmount = orderDTO.OrderAmount,
                 DiscountApplied = orderDTO.DiscountApplied,
-                FinalAmount = orderDTO.FinalAmout,
+                FinalAmount = orderDTO.FinalAmount,
                 Status = orderDTO.Status,
                 ProcessBy = orderDTO.ProcessBy,
             };

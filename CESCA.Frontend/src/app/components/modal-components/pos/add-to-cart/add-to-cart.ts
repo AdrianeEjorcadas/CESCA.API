@@ -200,6 +200,8 @@ export class AddToCart implements OnInit{
       processBy: this.userName,
       originalAmount: this.totalOrderAmountCopy()
     });
+
+    console.log(this.orderForm.value);
   }
 
   populateOrderDetails(){
@@ -224,6 +226,9 @@ export class AddToCart implements OnInit{
       }, 
       OrderDetailsDTO: this.orderDetails
     };
+
+    console.log(`final amount dto: ${JSON.stringify(this.orderRequest.OrderDTO.finalAmount)}`);
+    console.log(`final amount form: ${JSON.stringify(this.orderForm.value.totalAmount)}`);
   }
 
   cancel(){
