@@ -45,7 +45,7 @@ export class AddToCart implements OnInit{
 
   disableInput: boolean = false;
   disableRecalculation: boolean = false;
-  // public isDiscounted: boolean = false;
+  // public discountApplied: boolean = false;
   // payment: number = 0;
   totalOrderAmount = signal<number>(0);
   totalOrderAmountCopy = signal<number>(0); // hold the original amount
@@ -79,7 +79,7 @@ export class AddToCart implements OnInit{
   initializedForm(){
     this.orderForm = this.formBuilder.group({
       payment: [0, [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
-      isDiscounted: [false],
+      discountApplied: [false],
       originalAmount: [this.totalOrderAmountCopy()],
       totalAmount: [this.totalOrderAmount()],
       change: [this.change.toFixed(2)],
@@ -153,7 +153,7 @@ export class AddToCart implements OnInit{
     this.totalOrderAmount.update(value => reset);
     this.totalOrderAmountCopy.update(value => reset);
     this.change = 0;
-    this.orderForm.get('isDiscounted')?.setValue(false);
+    this.orderForm.get('discountApplied')?.setValue(false);
   }
 
   submit(){
@@ -170,16 +170,18 @@ export class AddToCart implements OnInit{
         next: (res) => {
           if(res.statusCode === 200){
             this.toastr.success('Order submitted', 'Cesca\'\s Pharmacy');
+            this.dialogRef.close(null);
           } else {
             this.toastr.error('Order failed', 'Cesca\'\s Pharmacy');
+            this.dialogRef.close();
           }
-          this.dialogRef.close(res.statusCode);
         },
         error: (err) => {
           this.toastr.error('Order failed', 'Cesca\'\s Pharmacy', err);
+          this.dialogRef.close();
         }
       });
-      this.dialogRef.close();
+      // this.dialogRef.close();
     }
   }
 
@@ -193,7 +195,7 @@ export class AddToCart implements OnInit{
   populateOrderForm(){
     this.orderForm.patchValue({
       payment: this.orderForm.value.payment,
-      isDiscounted: this.orderForm.value.isDiscounted,
+      discountApplied: this.orderForm.value.discountApplied,
       totalAmount: this.totalOrderAmount(),
       change : this.change,
       status: OrderStatus.Completed,
@@ -201,7 +203,7 @@ export class AddToCart implements OnInit{
       originalAmount: this.totalOrderAmountCopy()
     });
 
-    console.log(this.orderForm.value);
+    // console.log(this.orderForm.value);
   }
 
   populateOrderDetails(){
@@ -219,7 +221,7 @@ export class AddToCart implements OnInit{
         payment: this.orderForm.value.payment,
         change: this.orderForm.value.change,
         orderAmount: this.orderForm.value.originalAmount,
-        discountedApplied: this.orderForm.value.isDiscounted,
+        discountApplied: this.orderForm.value.discountApplied,
         finalAmount: this.orderForm.value.totalAmount,
         status: this.orderForm.value.status,
         processBy: this.orderForm.value.processBy

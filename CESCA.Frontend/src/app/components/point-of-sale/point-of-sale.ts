@@ -31,7 +31,7 @@ import { OrderQuantity } from '../modal-components/pos/order-quantity/order-quan
   imports: [FormsModule, MatMenuModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatIconModule, ReactiveFormsModule, MatTableModule, MatPaginator, MatButtonToggleModule, MatCheckboxModule],
   templateUrl: './point-of-sale.html',
   styleUrl: './point-of-sale.css',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PointOfSale implements OnInit{
 
@@ -82,10 +82,13 @@ export class PointOfSale implements OnInit{
     this.inventoryService.getInventoryItems$(this.searchParams).subscribe({
       next: (res) =>{
         //map metaData
-        this.paginatorMetadata = null;
+        // this.paginatorMetadata = null;
         this.paginatorMetadata = res.data.metaData;
-        const products = res.data.products;
-        this.dataSource = products.map(mapToProduct);
+        // const products = res.data.products;
+        this.dataSource = res.data.products.map(mapToProduct);
+        // this.dataSource = [...res.data.products.map(mapToProduct)];
+         // reset paginator after data is bound
+        setTimeout(() => this.resetPaginator());
       },
       error: (err) => {
         console.log(err);
@@ -136,11 +139,12 @@ export class PointOfSale implements OnInit{
       });
 
       dialogRef.afterClosed().subscribe(result => {
-        if (result.length > 0){
+        if(Array.isArray(result) && result.length > 0){
           this.cart.set(result);
-        } else {
+        } else if (result === null) {
           this.cart.set([]);
-        }
+          this.getProducts();
+        } else{}
       });
     } else {
       this.toastrService.info('Cart is empty','Cesca\'\s Pharmacy')
@@ -149,7 +153,7 @@ export class PointOfSale implements OnInit{
 
   search(){
     this.getProducts();
-    this.resetPaginator(); 
+    this.resetPaginator();
   }
   
   resetPaginator(){

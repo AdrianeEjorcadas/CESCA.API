@@ -2,7 +2,7 @@ export interface OrderModel{
     payment: number,
     change: number,
     orderAmount: number,
-    discountedApplied: boolean,
+    discountApplied: boolean,
     finalAmount: number,
     status: string
     processBy: string,

@@ -28,23 +28,32 @@ namespace CESCA.API.Repositories
         {
             await using var transaction = await _context.Database.BeginTransactionAsync(ct);
 
-            await _context.Orders.AddAsync(order, ct);
-            await _context.OrderDetails.AddRangeAsync(orderDetails);
-
-            foreach (var item in orderDetails)
+            try
             {
-                var product = await _context.Products.FindAsync(item.ProductId, ct);
+                await _context.Orders.AddAsync(order, ct);
+                await _context.OrderDetails.AddRangeAsync(orderDetails);
 
-                if(product is null)
+                foreach (var item in orderDetails)
                 {
-                    throw new ProductNotFoundException("Product not found");
-                } else if(product.StockQuantity < item.Quantity)
-                {
-                    throw new InsufficientProductException($"Insufficient stock for product");
+                    var product = await _context.Products.FindAsync(item.ProductId, ct);
+
+                    if (product is null)
+                    {
+                        throw new ProductNotFoundException("Product not found");
+                    }
+                    else if (product.StockQuantity < item.Quantity)
+                    {
+                        throw new InsufficientProductException($"Insufficient stock for product");
+                    }
+
+                    product!.StockQuantity -= item.Quantity;
+                    _context.Products.Update(product);
                 }
-
-                product!.StockQuantity -= item.Quantity;
-                _context.Products.Update(product);
+            }
+            catch
+            {
+                await transaction.RollbackAsync(ct);
+                throw;
             }
 
             await _context.SaveChangesAsync(ct);
