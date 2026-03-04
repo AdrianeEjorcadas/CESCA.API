@@ -1,6 +1,6 @@
 Pharmacy POS System
 A demo pharmacy point‑of‑sale (POS) application built with Angular and .NET Core.
-This project showcases clean architecture, EF Core integration, and Angular Material UI patterns.
+This project showcases Layered Architecture, EF Core integration, and Angular Material UI patterns.
 
 
 🚀 Features
@@ -13,8 +13,8 @@ This project showcases clean architecture, EF Core integration, and Angular Mate
 
 🔑 Demo Account
 For testing purposes, you can log in with the following demo credentials:
-Username: guess
-Password: guess
+- Username: guess
+- Password: guess
 ⚠️ Note: This account is for demo use only.
 It does not provide access to any sensitive or production data.
 
