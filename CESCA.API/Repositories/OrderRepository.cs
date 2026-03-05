@@ -1,4 +1,8 @@
-﻿using CESCA.API.Data;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using CESCA.API.Data;
+using CESCA.API.Helpers.Pagination;
+using CESCA.API.Helpers.Pagination.Parameters;
 using CESCA.API.Models;
 using CESCA.API.Models.Dtos.Order;
 using CESCA.API.Repositories.Interface;
@@ -10,10 +14,12 @@ namespace CESCA.API.Repositories
 {
     public class OrderRepository : IOrderRepository
     {
-        readonly ApplicationDBContext _context;
-        public OrderRepository(ApplicationDBContext context)
+        private readonly ApplicationDBContext _context;
+        private readonly IMapper _mapper;
+        public OrderRepository(ApplicationDBContext context, IMapper mapper )
         {
             _context = context;
+            _mapper = mapper;
         }
 
         public async Task<string> GetOrderSeq(CancellationToken ct)
@@ -58,6 +64,55 @@ namespace CESCA.API.Repositories
 
             await _context.SaveChangesAsync(ct);
             await transaction.CommitAsync(ct);
+        }
+
+        public async Task<PagedList<OrderResponseDTO>> GetOrdersAsync(OrderParameters orderParameters, CancellationToken ct)
+        {
+            var query = _context.Orders.AsQueryable();
+            var count = 0;
+
+            //Search Term / Process by
+            if (!string.IsNullOrEmpty(orderParameters.SearchTerm))
+            {
+                query = query.Where(o => o.ProcessBy.Contains(orderParameters.SearchTerm));
+            }
+
+            // Discounted Items
+            if (orderParameters.DiscountApplied)
+            {
+                query = query.Where(o => o.DiscountApplied == orderParameters.DiscountApplied);
+            }
+
+            // Order Date
+            if (orderParameters.OrderFrom.HasValue && orderParameters.OrderTo.HasValue)
+            {
+                query = query.Where(o => o.OrderDate >= orderParameters.OrderFrom
+                                        && o.OrderDate <= orderParameters.OrderTo); 
+            }
+
+            var result = await query
+                .AsNoTracking()
+                .OrderBy(o => o.InvoiceNumber)
+                .Skip((orderParameters.PageNumber - 1) * orderParameters.PageSize)
+                .Take(orderParameters.PageSize)
+                .ProjectTo<OrderResponseDTO>(_mapper.ConfigurationProvider) // Map from Orders to OrderResponseDTO
+                .ToListAsync(ct);
+
+            // recount 
+            if (!string.IsNullOrEmpty(orderParameters.SearchTerm) || (orderParameters.DiscountApplied is true))
+            {
+                count = result.Count();
+            }
+            else
+            {
+
+                count = await _context.Orders
+                    .Where(s => !s.DiscountApplied)
+                    .CountAsync(ct);
+            }
+
+            return PagedList<OrderResponseDTO>
+                .ToPagedList(result,  count, orderParameters.PageNumber, orderParameters.PageSize);
         }
     }
 }

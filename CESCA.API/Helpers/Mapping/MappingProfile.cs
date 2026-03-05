@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CESCA.API.Models;
+using CESCA.API.Models.Dtos.Order;
 using CESCA.API.Models.Dtos.Product;
 using CESCA.API.Services.Implementation;
 using CESCA.API.Services.Interface;
@@ -22,6 +23,9 @@ namespace CESCA.API.Helpers.Mapping
 
             //UpdateProductDTO to Product
             CreateMap<UpdateProductDTO, Product>();
+
+            //Orders to OrderResponseDTO
+            CreateMap<Order, OrderResponseDTO>();
 
         }
     }

@@ -1,4 +1,6 @@
-﻿using CESCA.API.Models;
+﻿using CESCA.API.Helpers.Pagination;
+using CESCA.API.Helpers.Pagination.Parameters;
+using CESCA.API.Models;
 using CESCA.API.Models.Dtos.Order;
 using CESCA.API.Repositories.Interface;
 using CESCA.API.Services.Interface;
@@ -40,6 +42,14 @@ namespace CESCA.API.Services.Implementation
             }).ToList();
 
             await _orderRepository.PlaceOrderAsync(orders, orderDetailList, ct);
+        }
+
+        public async Task<(IEnumerable<OrderResponseDTO> orders, MetaData metaData)> GetOrdersAsync(
+            OrderParameters orderParameters, CancellationToken cancellationToken)
+        {
+            var result = await _orderRepository.GetOrdersAsync(orderParameters, cancellationToken);
+
+            return (orders: result, metaData: result.MetaData);
         }
     }
 }
