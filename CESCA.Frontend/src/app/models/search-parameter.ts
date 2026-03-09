@@ -14,3 +14,8 @@ export interface SupplierSearchParameter extends SearchParameter{
 
 export interface InventorySearchParameter extends SearchParameter{
 }
+
+export interface InvoiceSearchParameter extends SearchParameter{
+    startDate: Date | null,
+    endDate: Date | null
+}

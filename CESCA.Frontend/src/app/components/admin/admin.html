@@ -24,6 +24,12 @@
                             *ngIf="checkUserRole()"
                             [routerLinkActiveOptions]="{exact: true}" ></i>
                 </a>
+                <a [routerLink]="['invoice']" title="Invoice" class="self-center ">
+                        <i class="fa-solid fa-file-invoice text-2xl text-gray hover:text-light-4 transition-all duration-300" 
+                            routerLinkActive="text-light-4" 
+                            *ngIf="checkUserRole()"
+                            [routerLinkActiveOptions]="{exact: true}" ></i>
+                </a>
                 <a [routerLink]="['inventory']" title="Inventory" class="self-center">
                         <i class="fa-solid fa-warehouse text-2xl text-gray hover:text-light-4 transition-all duration-300" 
                             routerLinkActive="text-light-4" 
@@ -66,6 +72,15 @@
                     [routerLinkActiveOptions]="{exact: true}">
                         <!-- <i class="fa-solid fa-chart-line"></i> -->
                         <span class="pl-2">Dashboard</span>
+                </a>
+                <a class="cursor-pointer text-center font-bold tracking-wider font-mono text-xl text-gray hover:text-light-4 transition-all duration-300" 
+                    title="Invoice" 
+                    *ngIf="checkUserRole()"
+                    [routerLink]="['invoice']"
+                    routerLinkActive="text-light-4" 
+                    [routerLinkActiveOptions]="{exact: true}">
+                        <!-- <i class="fa-solid fa-chart-line"></i> -->
+                        <span class="pl-2">Invoice</span>
                 </a>
                 <a class="cursor-pointer text-center font-bold tracking-wider font-mono text-xl text-gray hover:text-light-4 transition-all duration-300" 
                     title="Inventory"  

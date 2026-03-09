@@ -41,6 +41,12 @@ export const routes: Routes = [
                 loadComponent: () => import('../app/components/supplier/supplier').then(m => m.Supplier),
                 canActivate: [authGuard]
            },
+           {
+                path: 'invoice',
+                title: 'Cesca ~ Invoice',
+                loadComponent: () => import('../app/components/invoice/invoice').then(m => m.Invoice),
+                canActivate: [authGuard]
+           },
           {
           path : 'pos',
           title: 'Cesca ~ Point of Sale',
