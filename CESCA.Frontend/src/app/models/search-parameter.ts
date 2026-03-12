@@ -16,6 +16,6 @@ export interface InventorySearchParameter extends SearchParameter{
 }
 
 export interface InvoiceSearchParameter extends SearchParameter{
-    startDate: Date | null,
-    endDate: Date | null
+    orderFrom: Date | null,
+    orderTo: Date | null
 }

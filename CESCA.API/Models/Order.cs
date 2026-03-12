@@ -6,7 +6,7 @@ namespace CESCA.API.Models
     {
         public Guid OrderId { get; set; }
         public string InvoiceNumber { get; set; }
-        public DateTime OrderDate { get; set; }
+        public DateTimeOffset OrderDate { get; set; }
         public decimal OrderAmount { get; set; }
         public bool DiscountApplied { get; set; }
         public decimal FinalAmount { get; set; }

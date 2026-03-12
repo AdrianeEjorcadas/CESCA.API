@@ -86,7 +86,7 @@ namespace CESCA.API.Data
                     appUser.CreatedAt = now;
                 } else if(entry.Entity is Order order)
                 {
-                    order.OrderDate = now;
+                    order.OrderDate = DateTimeOffset.UtcNow;
                 }
             }
         }

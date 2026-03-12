@@ -27,7 +27,13 @@ export class OrderService {
 
     //convert obj to params[key-value pair]  
     Object.entries(invoiceSearchParameter).forEach(([key, value]) => {
-      params = params.set(key, value as any);
+      if(value !== null  && value !== undefined){
+        if(value instanceof Date){
+          params = params.set(key, value.toISOString());
+        } else {
+          params = params.set(key, value as any);
+        }
+      }
     });
 
     return this.http.get<ReturnResponse<InvoiceResponseModel>>(`${this.orderUrl}/get-orders?${params}`)

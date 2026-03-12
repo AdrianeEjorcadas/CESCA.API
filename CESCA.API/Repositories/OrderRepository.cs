@@ -92,27 +92,52 @@ namespace CESCA.API.Repositories
 
             var result = await query
                 .AsNoTracking()
-                .OrderBy(o => o.InvoiceNumber)
+                .OrderByDescending(o => o.InvoiceNumber)
                 .Skip((orderParameters.PageNumber - 1) * orderParameters.PageSize)
                 .Take(orderParameters.PageSize)
                 .ProjectTo<OrderResponseDTO>(_mapper.ConfigurationProvider) // Map from Orders to OrderResponseDTO
                 .ToListAsync(ct);
 
-            // recount 
-            if (!string.IsNullOrEmpty(orderParameters.SearchTerm) || (orderParameters.DiscountApplied is true))
+            // count items 
+            if (orderParameters.OrderFrom.HasValue && (orderParameters.DiscountApplied is true))
             {
-                count = result.Count();
+                //count = result.Count();
+                count = await _context.Orders
+                    .AsNoTracking()
+                    .Where(o => o.DiscountApplied &&
+                        (o.OrderDate >= orderParameters.OrderFrom && o.OrderDate <= orderParameters.OrderTo))
+                    .CountAsync(ct);
+            } 
+            else if (orderParameters.OrderFrom.HasValue)
+            {
+                count = await _context.Orders
+                    .AsNoTracking()
+                    .Where(o => o.OrderDate >= orderParameters.OrderFrom 
+                                && o.OrderDate <= orderParameters.OrderTo)
+                    .CountAsync(ct);
+            } 
+            else if (orderParameters.DiscountApplied)
+            {
+                count = await _context.Orders
+                    .AsNoTracking()
+                    .Where(o => o.DiscountApplied)
+                    .CountAsync(ct);
             }
             else
             {
-
                 count = await _context.Orders
-                    .Where(s => !s.DiscountApplied)
+                    .AsNoTracking()
                     .CountAsync(ct);
             }
+                //else
+                //{
+                //    count = await _context.Orders
+                //        .Where(s => !s.DiscountApplied)
+                //        .CountAsync(ct);
+                //}
 
-            return PagedList<OrderResponseDTO>
-                .ToPagedList(result,  count, orderParameters.PageNumber, orderParameters.PageSize);
+                return PagedList<OrderResponseDTO>
+                    .ToPagedList(result, count, orderParameters.PageNumber, orderParameters.PageSize);
         }
     }
 }
