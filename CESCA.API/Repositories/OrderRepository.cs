@@ -139,5 +139,24 @@ namespace CESCA.API.Repositories
                 return PagedList<OrderResponseDTO>
                     .ToPagedList(result, count, orderParameters.PageNumber, orderParameters.PageSize);
         }
+
+
+        public async Task<IEnumerable<OrderDetailsDTO>> GetOrderByIdAsync(string invoiceNumber, CancellationToken ct)
+        {
+            var result = await _context.OrderDetails
+                .AsNoTracking()
+                //.Include(p => p.Product) drop since using automapper and it has been configured in mappingprofile config
+                .Where(od => od.InvoiceNumber == invoiceNumber)
+                .ProjectTo<OrderDetailsDTO>(_mapper.ConfigurationProvider)
+                .ToListAsync(ct);
+
+            //var debug = await _context.OrderDetails
+            //    .Where(od => od.InvoiceNumber == invoiceNumber)
+            //    .Select(od => new { od.ProductId, ProductName = od.Product.ProductName })
+            //    .ToListAsync();
+
+
+            return result;
+        }
     }
 }

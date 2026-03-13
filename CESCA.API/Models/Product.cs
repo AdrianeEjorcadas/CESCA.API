@@ -75,5 +75,9 @@ namespace CESCA.API.Models
         public DateTimeOffset? DeletedAt { get; set; }
         public Guid? DeletedBy { get; set; }
 
+
+        //Reference
+        public IEnumerable<OrderDetails> OrderDetails { get; set; }
+
     }
 }

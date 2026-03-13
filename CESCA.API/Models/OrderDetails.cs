@@ -13,5 +13,6 @@ namespace CESCA.API.Models
         public decimal Price { get; set; }
         public decimal Total { get; set; }
         public Order Order { get; set; }
+        public Product Product { get; set; }
     }
 }

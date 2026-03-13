@@ -55,6 +55,17 @@ namespace CESCA.API.Controllers
 
         }
 
+        [HttpGet("get-orders-by-id")]
+        public async Task<ActionResult<ReturnResponse<IEnumerable<OrderDetailsDTO>>>> GetOrderByIdAsync([FromQuery] string invoiceNumber, CancellationToken ct)
+        {
+            var result = await _orderService.GetOrderByIdAsync(invoiceNumber, ct);
 
+            return Ok(new ReturnResponse<IEnumerable<OrderDetailsDTO>>
+            {
+                StatusCode = 200,
+                Message = "Successfully retrieved invoice orders",
+                Data = result
+            });
+        }
     }
 }

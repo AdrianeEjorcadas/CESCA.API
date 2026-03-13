@@ -8,5 +8,6 @@ namespace CESCA.API.Services.Interface
     {
         Task PlaceOrderAsync(OrderDTO orderDTO, List<OrderDetailsDTO> orderDetailsDTO, CancellationToken ct);
         Task<(IEnumerable<OrderResponseDTO> orders, MetaData metaData)> GetOrdersAsync(OrderParameters orderParameters, CancellationToken cancellationToken);
+        Task<IEnumerable<OrderDetailsDTO>> GetOrderByIdAsync(string invoiceNumber, CancellationToken ct);
     }
 }

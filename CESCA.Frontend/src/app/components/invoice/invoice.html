@@ -51,12 +51,17 @@
             <!-- Name Column -->
             <ng-container matColumnDef="invoiceNumber">
                 <th mat-header-cell *matHeaderCellDef> Invoice No. </th>
-                <td mat-cell *matCellDef="let element"> {{element.invoiceNumber}} </td>
+                <td mat-cell *matCellDef="let element"> 
+                    <a 
+                        class="underline text-light-1 cursor-pointer" title="Check Orders of {{element.invoiceNumber}}" >
+                        {{element.invoiceNumber}}
+                    </a>
+                </td>
             </ng-container>
             <!-- Name Column -->
             <ng-container matColumnDef="orderDate"> 
                 <th mat-header-cell *matHeaderCellDef> Transaction Date </th>
-                <td mat-cell *matCellDef="let element"> {{element.orderDate | date:'short'}}  </td>
+                <td mat-cell *matCellDef="let element"> {{element.orderDate | toYYYYmmdd}}  </td>
             </ng-container>
             <!-- Name Column -->
             <ng-container matColumnDef="discountApplied">
@@ -68,12 +73,12 @@
             <!-- Name Column -->
             <ng-container matColumnDef="orderAmount">
                 <th mat-header-cell *matHeaderCellDef> Order Amount </th>
-                <td mat-cell *matCellDef="let element"> {{element.orderAmount}} </td>
+                <td mat-cell *matCellDef="let element"> ₱{{element.orderAmount}} </td>
             </ng-container>
             <!-- Name Column -->
             <ng-container matColumnDef="finalAmount">
                 <th mat-header-cell *matHeaderCellDef> Final Amount </th>
-                <td mat-cell *matCellDef="let element"> {{element.finalAmount}} </td>
+                <td mat-cell *matCellDef="let element"> ₱{{element.finalAmount}} </td>
             </ng-container>
             <!-- Name Column -->
             <ng-container matColumnDef="status">

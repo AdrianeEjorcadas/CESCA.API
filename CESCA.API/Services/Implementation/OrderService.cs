@@ -4,6 +4,7 @@ using CESCA.API.Models;
 using CESCA.API.Models.Dtos.Order;
 using CESCA.API.Repositories.Interface;
 using CESCA.API.Services.Interface;
+using static CESCA.API.Middleware.Exceptions.Exceptions;
 
 namespace CESCA.API.Services.Implementation
 {
@@ -50,6 +51,18 @@ namespace CESCA.API.Services.Implementation
             var result = await _orderRepository.GetOrdersAsync(orderParameters, cancellationToken);
 
             return (orders: result, metaData: result.MetaData);
+        }
+
+        public Task<IEnumerable<OrderDetailsDTO>> GetOrderByIdAsync(string invoiceNumber, CancellationToken ct)
+        {
+            var result = _orderRepository.GetOrderByIdAsync(invoiceNumber, ct);
+
+            if (result == null)
+            {
+                throw new OrderNotFoundException($"Order not found for Invoice Number  {invoiceNumber}");
+            }
+
+            return result;
         }
     }
 }

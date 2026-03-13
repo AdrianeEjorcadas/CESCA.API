@@ -42,6 +42,12 @@ namespace CESCA.API.Data
                 .IsRequired();
 
             modelBuilder.Entity<OrderDetails>()
+                .HasOne(p => p.Product)
+                .WithMany(od => od.OrderDetails)
+                .HasForeignKey(od => od.ProductId)
+                .IsRequired();
+
+            modelBuilder.Entity<OrderDetails>()
                 .Property(od => od.OrderItemId)
                 .ValueGeneratedOnAdd();
 

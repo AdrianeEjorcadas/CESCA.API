@@ -27,6 +27,11 @@ namespace CESCA.API.Helpers.Mapping
             //Orders to OrderResponseDTO
             CreateMap<Order, OrderResponseDTO>();
 
+            //OrderDetails to OrderDetailsDTO
+            CreateMap<OrderDetails, OrderDetailsDTO>()
+                .ForMember(dest => dest.ProductName,
+                            opt => opt.MapFrom(src => src.Product.ProductName));
+
         }
     }
 }
