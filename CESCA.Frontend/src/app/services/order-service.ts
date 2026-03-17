@@ -6,6 +6,7 @@ import { catchError, Observable, throwError } from 'rxjs';
 import { ReturnResponse } from '../models/return-response';
 import { InvoiceSearchParameter } from '../models/search-parameter';
 import { InvoiceResponseModel } from '../models/component-models/invoice/invoice-response';
+import { InvoiceOrderDetailsModel } from '../models/component-models/invoice/invoice-order-details';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +23,7 @@ export class OrderService {
     );
   }
 
-  getOrders$(invoiceSearchParameter: InvoiceSearchParameter){
+  getOrders$(invoiceSearchParameter: InvoiceSearchParameter): Observable<ReturnResponse<InvoiceResponseModel>>{
     let params = new HttpParams();
 
     //convert obj to params[key-value pair]  
@@ -37,6 +38,13 @@ export class OrderService {
     });
 
     return this.http.get<ReturnResponse<InvoiceResponseModel>>(`${this.orderUrl}/get-orders?${params}`)
+    .pipe(
+      catchError(err => throwError(() => err))
+    );
+  }
+
+  getOrdersByInvoiceNumber$(invoiceNumber: string) : Observable<ReturnResponse<InvoiceOrderDetailsModel[]>>{
+    return this.http.get<ReturnResponse<InvoiceOrderDetailsModel[]>>(`${this.orderUrl}/get-orders-by-id?invoiceNumber=${invoiceNumber}`)
     .pipe(
       catchError(err => throwError(() => err))
     );
