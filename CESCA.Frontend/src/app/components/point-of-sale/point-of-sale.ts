@@ -6,6 +6,7 @@ import { JwtPayload } from '../../models/jwt-payload';
 import { DatePipe } from '@angular/common';
 import { PosTableModel } from '../../models/component-models/pos/pos-table-model';
 import { MetadataModel } from '../../models/component-models/metadata-model';
+import { CurrencyPipe } from '@angular/common';
 
 // angulkar material
 import { MatInputModule } from '@angular/material/input';
@@ -28,7 +29,7 @@ import { OrderQuantity } from '../modal-components/pos/order-quantity/order-quan
 
 @Component({
   selector: 'app-point-of-sale',
-  imports: [FormsModule, MatMenuModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatIconModule, ReactiveFormsModule, MatTableModule, MatPaginator, MatButtonToggleModule, MatCheckboxModule],
+  imports: [FormsModule, MatMenuModule, MatButtonModule, MatFormFieldModule, MatInputModule, MatIconModule, ReactiveFormsModule, MatTableModule, MatPaginator, MatButtonToggleModule, MatCheckboxModule, CurrencyPipe],
   templateUrl: './point-of-sale.html',
   styleUrl: './point-of-sale.css',
   // changeDetection: ChangeDetectionStrategy.OnPush

@@ -145,7 +145,7 @@ namespace CESCA.API.Repositories
         {
             var result = await _context.OrderDetails
                 .AsNoTracking()
-                //.Include(p => p.Product) drop since using automapper and it has been configured in mappingprofile config
+                //.Include(p => p.Product) drop this since i am using automapper and it has been configured in mappingprofile config
                 .Where(od => od.InvoiceNumber == invoiceNumber)
                 .ProjectTo<OrderDetailsDTO>(_mapper.ConfigurationProvider)
                 .ToListAsync(ct);

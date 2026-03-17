@@ -8,6 +8,10 @@ import { Toast, ToastrService } from 'ngx-toastr';
 import { JsonPipe } from '@angular/common';
 import { NormalizeDatePipePipe } from '../../pipe/normalize-date-pipe-pipe';
 import { DatePipe } from '@angular/common';
+import { ActivatedRoute, Router, RouterLink } from "@angular/router";
+import { RouterOutlet } from '@angular/router';
+import { CurrencyPipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 
 // angular  material
 import {provideNativeDateAdapter} from '@angular/material/core';
@@ -21,7 +25,7 @@ import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-invoice',
-  imports: [MatDatepickerModule, MatFormFieldModule, MatInputModule, FormsModule, MatTableModule, NormalizeDatePipePipe, DatePipe, MatPaginator, MatIcon],
+  imports: [MatDatepickerModule, MatFormFieldModule, MatInputModule, FormsModule, MatTableModule, NormalizeDatePipePipe, DatePipe, MatPaginator, MatIcon, RouterLink, RouterOutlet, CurrencyPipe, CommonModule],
   providers: [provideNativeDateAdapter()],
   templateUrl: './invoice.html',
   styleUrl: './invoice.css'
@@ -30,6 +34,20 @@ export class Invoice implements OnInit{
 
   private orderService = inject(OrderService);
   private toastr = inject(ToastrService);
+
+  // child template 
+  isChildRoute = false;
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+
+  /**
+   *
+   */
+  constructor() {
+    this.router.events.subscribe(() => {
+      this.isChildRoute = this.route.firstChild !== null;
+    });
+  }
 
   // set maximum 
   readonly maxDate = new Date(Date.UTC(
@@ -109,6 +127,13 @@ export class Invoice implements OnInit{
     this.searchParams.pageNumber = event.pageIndex + 1;
     this.searchParams.pageSize = event.pageSize;
     this.getInvoiceList();
+  }
+
+  invoiceDetails(invoiceNumber: string){
+    this.router.navigate(
+      ['/invoice/invoice-order-item'],
+      { state: {invoiceNumber}
+    });
   }
 
 }

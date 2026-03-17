@@ -5,7 +5,7 @@ import { InventoryModel } from '../../models/component-models/inventory/inventor
 import { InventorySearchParameter } from '../../models/search-parameter';
 import { MetadataModel } from '../../models/component-models/metadata-model';
 import { FormsModule } from '@angular/forms';
-import { NgClass } from '@angular/common';
+import { NgClass, CurrencyPipe } from '@angular/common';
 import { InventoryDialog } from '../modal-components/inventory/inventory-dialog/inventory-dialog';
 
 //mat
@@ -30,7 +30,7 @@ import { AuthService } from '../../services/auth-service';
 
 @Component({
   selector: 'app-inventory',
-  imports: [FormsModule, NgClass, MatInputModule, MatFormFieldModule, MatCheckboxModule, NormalizeDatePipePipe, MatPaginator,MatIconModule, MatButtonModule, MatMenuModule],
+  imports: [FormsModule, NgClass, MatInputModule, MatFormFieldModule, MatCheckboxModule, NormalizeDatePipePipe, MatPaginator,MatIconModule, MatButtonModule, MatMenuModule, CurrencyPipe],
   templateUrl: './inventory.html',
   styleUrl: './inventory.css'
 })

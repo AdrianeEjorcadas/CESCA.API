@@ -5,9 +5,13 @@
         <p class="capitalize text-l pl-5 pb-3 md:text-xl">Invoice</p>
     </div>
 
+    <!-- invoice items -->
+    <div>
+        <router-outlet></router-outlet>
+    </div>
   
     <!-- filter -->
-     <div class="flex flex-col gap-1 mt-2">
+     <div class="flex flex-col gap-1 mt-2 " *ngIf="!isChildRoute">
         <p class="font-semibold">Transaction Date Range:</p>
         <div class="flex flex-row gap-2">
             <!-- FROM -->
@@ -45,7 +49,7 @@
      </div>
      
 
-    <div class="flex flex-col pr-2"> 
+    <div class="flex flex-col pr-2" *ngIf="!isChildRoute"> 
         <!-- invoice list -->
         <table mat-table [dataSource]="dataSource">
             <!-- Name Column -->
@@ -53,6 +57,7 @@
                 <th mat-header-cell *matHeaderCellDef> Invoice No. </th>
                 <td mat-cell *matCellDef="let element"> 
                     <a 
+                        (click)="invoiceDetails(element.invoiceNumber)"
                         class="underline text-light-1 cursor-pointer" title="Check Orders of {{element.invoiceNumber}}" >
                         {{element.invoiceNumber}}
                     </a>
@@ -61,7 +66,7 @@
             <!-- Name Column -->
             <ng-container matColumnDef="orderDate"> 
                 <th mat-header-cell *matHeaderCellDef> Transaction Date </th>
-                <td mat-cell *matCellDef="let element"> {{element.orderDate | toYYYYmmdd}}  </td>
+                <td mat-cell *matCellDef="let element"> {{element.orderDate | date:'short'}}  </td>
             </ng-container>
             <!-- Name Column -->
             <ng-container matColumnDef="discountApplied">
@@ -73,12 +78,12 @@
             <!-- Name Column -->
             <ng-container matColumnDef="orderAmount">
                 <th mat-header-cell *matHeaderCellDef> Order Amount </th>
-                <td mat-cell *matCellDef="let element"> ₱{{element.orderAmount}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.orderAmount | currency:'PHP':'symbol':'1.2-2'}} </td>
             </ng-container>
             <!-- Name Column -->
             <ng-container matColumnDef="finalAmount">
                 <th mat-header-cell *matHeaderCellDef> Final Amount </th>
-                <td mat-cell *matCellDef="let element"> ₱{{element.finalAmount}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.finalAmount | currency:'PHP':'symbol':'1.2-2'}} </td>
             </ng-container>
             <!-- Name Column -->
             <ng-container matColumnDef="status">
