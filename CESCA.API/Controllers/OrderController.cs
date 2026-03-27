@@ -2,6 +2,7 @@
 using CESCA.API.Models.Dtos.Order;
 using CESCA.API.Models.Response;
 using CESCA.API.Services.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
@@ -66,6 +67,14 @@ namespace CESCA.API.Controllers
                 Message = "Successfully retrieved invoice orders",
                 Data = result
             });
+        }
+
+        [HttpGet("generate-invoice-pdf")]
+        public async Task<ActionResult> CreateInvoicePDF([FromQuery] string invoiceNumber, CancellationToken ct)
+        {
+            var result = await _orderService.CreateInvoiceOrdersPDF(invoiceNumber, ct);
+            //throw new NotImplementedException();
+            return File(result, "application/pdf", $"Invoice_{invoiceNumber}.pdf");
         }
     }
 }

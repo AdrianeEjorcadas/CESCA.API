@@ -4,6 +4,7 @@ using CESCA.API.Data;
 using CESCA.API.Helpers.Pagination;
 using CESCA.API.Helpers.Pagination.Parameters;
 using CESCA.API.Models;
+using CESCA.API.Models.Dtos.Invoice;
 using CESCA.API.Models.Dtos.Order;
 using CESCA.API.Repositories.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -157,6 +158,29 @@ namespace CESCA.API.Repositories
 
 
             return result;
+        }
+
+        public async Task<IEnumerable<InvoiceOrderDTO>> GetInvoiceOrderAsync(string invoiceNumber, CancellationToken ct)
+        {
+            var order = await _context.Orders
+                .AsNoTracking()
+                .Where(o => o.InvoiceNumber == invoiceNumber)
+                .Include(od => od.OrderDetails)
+                    .ThenInclude(p => p.Product)
+                .FirstOrDefaultAsync(ct);
+
+            if (order is null)
+                throw new ProductNotFoundException("No product exist");
+
+            var invoiceOrders = order.OrderDetails.Select(od => new InvoiceOrderDTO
+            {
+                ProductName = od.Product.ProductName,
+                Price = od.Price,
+                Quantity = od.Quantity,
+                Cashier = order.ProcessBy
+            });
+
+            return invoiceOrders.ToList();
         }
     }
 }

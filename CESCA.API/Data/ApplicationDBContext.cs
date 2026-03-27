@@ -32,14 +32,27 @@ namespace CESCA.API.Data
                 .Property(p => p.Price)
                 .HasPrecision(18, 2);
 
+            //modelBuilder.Entity<Order>()
+            //    .HasKey(o => new { o.OrderId, o.InvoiceNumber }); //PK
             modelBuilder.Entity<Order>()
-                .HasKey(o => new { o.OrderId, o.InvoiceNumber }); //PK
+                .HasKey(o => o.OrderId);
+
+            modelBuilder.Entity<Order>()
+                .HasIndex(o => o.InvoiceNumber)
+                .IsUnique();
 
             modelBuilder.Entity<OrderDetails>()
                 .HasOne(o => o.Order)
                 .WithMany(od => od.OrderDetails)
-                .HasForeignKey(od => new {od.OrderId, od.InvoiceNumber}) // FK
+                .HasForeignKey(od => od.OrderId)
                 .IsRequired();
+
+
+            //modelBuilder.Entity<OrderDetails>()
+            //    .HasOne(o => o.Order)
+            //    .WithMany(od => od.OrderDetails)
+            //    .HasForeignKey(od => new {od.OrderId, od.InvoiceNumber}) // FK
+            //    .IsRequired();
 
             modelBuilder.Entity<OrderDetails>()
                 .HasOne(p => p.Product)

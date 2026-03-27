@@ -1,6 +1,8 @@
 ﻿using CESCA.API.Helpers.Pagination;
 using CESCA.API.Helpers.Pagination.Parameters;
+using CESCA.API.Helpers.PDF;
 using CESCA.API.Models;
+using CESCA.API.Models.Dtos.Invoice;
 using CESCA.API.Models.Dtos.Order;
 using CESCA.API.Repositories.Interface;
 using CESCA.API.Services.Interface;
@@ -63,6 +65,31 @@ namespace CESCA.API.Services.Implementation
             }
 
             return result;
+        }
+
+        public async Task<byte[]> CreateInvoiceOrdersPDF(string invoiceNumber, CancellationToken ct)
+        {
+            var invoiceOrder = await _orderRepository.GetInvoiceOrderAsync(invoiceNumber, ct);
+
+            //var invoiceDetails = new List<InvoiceOrderDTO>();
+
+            //foreach (var item in invoiceOrder!.OrderDetails)
+            //{
+
+            //    var dto = new InvoiceOrderDTO
+            //    {
+            //        ProductName = item.Product.ProductName,
+            //        Price = item.Price,
+            //        Quantity = item.Quantity,
+            //        Cashier = invoiceOrder.ProcessBy
+            //    };
+
+            //    invoiceDetails.Add(dto);
+            //}
+
+            byte[] generatedInvoice =  InvoiceService.CreateInvoicePDF(invoiceOrder, invoiceNumber);
+
+            return generatedInvoice;
         }
     }
 }
