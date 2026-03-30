@@ -106,11 +106,13 @@ builder.Services.AddScoped<ISupplierService, SupplierService>();
 builder.Services.AddTransient<ISKUGeneratorService, SKUGeneratorService>();
 builder.Services.AddScoped<IProductService, ProductService>();  
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IDashboardService, DashboardService>();
 
 //Repo
 builder.Services.AddScoped<ISupplierRepository, SupplierRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
 
 //Mapper
 //builder.Services.AddAutoMapper(cfg => { }, typeof(MappingProfile));

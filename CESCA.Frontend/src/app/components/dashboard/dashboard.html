@@ -2,3 +2,65 @@
     <h1 class="capitalize text-3xl pl-5 pt-5 md:text-4xl">Cesca System</h1>
     <p class="capitalize text-l pl-5 pb-3 md:text-xl">Dashboard</p>
 </div>
+
+<div class="flex flex-col ml-4 mt-2">
+    <!-- header of dashboard -->
+    <div class="flex flex-row flex-wrap space-x-5 justify-center">
+        <!-- no of order today -->
+        <div class="flex flex-row border rounded-xl p-2 space-x-3">
+            <!-- label -->
+            <div class="flex flex-col md:space-y-2 space-y-1">
+                <p class="capitalize text-xs">today no of order</p>
+                <p class="font-extrabold md:text-4xl text-2xl text-gray-700">{{initialDashboardData.todaysOrder}}</p>
+            </div>
+            <!-- value -->
+            <div>
+                <span><i class="fa-solid fa-box-open text-xs font-extralight text-light-2"></i></span>
+            </div>
+        </div>
+
+        <!-- no of order this month -->
+        <div class="flex flex-row border rounded-xl p-2 space-x-3">
+            <!-- label -->
+            <div class="flex flex-col md:space-y-2 space-y-1">
+                <p class="capitalize text-xs">monthly no of order</p>
+                <p class="font-extrabold md:text-4xl text-2xl text-gray-700">{{initialDashboardData.monthsOrder}}</p>
+            </div>
+            <!-- value -->
+            <div>
+                <span><i class="fa-regular fa-calendar-days text-xs font-extralight text-light-2"></i></span>
+            </div>
+        </div>
+
+        <!-- revenue today -->
+        <div class="flex flex-row border rounded-xl p-2 space-x-3">
+            <!-- label -->
+            <div class="flex flex-col md:space-y-2 space-y-1">
+                <p class="capitalize text-xs">today total revenue</p>
+                <p class="font-extrabold md:text-4xl text-2xl text-gray-700">{{initialDashboardData.todaysRevenue | currency:'PHP':'symbol':'1.2-2'}}</p>
+            </div>
+            <!-- value -->
+            <div>
+                <span><i class="fa-solid fa-money-bill text-xs font-extralight text-light-2"></i></span>
+            </div>
+        </div>
+
+        <!-- revenue this month -->
+        <div class="flex flex-row border rounded-xl p-2 space-x-3">
+            <!-- label -->
+            <div class="flex flex-col md:space-y-2 space-y-1">
+                <p class="capitalize text-xs">monthly total revenue</p>
+                <p class="font-extrabold md:text-4xl text-2xl text-gray-700">{{initialDashboardData.monthsRevenue| currency:'PHP':'symbol':'1.2-2'}}</p>
+            </div>
+            <!-- value -->
+            <div>
+                <span><i class="fa-solid fa-money-bills text-xs font-extralight text-light-2"></i></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- graphs and chart-->
+    <div class="flex flex-col space">
+        <!-- order over time -->
+    </div>
+</div>
