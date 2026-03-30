@@ -49,5 +49,12 @@ export class OrderService {
       catchError(err => throwError(() => err))
     );
   }
+// generate-invoice-pdf
+  downloadInvoice(invoiceNumber: string){
+    return this.http.get(`${this.orderUrl}/generate-invoice-pdf?invoiceNumber=${invoiceNumber}`, {responseType: 'blob'})
+    .pipe(
+      catchError(err => throwError(() => err))
+    );
+  }
 
 }

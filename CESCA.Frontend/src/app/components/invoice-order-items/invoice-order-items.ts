@@ -48,6 +48,18 @@ export class InvoiceOrderItems implements OnInit {
     });
   }
 
+  downloadInvoice(){
+    this.orderService.downloadInvoice(this.invoiceNumber!)
+    .subscribe((blob: Blob)=> {
+      const fileUrl = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = fileUrl;
+      a.download = `Invoice_${this.invoiceNumber}.pdf`;
+      a.click();
+      window.URL.revokeObjectURL(fileUrl);
+    });
+  }
+
 }
 
 function mapToInvoiceOrderDetails(src: InvoiceOrderDetailsModel): InvoiceOrderDetailsModel{

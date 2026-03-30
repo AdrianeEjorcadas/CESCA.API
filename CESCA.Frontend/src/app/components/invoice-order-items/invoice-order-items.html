@@ -1,5 +1,17 @@
-<p>invoice-order-items id is {{invoiceNumber}}</p>
+
 <div class="mr-2">
+
+    <!-- action button -->
+    <div class="flex flex-row mb-2 justify-end">
+        <button title="Save as PDF" 
+            class="rounded-xl border-1 px-4 py-1 cursor-pointer
+            hover:bg-light-4 hover:text-white transition-all duration-300"
+            (click)="downloadInvoice()">
+            <i class="fa-regular fa-file-pdf text-xl"></i>
+        </button>
+    </div>
+
+    <!-- table -->
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
     <!--- Note that these columns can be defined in any order.
