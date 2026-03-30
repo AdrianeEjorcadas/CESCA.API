@@ -20,7 +20,14 @@ export const routes: Routes = [
                 path: 'dashboard',
                 title: 'Cesca ~ Dashboard',
                 loadComponent: () => import('../app/components/dashboard/dashboard').then(m => m.Dashboard),
-                canActivate: [authGuard]
+                canActivate: [authGuard],
+                children: [
+                    {
+                         path: 'orders-over-time-chart',
+                         title: 'Cesca ~ Orders Over Time Chart',
+                         loadComponent: () => import('../app/components/dashboard/charts/orders-over-time-chart/orders-over-time-chart').then(m => m.OrdersOverTimeChart)
+                    }
+                ]
            },
            {
                 path: 'inventory',

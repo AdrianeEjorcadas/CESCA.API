@@ -3,9 +3,12 @@ import { CurrencyPipe } from '@angular/common';
 import { InitialDashboardPayload } from '../../models/component-models/dashboard/initial-dashboard-payload';
 import { ToastrService } from 'ngx-toastr';
 import { DashboardService } from '../../services/dashboard-service';
+
+import { OrdersOverTimeChart } from './charts/orders-over-time-chart/orders-over-time-chart';
+import { MatCalendar } from "@angular/material/datepicker";
 @Component({
   selector: 'app-dashboard',
-  imports: [CurrencyPipe],
+  imports: [CurrencyPipe, OrdersOverTimeChart, MatCalendar],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
 })

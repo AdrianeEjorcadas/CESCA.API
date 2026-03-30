@@ -3,15 +3,15 @@
     <p class="capitalize text-l pl-5 pb-3 md:text-xl">Dashboard</p>
 </div>
 
-<div class="flex flex-col ml-4 mt-2">
+<div class="flex flex-col mx-4 mt-2">
     <!-- header of dashboard -->
-    <div class="flex flex-row flex-wrap space-x-5 justify-center">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-5 justify-center">
         <!-- no of order today -->
-        <div class="flex flex-row border rounded-xl p-2 space-x-3">
+        <div class="flex flex-row border rounded-xl p-2 gap-3">
             <!-- label -->
             <div class="flex flex-col md:space-y-2 space-y-1">
                 <p class="capitalize text-xs">today no of order</p>
-                <p class="font-extrabold md:text-4xl text-2xl text-gray-700">{{initialDashboardData.todaysOrder}}</p>
+                <p class="font-extrabold md:text-2xl text-1xl text-gray-700">{{initialDashboardData.todaysOrder}}</p>
             </div>
             <!-- value -->
             <div>
@@ -20,11 +20,11 @@
         </div>
 
         <!-- no of order this month -->
-        <div class="flex flex-row border rounded-xl p-2 space-x-3">
+        <div class="flex flex-row border rounded-xl p-2 gap-3">
             <!-- label -->
             <div class="flex flex-col md:space-y-2 space-y-1">
                 <p class="capitalize text-xs">monthly no of order</p>
-                <p class="font-extrabold md:text-4xl text-2xl text-gray-700">{{initialDashboardData.monthsOrder}}</p>
+                <p class="font-extrabold md:text-2xl text-1xl text-gray-700">{{initialDashboardData.monthsOrder}}</p>
             </div>
             <!-- value -->
             <div>
@@ -33,11 +33,11 @@
         </div>
 
         <!-- revenue today -->
-        <div class="flex flex-row border rounded-xl p-2 space-x-3">
+        <div class="flex flex-row border rounded-xl p-2 gap-3">
             <!-- label -->
             <div class="flex flex-col md:space-y-2 space-y-1">
                 <p class="capitalize text-xs">today total revenue</p>
-                <p class="font-extrabold md:text-4xl text-2xl text-gray-700">{{initialDashboardData.todaysRevenue | currency:'PHP':'symbol':'1.2-2'}}</p>
+                <p class="font-extrabold md:text-2xl text-1xl text-gray-700">{{initialDashboardData.todaysRevenue | currency:'PHP':'symbol':'1.2-2'}}</p>
             </div>
             <!-- value -->
             <div>
@@ -46,11 +46,11 @@
         </div>
 
         <!-- revenue this month -->
-        <div class="flex flex-row border rounded-xl p-2 space-x-3">
+        <div class="flex flex-row border rounded-xl p-2 gap-3">
             <!-- label -->
             <div class="flex flex-col md:space-y-2 space-y-1">
                 <p class="capitalize text-xs">monthly total revenue</p>
-                <p class="font-extrabold md:text-4xl text-2xl text-gray-700">{{initialDashboardData.monthsRevenue| currency:'PHP':'symbol':'1.2-2'}}</p>
+                <p class="font-extrabold md:text-2xl text-1xl text-gray-700">{{initialDashboardData.monthsRevenue| currency:'PHP':'symbol':'1.2-2'}}</p>
             </div>
             <!-- value -->
             <div>
@@ -60,7 +60,13 @@
     </div>
 
     <!-- graphs and chart-->
-    <div class="flex flex-col space">
         <!-- order over time -->
+    <div class="grid grid-cols-1 2xl:grid-cols-2 gap-5 space-y-2 mt-5 justify-center p-2">
+         <div class="flex justify-center p-2 ">
+            <app-orders-over-time-chart></app-orders-over-time-chart>
+         </div>
+         <div class="flex justify-center p-2">
+            <app-orders-over-time-chart></app-orders-over-time-chart>
+         </div>
     </div>
 </div>
