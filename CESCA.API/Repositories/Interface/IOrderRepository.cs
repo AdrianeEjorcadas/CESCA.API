@@ -14,6 +14,6 @@ namespace CESCA.API.Repositories.Interface
         Task<PagedList<OrderResponseDTO>> GetOrdersAsync(OrderParameters orderParameters, CancellationToken ct); 
         Task<IEnumerable<OrderDetailsDTO>> GetOrderByIdAsync(string invoiceNumber, CancellationToken ct);
         //Task<Order?> GetInvoiceOrderAsync(string invoiceNumber, CancellationToken ct);
-        Task<IEnumerable<InvoiceOrderDTO>> GetInvoiceOrderAsync(string invoiceNumber, CancellationToken ct);
+        Task<(IEnumerable<InvoiceOrderDTO> orders, decimal totalAmount)> GetInvoiceOrderAsync(string invoiceNumber, CancellationToken ct);
     }
 }

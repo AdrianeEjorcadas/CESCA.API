@@ -77,4 +77,5 @@ namespace CESCA.API.Controllers
             return File(result, "application/pdf", $"Invoice_{invoiceNumber}.pdf");
         }
     }
+
 }

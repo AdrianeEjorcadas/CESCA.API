@@ -38,7 +38,7 @@ namespace CESCA.API.Repositories
             try
             {
                 await _context.Orders.AddAsync(order, ct);
-                await _context.OrderDetails.AddRangeAsync(orderDetails);
+                await _context.OrderDetails.AddRangeAsync(orderDetails, ct);
 
                 foreach (var item in orderDetails)
                 {
@@ -151,16 +151,10 @@ namespace CESCA.API.Repositories
                 .ProjectTo<OrderDetailsDTO>(_mapper.ConfigurationProvider)
                 .ToListAsync(ct);
 
-            //var debug = await _context.OrderDetails
-            //    .Where(od => od.InvoiceNumber == invoiceNumber)
-            //    .Select(od => new { od.ProductId, ProductName = od.Product.ProductName })
-            //    .ToListAsync();
-
-
             return result;
         }
 
-        public async Task<IEnumerable<InvoiceOrderDTO>> GetInvoiceOrderAsync(string invoiceNumber, CancellationToken ct)
+        public async Task<(IEnumerable<InvoiceOrderDTO> orders, decimal totalAmount)> GetInvoiceOrderAsync(string invoiceNumber, CancellationToken ct)
         {
             var order = await _context.Orders
                 .AsNoTracking()
@@ -170,7 +164,7 @@ namespace CESCA.API.Repositories
                 .FirstOrDefaultAsync(ct);
 
             if (order is null)
-                throw new ProductNotFoundException("No product exist");
+                throw new OrderNotFoundException("No product exist");
 
             var invoiceOrders = order.OrderDetails.Select(od => new InvoiceOrderDTO
             {
@@ -180,7 +174,9 @@ namespace CESCA.API.Repositories
                 Cashier = order.ProcessBy
             });
 
-            return invoiceOrders.ToList();
+            var totalAmount = order.FinalAmount;
+
+            return (invoiceOrders.ToList(), totalAmount);
         }
     }
 }

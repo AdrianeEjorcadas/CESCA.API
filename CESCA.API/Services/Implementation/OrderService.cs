@@ -71,23 +71,7 @@ namespace CESCA.API.Services.Implementation
         {
             var invoiceOrder = await _orderRepository.GetInvoiceOrderAsync(invoiceNumber, ct);
 
-            //var invoiceDetails = new List<InvoiceOrderDTO>();
-
-            //foreach (var item in invoiceOrder!.OrderDetails)
-            //{
-
-            //    var dto = new InvoiceOrderDTO
-            //    {
-            //        ProductName = item.Product.ProductName,
-            //        Price = item.Price,
-            //        Quantity = item.Quantity,
-            //        Cashier = invoiceOrder.ProcessBy
-            //    };
-
-            //    invoiceDetails.Add(dto);
-            //}
-
-            byte[] generatedInvoice =  InvoiceService.CreateInvoicePDF(invoiceOrder, invoiceNumber);
+            byte[] generatedInvoice =  InvoiceService.CreateInvoicePDF(invoiceOrder.orders, invoiceNumber, invoiceOrder.totalAmount);
 
             return generatedInvoice;
         }

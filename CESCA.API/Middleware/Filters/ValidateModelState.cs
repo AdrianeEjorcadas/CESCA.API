@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace CESCA.API.Middleware.Filters
 {
-    public class ValidateModelState :ActionFilterAttribute
+    public class ValidateModelState : ActionFilterAttribute
     {
         public override void OnActionExecuting(ActionExecutingContext context)
         {
