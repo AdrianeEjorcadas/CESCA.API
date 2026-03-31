@@ -30,5 +30,27 @@ namespace CESCA.API.Repositories
 
             return payload;
         }
+
+        public async Task<IEnumerable<LineChartDTO>> GetDailySaleAndRevTrendAsync(DateTimeOffset targetDate, CancellationToken ct)
+        {
+            //var dateToR = DateTimeOffset.UtcNow.Date;
+            var monthStart = new DateTimeOffset(targetDate.Year, targetDate.Month, 1, 0, 0, 0, TimeSpan.Zero);
+
+            var firstDayNextMonth = monthStart.AddMonths(1);
+            //var monthEnd = firstDayNextMonth.AddDays(-1);
+
+            var payload = await _context.Orders
+                .Where(o => o.OrderDate >= monthStart && o.OrderDate < firstDayNextMonth)
+                .GroupBy(o => o.OrderDate.Date)
+                .Select(c => new LineChartDTO
+                {
+                    TransactionDate = c.Key,
+                    Sales = c.Count(),
+                    Revenue = c.Sum(o => o.FinalAmount)
+                })
+                .ToListAsync(ct);
+
+            return payload;
+        }
     }
 }

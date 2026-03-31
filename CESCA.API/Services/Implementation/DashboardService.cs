@@ -21,5 +21,19 @@ namespace CESCA.API.Services.Implementation
 
             return payload;
         }
+
+        public async Task<IEnumerable<LineChartDTO>> GetDailySaleAndRevTrendAsync(CancellationToken ct, DateTimeOffset? date = null)
+        {
+            //check if date from user exist
+            var targetDate = date ?? DateTimeOffset.UtcNow.Date;
+
+            var payload = await _dashboardRepo.GetDailySaleAndRevTrendAsync(targetDate, ct);
+
+            if (payload is null)
+                throw new InvalidOperationException("Unable to retrieve sales and revenue trend payload");
+
+            return payload;
+
+        }
     }
 }

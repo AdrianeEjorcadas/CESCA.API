@@ -28,6 +28,19 @@ namespace CESCA.API.Controllers
                 Data = payload
             });
         }
+
+        [HttpGet("daily-sale-and-revenue")]
+        public async Task<ActionResult<ReturnResponse<IEnumerable<LineChartDTO>>>> GetDailySaleAndRevTrendAsync(CancellationToken ct, DateTimeOffset? date = null )
+        {
+            var payload = await _dashboardService.GetDailySaleAndRevTrendAsync(ct, date);
+
+            return Ok(new ReturnResponse<IEnumerable<LineChartDTO>>
+            {
+                StatusCode = 200,
+                Message = "Succesfully retrieve the daily sale and revenue trend payload",
+                Data = payload
+            });
+        }
     
     }
 }

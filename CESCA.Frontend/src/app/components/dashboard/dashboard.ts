@@ -8,7 +8,7 @@ import { OrdersOverTimeChart } from './charts/orders-over-time-chart/orders-over
 import { MatCalendar } from "@angular/material/datepicker";
 @Component({
   selector: 'app-dashboard',
-  imports: [CurrencyPipe, OrdersOverTimeChart, MatCalendar],
+  imports: [CurrencyPipe, OrdersOverTimeChart],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
 })
